@@ -1,17 +1,26 @@
 {
-  _config+:: {
-    enableMultiCluster: false,
-    tensorflowSelector: if self.enableMultiCluster then 'job=~"$job", cluster=~"$cluster"' else 'job=~"$job"',
-    dashboardTags: ['tensorflow-mixin'],
-    dashboardPeriod: 'now-30m',
-    dashboardTimezone: 'default',
-    dashboardRefresh: '1m',
+  local this = self,
+  filteringSelector: 'job="integrations/tensorflow"',
+  groupLabels: ['job', 'cluster'],
+  logLabels: ['cluster'],
+  instanceLabels: ['instance'],
 
-    // enable Loki logs
-    enableLokiLogs: true,
+  dashboardTags: [self.uid],
+  uid: 'tensorflow',
+  dashboardNamePrefix: 'TensorFlow',
+  dashboardPeriod: 'now-30m',
+  dashboardTimezone: 'default',
+  dashboardRefresh: '1m',
+  metricsSource: 'prometheus',  // metrics source for signals
 
-    // for alerts
-    alertsModelRequestErrorRate: '30',  // %
-    alertsBatchQueuingLatency: '5000000',  // µs
+  // Logging configuration
+  enableLokiLogs: true,
+  extraLogLabels: ['level'],  // Required by logs-lib
+  logsVolumeGroupBy: 'level',
+  showLogsVolume: true,
+
+  // Signals configuration
+  signals+: {
+    serving: (import './signals/serving.libsonnet')(this),
   },
 }
