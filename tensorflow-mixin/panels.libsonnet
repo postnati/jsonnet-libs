@@ -139,42 +139,42 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.options.tooltip.withSort('desc')
         + g.panel.timeSeries.panelOptions.withPluginVersion(),
 
-      // batchQueuingLatencyPanel:
-      //   commonlib.panels.generic.timeSeries.base.new(
-      //     'Batch queuing latency',
-      //     targets=[signals.serving.batchQueuingLatency.asTarget()],
-      //     description='Average time requests spend in the batching queue.'
-      //   )
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-      //   + g.panel.timeSeries.standardOptions.withUnit('µs')
-      //   + g.panel.timeSeries.options.legend.withCalcs([])
-      //   + g.panel.timeSeries.options.legend.withDisplayMode('list')
-      //   + g.panel.timeSeries.options.tooltip.withMode('multi')
-      //   + g.panel.timeSeries.options.tooltip.withSort('desc')
-      //   + g.panel.timeSeries.panelOptions.withPluginVersion(),
+      batchQueuingLatencyPanel:
+        commonlib.panels.generic.timeSeries.base.new(
+          'Batch queuing latency',
+          targets=[signals.serving.batchQueuingLatency.asTarget()],
+          description='Current latency in the batching queue.'
+        )
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.standardOptions.withUnit('µs')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc')
+        + g.panel.timeSeries.panelOptions.withPluginVersion(),
 
-      // batchQueueThroughput:
-      //   commonlib.panels.generic.timeSeries.base.new(
-      //     'Batch queue throughput',
-      //     targets=[signals.serving.batchQueueThroughput.asTarget()],
-      //     description='Throughput of the batch queue.'
-      //   )
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-      //   + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-      //   + g.panel.timeSeries.standardOptions.withUnit('reqps')
-      //   + g.panel.timeSeries.options.legend.withCalcs([])
-      //   + g.panel.timeSeries.options.legend.withDisplayMode('list')
-      //   + g.panel.timeSeries.options.tooltip.withMode('multi')
-      //   + g.panel.timeSeries.options.tooltip.withSort('desc')
-      //   + g.panel.timeSeries.panelOptions.withPluginVersion(),
+      batchQueueThroughput:
+        commonlib.panels.generic.timeSeries.base.new(
+          'Batch queue throughput',
+          targets=[signals.serving.batchQueueThroughput.asTarget()],
+          description='Rate of batch queue throughput over time.'
+        )
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.standardOptions.withUnit('reqps')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc')
+        + g.panel.timeSeries.panelOptions.withPluginVersion(),
     },
 }

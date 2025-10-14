@@ -110,33 +110,32 @@ function(this) {
       },
     },
 
-    // batchQueueThroughput: {
-    //   name: 'Batch queue throughput',
-    //   nameShort: 'Throughput',
-    //   type: 'gauge',
-    //   description: 'Throughput of the batch queue.',
-    //   unit: 'reqps',
-    //   sources: {
-    //     prometheus: {
-    //       expr: 'increase(:tensorflow:serving:batch_queue_throughput{%(queriesSelector)s}[$__rate_interval])',
-    //       legendCustomTemplate: '{{ instance }}',
-    //     },
-    //   },
-    // },
+    batchQueuingLatency: {
+      name: 'Batch queuing latency',
+      nameShort: 'Queuing latency',
+      type: 'gauge',
+      description: 'Average time requests spend in the batching queue.',
+      unit: 'µs',
+      sources: {
+        prometheus: {
+          expr: 'increase(:tensorflow:serving:batching_session:queuing_latency_sum{%(queriesSelector)s}[$__rate_interval]) / increase(:tensorflow:serving:batching_session:queuing_latency_count[2m])',
+          legendCustomTemplate: '{{ instance }}',
+        },
+      },
+    },
 
-    // batchQueuingLatency: {
-    //   name: 'Batch queuing latency',
-    //   nameShort: 'Queuing latency',
-    //   type: 'gauge',
-    //   description: 'Average time requests spend in the batching queue.',
-    //   unit: 'µs',
-    //   sources: {
-    //     prometheus: {
-    //       expr: 'increase(:tensorflow:serving:batching_session:queuing_latency_sum[2m]) / increase(:tensorflow:serving:batching_session:queuing_latency_count[2m])',
-    //       legendCustomTemplate: '{{ instance }}',
-    //     },
-    //   },
-    // },
-
+    batchQueueThroughput: {
+      name: 'Batch queue throughput',
+      nameShort: 'Throughput',
+      type: 'gauge',
+      description: 'Throughput of the batch queue.',
+      unit: 'reqps',
+      sources: {
+        prometheus: {
+          expr: 'increase(:tensorflow:serving:batch_queue_throughput{%(queriesSelector)s}[$__rate_interval])',
+          legendCustomTemplate: '{{ instance }}',
+        },
+      },
+    },
   },
 } 

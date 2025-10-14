@@ -20,8 +20,8 @@ local panels = import './panels.libsonnet';
         this.grafana.panels.graphRuns { gridPos+: { w: 12 } },
         this.grafana.panels.graphBuildTime { gridPos+: { w: 12 } },
         this.grafana.panels.graphRunTime { gridPos+: { w: 12 } },
-        // this.grafana.panels.batchQueuingLatencyPanel { gridPos+: { w: 12 } },
-        // this.grafana.panels.batchQueueThroughput { gridPos+: { w: 12 } },
+        this.grafana.panels.batchQueuingLatencyPanel { gridPos+: { w: 12 } },
+        this.grafana.panels.batchQueueThroughput { gridPos+: { w: 12 } },
       ]),
   },
 }
