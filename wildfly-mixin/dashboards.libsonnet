@@ -13,10 +13,11 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
     local refresh = this.config.dashboardRefresh;
     local period = this.config.dashboardPeriod;
     local timezone = this.config.dashboardTimezone;
+    local extraLogLabels = this.config.extraLogLabels;
     {
 
       'wildfly-overview.json':
-        g.dashboard.new(this.config.dashboardNamePrefix + ' overview')
+        g.dashboard.new(this.config.dashboardNamePrefix + ' Overview')
         + g.dashboard.withPanels(
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels([
@@ -27,7 +28,7 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
           )
         ) + root.applyCommon(
           vars.multiInstance,
-          uid + '_overview',
+          uid + '-overview',
           tags,
           links { wildflyOverview+:: {} },
           annotations,
@@ -36,7 +37,7 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
           period,
         ),
       'wildfly-datasource.json':
-        g.dashboard.new(this.config.dashboardNamePrefix + ' datasource')
+        g.dashboard.new(this.config.dashboardNamePrefix + ' Datasource')
         + g.dashboard.withPanels(
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels([
@@ -46,7 +47,7 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
           )
         ) + root.applyCommon(
           vars.multiInstance,
-          uid + '_datasource',
+          uid + '-datasource',
           tags,
           links { wildflyDatasource+:: {} },
           annotations,
@@ -56,6 +57,36 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
         ),
 
     } + if this.config.enableLokiLogs then {
+      'wildfly-logs.json':
+        logslib.new(
+          this.config.dashboardNamePrefix + ' Logs',
+          datasourceName=this.grafana.variables.datasources.loki.name,
+          datasourceRegex=this.grafana.variables.datasources.loki.regex,
+          filterSelector=this.config.filteringSelector,
+          labels=this.config.groupLabels + this.config.extraLogLabels,
+          formatParser=null,
+          showLogsVolume=this.config.showLogsVolume,
+        )
+        {
+          dashboards+:
+            {
+              logs+:
+                root.applyCommon(super.logs.templating.list, uid=uid + '-logs', tags=tags, links=links { logs+:: {} }, annotations=annotations, timezone=timezone, refresh=refresh, period=period),
+            },
+          panels+:
+            {
+              logs+:
+                g.panel.logs.options.withEnableLogDetails(true)
+                + g.panel.logs.options.withShowTime(false)
+                + g.panel.logs.options.withWrapLogMessage(false),
+            },
+          variables+: {
+            toArray+: [
+              this.grafana.variables.datasources.prometheus { hide: 2 },
+            ],
+          },
+        }.dashboards.logs,
+
     } else {},
 
   applyCommon(vars, uid, tags, links, annotations, timezone, refresh, period):

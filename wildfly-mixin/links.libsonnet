@@ -21,6 +21,9 @@ local g = import './g.libsonnet';
     +
     if this.config.enableLokiLogs then
       {
+        logs:
+          link.link.new('Wildfly logs', '/d/' + this.grafana.dashboards['wildfly-logs.json'].uid)
+          + link.link.options.withKeepTime(true),
       }
     else {},
 }
