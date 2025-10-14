@@ -1,4 +1,4 @@
-// for Connection related signals
+// for Transaction related signals
 function(this)
   {
     filteringSelector: this.filteringSelector,

@@ -78,5 +78,30 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         )
         + g.panel.timeSeries.standardOptions.withUnit('reqps')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+      sessionsActivePanel:
+        commonlib.panels.generic.timeSeries.base.new(
+          'Active Sessions',
+          targets=[signals.sessions.activeSessions.asTarget() { interval: '1m' }],
+          description='Number of active sessions to deployment over time'
+        )
+        + g.panel.timeSeries.standardOptions.withUnit('reqps')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+      sessionsExpiredPanel:
+        commonlib.panels.generic.timeSeries.base.new(
+          'Expired Sessions',
+          targets=[signals.sessions.expiredSessions.asTarget() { interval: '1m' }],
+          description='Number of sessions that have expired for a deployment over time'
+        )
+        + g.panel.timeSeries.standardOptions.withUnit('reqps')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+      sessionsRejectedPanel:
+        commonlib.panels.generic.timeSeries.base.new(
+          'Rejected Sessions',
+          targets=[signals.sessions.rejectedSessions.asTarget() { interval: '1m' }],
+          description='Number of sessions that have been rejected from a deployment over time'
+        )
+        + g.panel.timeSeries.standardOptions.withUnit('reqps')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
     },
 }

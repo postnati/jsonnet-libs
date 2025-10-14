@@ -1,0 +1,55 @@
+// for Session related signals
+function(this)
+  {
+    filteringSelector: this.filteringSelector,
+    groupLabels: this.groupLabels,
+    instanceLabels: this.instanceLabels,
+    enableLokiLogs: this.enableLokiLogs,
+    aggLevel: 'none',
+    aggFunction: 'avg',
+    alertsInterval: '5m',
+    discoveryMetric: {
+      prometheus: 'wildfly_undertow_expired_sessions_total',
+    },
+    signals: {
+      activeSessions: {
+        name: 'Active Sessions',
+        nameShort: 'Active Sessions',
+        type: 'raw',
+        description: 'Number of active sessions to deployment over time',
+        unit: 'reqps',
+        sources: {
+          prometheus: {
+            expr: 'wildfly_undertow_active_sessions{%(queriesSelector)s}',
+            legendCustomTemplate: '{{deployment}}',
+          },
+        },
+      },
+      expiredSessions: {
+        name: 'Expired Sessions',
+        nameShort: 'Expired Sessions',
+        type: 'raw',
+        description: 'Number of sessions that have expired for a deployment over time',
+        unit: 'reqps',
+        sources: {
+          prometheus: {
+            expr: 'increase(wildfly_undertow_expired_sessions_total{%(queriesSelector)s}[$__interval])',
+            legendCustomTemplate: '{{deployment}}',
+          },
+        },
+      },
+      rejectedSessions: {
+        name: 'Rejected Sessions',
+        nameShort: 'Rejected Sessions',
+        type: 'raw',
+        description: 'Number of sessions that have been rejected from a deployment over time',
+        unit: 'reqps',
+        sources: {
+          prometheus: {
+            expr: 'increase(wildfly_undertow_rejected_sessions_total{%(queriesSelector)s}[$__interval])',
+            legendCustomTemplate: '{{deployment}}',
+          },
+        },
+      },
+    },
+  }

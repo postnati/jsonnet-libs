@@ -22,6 +22,7 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
             g.util.grid.wrapPanels([
               this.grafana.rows.requestsRow,
               this.grafana.rows.networkRow,
+              this.grafana.rows.sessionsRow,
             ])
           )
         ) + root.applyCommon(

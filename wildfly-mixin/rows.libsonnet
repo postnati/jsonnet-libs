@@ -31,5 +31,13 @@ local g = import './g.libsonnet';
         this.grafana.panels.transactionsInFlightPanel { gridPos+: { w: 12 } },
         this.grafana.panels.transactionsAbortedPanel { gridPos+: { w: 24 } },
       ]),
+    sessionsRow:
+      g.panel.row.new('Sessions')
+      + g.panel.row.withCollapsed(false)
+      + g.panel.row.withPanels([
+        this.grafana.panels.sessionsActivePanel { gridPos+: { w: 24 } },
+        this.grafana.panels.sessionsExpiredPanel { gridPos+: { w: 12 } },
+        this.grafana.panels.sessionsRejectedPanel { gridPos+: { w: 12 } },
+      ]),
   },
 }
