@@ -9,7 +9,7 @@ function(this)
     aggFunction: 'avg',
     alertsInterval: '5m',
     discoveryMetric: {
-      prometheus: 'wildfly_undertow_request_count_total',
+      prometheus: 'wildfly_undertow_bytes_received_total_bytes',
     },
     signals: {
       networkReceivedThroughput: {

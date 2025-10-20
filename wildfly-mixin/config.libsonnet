@@ -3,7 +3,7 @@
   filteringSelector: 'job="integrations/wildfly"',
   groupLabels: ['job', 'cluster'],
   logLabels: ['job', 'cluster', 'instance'],
-  instanceLabels: ['instance'],
+  instanceLabels: ['instance', 'deployment'],
 
   dashboardTags: [self.uid],
   uid: 'wildfly',
