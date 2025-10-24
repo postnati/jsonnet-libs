@@ -67,31 +67,11 @@ local utils = commonlib.utils;
           {
             type: 'value',
             options: {
-              '2': {
-                color: 'light-purple',
-                index: 0,
-                text: 'data',
-              },
-              '3': {
-                color: 'light-green',
-                index: 1,
-                text: 'master',
-              },
-              '4': {
-                color: 'light-blue',
-                index: 2,
-                text: 'ingest',
-              },
-              '5': {
-                text: 'cluster_manager',
-                color: 'light-yellow',
-                index: 3,
-              },
-              '6': {
-                text: 'remote_cluster_client',
-                color: 'super-light-red',
-                index: 4,
-              },
+              '2': {color: 'light-purple', index: 0, text: 'data'},
+              '3': {color: 'light-green', index: 1, text: 'master'},
+              '4': {color: 'light-blue', index: 2, text: 'ingest'},
+              '5': {color: 'light-yellow', index: 3, text: 'cluster_manager'},
+              '6': {color: 'super-light-red', index: 4, text: 'remote_cluster_client'},
             },
           },
         ]),
