@@ -206,11 +206,15 @@ function(this)
       segments_number: {
         name: 'Segments number',
         description: 'Number of segments.',
-        type: 'raw',
-        unit: 'count',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
+        unit: 'segments',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_segments_number{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_segments_number{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
@@ -228,11 +232,15 @@ function(this)
       store_size_bytes: {
         name: 'Store size bytes',
         description: 'Store size in bytes.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'bytes',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_store_size_bytes{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_store_size_bytes{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
