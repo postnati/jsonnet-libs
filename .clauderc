@@ -52,21 +52,68 @@
     - Missing options properties (varies by panel type - see below)
     - Missing standardOptions properties (color mode, mappings, thresholds mode, overrides)
     - Missing target properties (intervalFactor, interval, instant)
-  5. Update the libsonnet panel definition to include all missing properties using the appropriate grafonnet helper methods based on panel type. Use the actual values from the reference panel - the examples below are just to show the
+
+  4.1. IMPORTANT - Simplification and Default Values:
+    - The legacy JSON panels include ALL Grafana default values explicitly because that's how Grafana exports dashboards
+    - Following Jsonnet mixin best practices, ONLY include non-default values in your panel definitions
+    - This keeps the code clean, maintainable, and focused on meaningful customizations
+
+    Common Grafana defaults to OMIT (unless the legacy has a different value):
+    - color.withMode('palette-classic') - this is the default color mode
+    - withMappings([]) - empty mappings array is default
+    - thresholds.withMode('absolute') - default threshold mode
+    - thresholds.withSteps([{color: 'green', value: null}]) - default threshold
+    - withOverrides([]) - empty overrides array is default
+    - All timeSeries custom field defaults:
+      - withAxisCenteredZero(false), withAxisColorMode('text'), withAxisLabel(''), withAxisPlacement('auto')
+      - withBarAlignment(0), withDrawStyle('line'), withFillOpacity(0), withGradientMode('none')
+      - hideFrom.withLegend(false), hideFrom.withTooltip(false), hideFrom.withViz(false)
+      - withLineInterpolation('linear'), withLineWidth(1), withPointSize(5)
+      - scaleDistribution.withType('linear'), withShowPoints('auto'), withSpanNulls(false)
+      - stacking.withGroup('A'), stacking.withMode('none'), thresholdsStyle.withMode('off')
+    - All legend defaults:
+      - legend.withCalcs([]), legend.withDisplayMode('list'), legend.withPlacement('bottom'), legend.withShowLegend(true)
+    - All tooltip defaults:
+      - tooltip.withMode('single'), tooltip.withSort('none')
+
+    Values to INCLUDE (these are meaningful customizations):
+    - Non-default color modes (e.g., 'continuous-BlYlRd', 'thresholds')
+    - Non-empty mappings with actual value mappings
+    - Custom thresholds with multiple steps or non-green colors
+    - Non-empty overrides with field-specific customizations
+    - Custom intervals (e.g., withInterval('1m'))
+    - Custom intervalFactor (e.g., withIntervalFactor(2))
+    - Meaningful units (e.g., withUnit('percent'), withUnit('bytes'))
+    - Custom min/max values (e.g., withMin(0), withMax(100))
+    - Custom decimals (e.g., withDecimals(1))
+    - Non-default timeSeries styling:
+      - Custom fillOpacity (e.g., 5, 30)
+      - Custom gradientMode (e.g., 'scheme', 'opacity')
+      - Custom lineInterpolation (e.g., 'smooth')
+      - Custom lineWidth (e.g., 2)
+      - Custom showPoints (e.g., 'never')
+      - Custom stacking mode (e.g., 'normal')
+    - Non-default legend options:
+      - Custom displayMode (e.g., 'table')
+      - Custom calcs with values (e.g., ['mean', 'lastNotNull'])
+    - Non-default tooltip options:
+      - Custom mode (e.g., 'multi')
+      - Custom sort (e.g., 'desc')
+
+  5. Update the libsonnet panel definition to include ONLY MEANINGFUL non-default properties using the appropriate grafonnet helper methods based on panel type. Use the actual values from the reference panel - the examples below are just to show the
   syntax:
 
-  5. For all panel types:
-    - Use g.query.prometheus.withIntervalFactor(2) for intervalFactor (use actual value from reference)
-    - Use g.query.prometheus.withInterval('1m') for interval (use actual value from reference)
-    - Use g.query.prometheus.withInstant(true) for instant queries (use actual value from reference)
-    - Use g.panel.[TYPE].standardOptions.color.withMode('thresholds') for color mode (use actual value from reference)
-    - ALWAYS add g.panel.[TYPE].standardOptions.thresholds.withMode('absolute') (use actual value from reference)
-    - ALWAYS add g.panel.[TYPE].standardOptions.withOverrides([]) if it's an empty array in reference
+  5. For all panel types (ONLY include if non-default):
+    - Use g.query.prometheus.withIntervalFactor(2) ONLY if not default (1)
+    - Use g.query.prometheus.withInterval('1m') ONLY if specified in reference
+    - Use g.query.prometheus.withInstant(true) ONLY if instant queries are used
+    - Use g.panel.[TYPE].standardOptions.color.withMode('...') ONLY if NOT 'palette-classic'
+    - OMIT g.panel.[TYPE].standardOptions.thresholds.withMode('absolute') - it's the default
+    - OMIT g.panel.[TYPE].standardOptions.withOverrides([]) - empty is the default
 
-  For mappings:
-    - If the reference panel has an empty mappings array, use:
-    + g.panel.[TYPE].standardOptions.withMappings([])
-    - If the panel has value mappings, use the ValueMap builder pattern with the actual mapping values from the reference panel:
+  For mappings (ONLY include if non-default):
+    - OMIT withMappings([]) - empty array is the default
+    - ONLY include if the panel has actual value mappings, use the ValueMap builder pattern with the actual mapping values from the reference panel:
     + g.panel.[TYPE].standardOptions.withMappings([
     g.panel.[TYPE].standardOptions.mapping.ValueMap.withType()
     + g.panel.[TYPE].standardOptions.mapping.ValueMap.withOptions({
@@ -77,11 +124,10 @@
   ])
     - Note: The options hash with specific keys is unavoidable - that's how Grafana mappings work.
 
-  For overrides:
+  For overrides (ONLY include if non-default):
     - ALWAYS use the fieldOverride builder methods instead of hardcoded data structures
-    - If the reference panel has an empty overrides array, use:
-    + g.panel.[TYPE].standardOptions.withOverrides([])
-    - If the panel has overrides, use the fieldOverride builder pattern:
+    - OMIT withOverrides([]) - empty array is the default
+    - ONLY include if the panel has actual overrides, use the fieldOverride builder pattern:
     + g.panel.[TYPE].standardOptions.withOverrides([
     g.panel.[TYPE].fieldOverride.byRegexp.new('/pattern/')  // or byName, byType, byQuery
     + g.panel.[TYPE].fieldOverride.byRegexp.withProperty('custom.axisSoftMax', 100)
@@ -139,46 +185,35 @@
     + g.panel.barGauge.options.reduceOptions.withValues(false)
     + g.panel.barGauge.options.withOrientation('horizontal'),
 
-  timeSeries panels (g.panel.timeSeries):
-  panelName:
+  timeSeries panels (g.panel.timeSeries) - SIMPLIFIED APPROACH:
+  Basic timeSeries with defaults (most common):
+    g.panel.timeSeries.new('Title')
+    + g.panel.timeSeries.panelOptions.withDescription('...')
+    + g.panel.timeSeries.queryOptions.withTargets([
+      signals.xxx.yyy.asTarget()
+      + g.query.prometheus.withInterval('1m')  // ONLY if non-default
+      + g.query.prometheus.withIntervalFactor(2),  // ONLY if non-default (not 1)
+    ])
+    + g.panel.timeSeries.standardOptions.withUnit('...'),  // ONLY include meaningful unit
+
+  timeSeries with custom styling (if legacy has non-defaults):
     g.panel.timeSeries.new('Title')
     + g.panel.timeSeries.panelOptions.withDescription('...')
     + g.panel.timeSeries.queryOptions.withTargets([...])
-    + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
-    + g.panel.timeSeries.standardOptions.withMappings([])
-    + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
-    + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-      g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
-      + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
-    ])
-    + g.panel.timeSeries.standardOptions.withUnit('...')
-    + g.panel.timeSeries.standardOptions.withOverrides([])
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-    + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
-    + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
-    + g.panel.timeSeries.options.legend.withCalcs([])
-    + g.panel.timeSeries.options.legend.withDisplayMode('list')
-    + g.panel.timeSeries.options.legend.withPlacement('bottom')
-    + g.panel.timeSeries.options.legend.withShowLegend(true)
-    + g.panel.timeSeries.options.tooltip.withMode('single')
-    + g.panel.timeSeries.options.tooltip.withSort('none'),
+    + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')  // ONLY if not 'palette-classic'
+    + g.panel.timeSeries.standardOptions.withDecimals(1)  // ONLY if specified
+    + g.panel.timeSeries.standardOptions.withMax(100)  // ONLY if specified
+    + g.panel.timeSeries.standardOptions.withMin(0)  // ONLY if specified
+    + g.panel.timeSeries.standardOptions.withUnit('percent')
+    + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)  // ONLY if not 0
+    + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')  // ONLY if not 'none'
+    + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')  // ONLY if not 'linear'
+    + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)  // ONLY if not 1
+    + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')  // ONLY if not 'auto'
+    + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')  // ONLY if not 'none'
+    + g.panel.timeSeries.options.legend.withCalcs(['mean', 'lastNotNull'])  // ONLY if not empty
+    + g.panel.timeSeries.options.tooltip.withMode('multi')  // ONLY if not 'single'
+    + g.panel.timeSeries.options.tooltip.withSort('desc'),  // ONLY if not 'none'
 
   table panels (g.panel.table):
     - Check for transformations (labelsToFields, merge, organize) - use actual transformations from reference
@@ -210,26 +245,32 @@
 
   e. Repeat until the panels match - Continue iterating through steps 3-6 until the diff shows only acceptable differences (formatting, auto-generated fields)
   7. Important notes:
-    - Always add withMappings([]) if the reference has an empty array
-    - Always add withOverrides([]) if the reference has an empty array
-    - Always add thresholds.withMode('absolute')
+    - OMIT withMappings([]) - empty array is default (only include if has actual mappings)
+    - OMIT withOverrides([]) - empty array is default (only include if has actual overrides)
+    - OMIT thresholds.withMode('absolute') - it's the default
+    - OMIT all timeSeries custom field defaults (see section 4.1 for full list)
+    - OMIT default legend/tooltip options (see section 4.1 for full list)
     - Always use chained format for reduceOptions (NOT object format)
     - Don't worry about the "format": "time_series" field - that's automatically handled
     - Grid position (gridPos) is managed by dashboard layout - don't include that
     - Panel IDs are auto-generated - don't include those
     - For mappings, use the mapping.ValueMap builder but the options hash structure is required
-    - Always use the actual values from the reference panel, not the example values shown above
+    - ONLY include non-default values from the reference panel (see section 4.1)
     - Always update both the signal definition AND the panel definition to match the legacy JSON
     - Pay close attention to whether the legacy uses queriesSelector or queriesSelectorGroupOnly - check the actual label selectors in the metric
-    - Property ordering matters:
-        - color.withMode() comes BEFORE thresholds
-      - thresholds.withMode() comes immediately after withMappings()
-      - withUnit() comes AFTER thresholds
-      - withOverrides() always at end of standardOptions
-    - The only acceptable differences should be:
+    - Property ordering for non-defaults that you DO include:
+        - color.withMode() comes first if non-default
+      - withDecimals(), withMax(), withMin() before withUnit()
+      - withUnit() always included if meaningful
+      - Custom field properties grouped together
+      - Legend options grouped together
+      - Tooltip options grouped together
+    - The acceptable differences will be MORE than just formatting:
         - Expression formatting (newlines/whitespace)
       - Auto-generated fields (id, gridPos, pluginVersion)
       - Datasource structure differences from the signal framework
+      - ALL the default values that are in legacy JSON but omitted from simplified Jsonnet
+      - The generated JSON will be much shorter because Grafana adds defaults when loading
   8. Final output - Show the comparison:
 
   8. After completing all updates and verifying the panels match, provide the following output:
