@@ -52,11 +52,16 @@ function(this)
       indexing_failed: {
         name: 'Indexing failed (avg)',
         description: 'Indexing failures per interval.',
-        type: 'raw',
-        unit: 'count',
+        type: 'counter',
+        aggLevel: 'group',
+        aggFunction: 'avg',
+        unit: 'failures',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_indexing_index_failed_count{%(queriesSelector)s, context="total"}[$__interval:]))',
+            expr: 'opensearch_index_indexing_index_failed_count{%(queriesSelectorGroupOnly)s,index=~"$index",context="total"}',
+            rangeFunction: 'increase',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
