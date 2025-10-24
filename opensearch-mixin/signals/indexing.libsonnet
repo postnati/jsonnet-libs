@@ -164,7 +164,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_refresh_total_time_seconds{%(queriesSelector)s, context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_refresh_total_count{%(queriesSelector)s, context="total"}[$__interval:]),1))',
+            expr: 'avg by(job,opensearch_cluster,index) (increase(opensearch_index_refresh_total_time_seconds{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_refresh_total_count{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:]),1))',
+            legendCustomTemplate: '{{index}}',
           },
         },
       },
@@ -182,11 +183,15 @@ function(this)
       translog_ops: {
         name: 'Translog operations',
         description: 'Translog operation count.',
-        type: 'raw',
-        unit: 'count',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
+        unit: 'operations',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_translog_operations_number{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_translog_operations_number{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
