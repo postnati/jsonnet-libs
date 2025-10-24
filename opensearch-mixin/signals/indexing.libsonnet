@@ -83,7 +83,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_flush_total_time_seconds{%(queriesSelector)s, context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_flush_total_count{%(queriesSelector)s, context="total"}[$__interval:]),1))',
+            expr: 'avg by(' + this.groupAggList + ',index) (increase(opensearch_index_flush_total_time_seconds{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_flush_total_count{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:]),1))',
+            legendCustomTemplate: '{{index}}',
           },
         },
       },
@@ -105,7 +106,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_merges_total_time_seconds{%(queriesSelector)s, context="total"}[$__interval:])) > 0',
+            expr: 'avg by(job,opensearch_cluster,index) (increase(opensearch_index_merges_total_time_seconds{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:])) > 0',
+            legendCustomTemplate: '{{index}} - total',
           },
         },
       },
@@ -116,7 +118,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_merges_total_stopped_time_seconds{%(queriesSelector)s, context="total"}[$__interval:])) > 0',
+            expr: 'avg by(job,opensearch_cluster,index) (increase(opensearch_index_merges_total_stopped_time_seconds{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:])) > 0',
+            legendCustomTemplate: '{{index}} - stopped',
           },
         },
       },
@@ -127,7 +130,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_merges_total_throttled_time_seconds{%(queriesSelector)s, context="total"}[$__interval:])) > 0',
+            expr: 'avg by(job,opensearch_cluster,index) (increase(opensearch_index_merges_total_throttled_time_seconds{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}[$__interval:])) > 0',
+            legendCustomTemplate: '{{index}} - throttled',
           },
         },
       },
