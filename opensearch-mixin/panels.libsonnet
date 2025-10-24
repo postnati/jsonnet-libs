@@ -620,8 +620,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
 
       // JVM buffer pool usage
       jvmBufferPoolUsage:

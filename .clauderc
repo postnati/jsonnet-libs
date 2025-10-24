@@ -57,13 +57,28 @@
     - The legacy JSON panels include ALL Grafana default values explicitly because that's how Grafana exports dashboards
     - Following Jsonnet mixin best practices, ONLY include non-default values in your panel definitions
     - This keeps the code clean, maintainable, and focused on meaningful customizations
+    - When reviewing existing panel code, identify and remove any default values that provide no customization
+
+    HOW TO IDENTIFY DEFAULT VALUES:
+    - Compare settings to the default values list below
+    - If a setting matches a default exactly, remove it
+    - Even in modernized panels, default values may still exist (e.g., color.withMode('palette-classic'))
+    - ALWAYS remove these when found, even if the panel has other meaningful customizations
 
     Common Grafana defaults to OMIT (unless the legacy has a different value):
-    - color.withMode('palette-classic') - this is the default color mode
+    - color.withMode('palette-classic') - this is the default color mode, ALWAYS remove
     - withMappings([]) - empty mappings array is default
     - thresholds.withMode('absolute') - default threshold mode
-    - thresholds.withSteps([{color: 'green', value: null}]) - default threshold
+    - thresholds.withSteps([{color: 'green', value: null}]) - default threshold (single green step)
     - withOverrides([]) - empty overrides array is default
+    - All stat panel defaults:
+      - options.withColorMode('value'), withGraphMode('none'), withJustifyMode('auto'), withOrientation('auto')
+      - options.withTextMode('auto')
+      - reduceOptions.withFields(''), withValues(false)
+    - All barGauge panel defaults:
+      - options.withDisplayMode('gradient'), withMinVizHeight(10), withMinVizWidth(0)
+      - options.withOrientation('horizontal'), withShowUnfilled(true)
+      - reduceOptions.withFields(''), withValues(false)
     - All timeSeries custom field defaults:
       - withAxisCenteredZero(false), withAxisColorMode('text'), withAxisLabel(''), withAxisPlacement('auto')
       - withBarAlignment(0), withDrawStyle('line'), withFillOpacity(0), withGradientMode('none')
@@ -78,6 +93,7 @@
 
     Values to INCLUDE (these are meaningful customizations):
     - Non-default color modes (e.g., 'continuous-BlYlRd', 'thresholds')
+      - NOTE: 'palette-classic' is the DEFAULT - never include it!
     - Non-empty mappings with actual value mappings
     - Custom thresholds with multiple steps or non-green colors
     - Non-empty overrides with field-specific customizations
@@ -87,18 +103,18 @@
     - Custom min/max values (e.g., withMin(0), withMax(100))
     - Custom decimals (e.g., withDecimals(1))
     - Non-default timeSeries styling:
-      - Custom fillOpacity (e.g., 5, 30)
-      - Custom gradientMode (e.g., 'scheme', 'opacity')
-      - Custom lineInterpolation (e.g., 'smooth')
-      - Custom lineWidth (e.g., 2)
-      - Custom showPoints (e.g., 'never')
-      - Custom stacking mode (e.g., 'normal')
+      - Custom fillOpacity (e.g., 5, 30) - default is 0
+      - Custom gradientMode (e.g., 'scheme', 'opacity') - default is 'none'
+      - Custom lineInterpolation (e.g., 'smooth') - default is 'linear'
+      - Custom lineWidth (e.g., 2) - default is 1
+      - Custom showPoints (e.g., 'never') - default is 'auto'
+      - Custom stacking mode (e.g., 'normal') - default is 'none'
     - Non-default legend options:
-      - Custom displayMode (e.g., 'table')
-      - Custom calcs with values (e.g., ['mean', 'lastNotNull'])
+      - Custom displayMode (e.g., 'table') - default is 'list'
+      - Custom calcs with values (e.g., ['mean', 'lastNotNull']) - default is []
     - Non-default tooltip options:
-      - Custom mode (e.g., 'multi')
-      - Custom sort (e.g., 'desc')
+      - Custom mode (e.g., 'multi') - default is 'single'
+      - Custom sort (e.g., 'desc') - default is 'none'
 
   5. Update the libsonnet panel definition to include ONLY MEANINGFUL non-default properties using the appropriate grafonnet helper methods based on panel type. Use the actual values from the reference panel - the examples below are just to show the
   syntax:
