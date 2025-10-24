@@ -698,44 +698,24 @@ local utils = commonlib.utils;
         g.panel.timeSeries.new('Evictions')
         + g.panel.timeSeries.panelOptions.withDescription('Total evictions count by cache type for the selected index.')
         + g.panel.timeSeries.queryOptions.withTargets([
-          signals.search.query_cache_evictions.asTarget() { interval: '1m' },
-          signals.search.request_cache_evictions.asTarget() { interval: '1m' },
-          signals.search.fielddata_evictions.asTarget() { interval: '1m' },
+          signals.search.query_cache_evictions.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+          signals.search.request_cache_evictions.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+          signals.search.fielddata_evictions.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.withUnit('evictions')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withScaleDistribution({ type: 'linear' })
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withStacking({ group: 'A', mode: 'none' })
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withThresholdsStyle({ mode: 'off' })
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
           g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
           + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
           g.panel.timeSeries.standardOptions.threshold.step.withColor('red')
           + g.panel.timeSeries.standardOptions.threshold.step.withValue(80),
         ])
-        + g.panel.timeSeries.options.withLegend({
-          calcs: [],
-          displayMode: 'list',
-          placement: 'bottom',
-          showLegend: true,
-        })
-        + g.panel.timeSeries.options.withTooltip({
-          mode: 'multi',
-          sort: 'none',
-        }),
+        + g.panel.timeSeries.options.tooltip.withMode('multi'),
 
       // Indexing Performance Panels
       indexingRatePanel:
