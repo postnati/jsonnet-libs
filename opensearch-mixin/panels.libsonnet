@@ -715,6 +715,12 @@ local utils = commonlib.utils;
           g.panel.timeSeries.standardOptions.threshold.step.withColor('red')
           + g.panel.timeSeries.standardOptions.threshold.step.withValue(80),
         ])
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          {
+            matcher: {id: 'byValue', options: {op: 'gte', reducer: 'allIsZero', value: 0}},
+            properties: [{id: 'custom.hideFrom', value: {legend: true, tooltip: true, viz: false}}],
+          },
+        ])
         + g.panel.timeSeries.options.tooltip.withMode('multi'),
 
       // Indexing Performance Panels
