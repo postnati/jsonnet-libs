@@ -79,6 +79,7 @@ function(this)
         sources: {
           prometheus: {
             expr: '100 - (100 * opensearch_fs_path_free_bytes{%(queriesSelector)s} / clamp_min(opensearch_fs_path_total_bytes{%(queriesSelector)s}, 1))',
+            legendCustomTemplate: '{{node}}',
           },
         },
       },
@@ -89,7 +90,8 @@ function(this)
         unit: 'connections',
         sources: {
           prometheus: {
-            expr: 'sum by (' + this.groupAggList + ') (opensearch_transport_server_open_number{%(queriesSelector)s})',
+            expr: 'sum by (' + this.groupAggListWithInstance + ') (opensearch_transport_server_open_number{%(queriesSelector)s})',
+            legendCustomTemplate: '{{node}}',
           },
         },
       },

@@ -67,7 +67,7 @@ function(this)
       },
       cluster_shards_number_by_type: {
         name: 'Shard status',
-        description: 'Shard status counts across the Opensearch cluster.',
+        description: 'Shard status counts across the OpenSearch cluster.',
         type: 'gauge',
         aggLevel: 'group',
         aggFunction: 'min',
@@ -96,43 +96,55 @@ function(this)
       cluster_pending_tasks_number: {
         name: 'Pending tasks',
         description: 'The number of tasks waiting to be executed across the OpenSearch cluster.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_cluster_pending_tasks_number{%(queriesSelector)s})',
+            expr: 'opensearch_cluster_pending_tasks_number{%(queriesSelectorGroupOnly)s}',
+            legendCustomTemplate: '{{opensearch_cluster}}',
           },
         },
       },
       cluster_task_max_wait_seconds: {
         name: 'Max task wait time',
         description: 'The max wait time for tasks to be executed across the OpenSearch cluster.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'max',
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'max by(' + this.groupAggList + ') (opensearch_cluster_task_max_waiting_time_seconds{%(queriesSelector)s})',
+            expr: 'opensearch_cluster_task_max_waiting_time_seconds{%(queriesSelectorGroupOnly)s}',
+            legendCustomTemplate: '{{opensearch_cluster}}',
           },
         },
       },
       indices_indexing_index_count_avg: {
         name: 'Total documents',
         description: 'The total count of documents indexed across the OpenSearch cluster.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_indices_indexing_index_count{%(queriesSelector)s})',
+            expr: 'opensearch_indices_indexing_index_count{%(queriesSelectorGroupOnly)s}',
+            legendCustomTemplate: '{{opensearch_cluster}}',
           },
         },
       },
       indices_store_size_bytes_avg: {
         name: 'Store size',
         description: 'The total size of the store across the OpenSearch cluster.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'bytes',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_indices_store_size_bytes{%(queriesSelector)s})',
+            expr: 'opensearch_indices_store_size_bytes{%(queriesSelectorGroupOnly)s}',
+            legendCustomTemplate: '{{opensearch_cluster}}',
           },
         },
       },

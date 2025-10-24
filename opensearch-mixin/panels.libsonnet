@@ -1067,15 +1067,19 @@ local utils = commonlib.utils;
       // Node open connections
       nodeOpenConnections:
         g.panel.timeSeries.new('Node open connections')
-        + g.panel.timeSeries.panelOptions.withDescription('Number of open connections on the node\'s Operating System.')
+        + g.panel.timeSeries.panelOptions.withDescription('Number of open connections for the selected node.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.transport_open_connections.asTarget()])
-        + g.panel.timeSeries.standardOptions.withUnit('connections')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
+        + g.panel.timeSeries.standardOptions.withUnit('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(30)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
       // Node disk usage
       nodeDiskUsage:
