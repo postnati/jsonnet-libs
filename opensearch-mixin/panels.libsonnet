@@ -962,41 +962,21 @@ local utils = commonlib.utils;
       searchAndIndexStoreSizePanel:
         g.panel.timeSeries.new('Store size')
         + g.panel.timeSeries.panelOptions.withDescription('Size of the store in bytes for the selected index.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.indexing.store_size_bytes.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.indexing.store_size_bytes.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('bytes')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withScaleDistribution({ type: 'linear' })
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withStacking({ group: 'A', mode: 'none' })
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withThresholdsStyle({ mode: 'off' })
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
           g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
           + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
           g.panel.timeSeries.standardOptions.threshold.step.withColor('red')
           + g.panel.timeSeries.standardOptions.threshold.step.withValue(80),
         ])
-        + g.panel.timeSeries.options.withLegend({
-          calcs: [],
-          displayMode: 'list',
-          placement: 'bottom',
-          showLegend: true,
-        })
-        + g.panel.timeSeries.options.withTooltip({
-          mode: 'single',
-          sort: 'none',
-        }),
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          g.panel.timeSeries.fieldOverride.byValue.new({op: 'gte', reducer: 'allIsZero', value: 0})
+          + g.panel.timeSeries.fieldOverride.byValue.withProperty('custom.hideFrom', {legend: true, tooltip: true, viz: false}),
+        ]),
 
       segmentSizePanel:
         g.panel.timeSeries.new('Segment size')
