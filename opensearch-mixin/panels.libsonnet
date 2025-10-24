@@ -1010,8 +1010,6 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -1030,8 +1028,6 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -1056,8 +1052,6 @@ local utils = commonlib.utils;
           + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('custom.drawStyle', 'points')
           + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('unit', 'percent'),
         ])
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -1066,15 +1060,12 @@ local utils = commonlib.utils;
         g.panel.timeSeries.new('Node open connections')
         + g.panel.timeSeries.panelOptions.withDescription('Number of open connections for the selected node.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.transport_open_connections.asTarget()])
-        + g.panel.timeSeries.standardOptions.withUnit('')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(30)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -1084,17 +1075,15 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.panelOptions.withDescription('Disk usage percentage of the selected node.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.fs_used_percent.asTarget()])
         + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
-        + g.panel.timeSeries.standardOptions.withUnit('percent')
+        + g.panel.timeSeries.standardOptions.withDecimals(1)
         + g.panel.timeSeries.standardOptions.withMin(0)
         + g.panel.timeSeries.standardOptions.withMax(100)
-        + g.panel.timeSeries.standardOptions.withDecimals(1)
+        + g.panel.timeSeries.standardOptions.withUnit('percent')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(1)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -1105,16 +1094,14 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.os_swap_used_percent.asTarget()])
         + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
         + g.panel.timeSeries.standardOptions.withDecimals(1)
-        + g.panel.timeSeries.standardOptions.withMax(100)
         + g.panel.timeSeries.standardOptions.withMin(0)
+        + g.panel.timeSeries.standardOptions.withMax(100)
         + g.panel.timeSeries.standardOptions.withUnit('percent')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -1131,8 +1118,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
 
       // Circuit breakers
       circuitBreakers:
