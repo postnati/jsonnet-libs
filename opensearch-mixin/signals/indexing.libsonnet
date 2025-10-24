@@ -41,11 +41,15 @@ function(this)
       indexing_count: {
         name: 'Indexing count (avg)',
         description: 'Indexing ops count.',
-        type: 'raw',
-        unit: 'count',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
+        unit: 'documents',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_indexing_index_count{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_indexing_index_count{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
@@ -68,11 +72,15 @@ function(this)
       indexing_delete_current: {
         name: 'Indexing delete current',
         description: 'In-flight delete operations.',
-        type: 'raw',
-        unit: 'ops',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
+        unit: 'documents/s',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (opensearch_index_indexing_delete_current_number{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_indexing_delete_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
