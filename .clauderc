@@ -25,19 +25,42 @@
     - legendCustomTemplate: Must match the legendFormat from legacy JSON
         - Example: '{{opensearch_cluster}}', '{{node}}', '{{type}}'
       - IMPORTANT: No spaces around label names: '{{index}}' NOT '{{ index }}'
-    - IMPORTANT - Selector choice (queriesSelector vs queriesSelectorGroupOnly):
-        - Examine the label selectors in the legacy JSON's metric selector (the part in curly braces)
-      - Use %(queriesSelectorGroupOnly)s if the selector ONLY includes:
-            - opensearch_cluster!=""
-        - job=~"$job"
-        - opensearch_cluster=~"$opensearch_cluster"
-        - Example: opensearch_fs_path_total_bytes{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster"}
-      - Use %(queriesSelector)s if the selector ALSO includes node filtering:
-            - All of the above PLUS node=~"$node"
-        - Example: opensearch_os_cpu_percent{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",node=~"$node"}
-      - Rule of thumb:
-            - If aggregating BY node (e.g., sum by(node, job, opensearch_cluster)) but NOT filtering by node in the selector → use queriesSelectorGroupOnly
-        - If filtering by node in the selector → use queriesSelector
+    - IMPORTANT - Selector template variables (%(queriesSelector)s and %(queriesSelectorGroupOnly)s):
+        - These template variables are substituted during the build process
+      - They are constructed from the mixin's groupLabels and instanceLabels configuration
+
+      Understanding the mixin configuration (opensearch-mixin/config.libsonnet):
+      - groupLabels: ['job', 'opensearch_cluster'] (or ['job', 'cluster', 'opensearch_cluster'] with multi-cluster)
+      - instanceLabels: ['node']
+
+      Template variable substitutions:
+      - %(queriesSelectorGroupOnly)s expands to: opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster"
+        - This uses ONLY the groupLabels (job, opensearch_cluster)
+        - Use when you need to filter by cluster-level labels without instance filtering
+        - Example: opensearch_cluster_status{%(queriesSelectorGroupOnly)s}
+          becomes: opensearch_cluster_status{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster"}
+
+      - %(queriesSelector)s expands to: opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",node=~"$node"
+        - This uses groupLabels + instanceLabels (job, opensearch_cluster, node)
+        - Use when you need to filter by both cluster and instance (node) labels
+        - Example: opensearch_os_cpu_percent{%(queriesSelector)s}
+          becomes: opensearch_os_cpu_percent{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",node=~"$node"}
+
+      Adding additional filters:
+      - You can add extra label filters after the template variable
+      - Use a comma to separate: {%(queriesSelectorGroupOnly)s,index=~"$index"}
+      - Example: opensearch_index_search_query_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"}
+        becomes: opensearch_index_search_query_current_number{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context=~"total"}
+
+      Rule of thumb for choosing the right selector:
+      - Use %(queriesSelectorGroupOnly)s when:
+        - The metric is cluster-scoped (doesn't vary by node)
+        - OR you want to aggregate across all nodes first, then filter
+        - Examples: cluster_status, cluster_nodes_number, or index-level metrics aggregated across nodes
+      - Use %(queriesSelector)s when:
+        - The metric is node-scoped (varies by node)
+        - You want to filter by specific nodes using the $node dashboard variable
+        - Examples: os_cpu_percent, os_mem_used_percent, jvm_heap_used_bytes
 
   e. Compare generated vs legacy expression:
     - Signal with aggLevel: 'group', aggFunction: 'min' generates:
