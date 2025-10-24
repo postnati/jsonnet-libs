@@ -15,11 +15,15 @@ function(this)
       indexing_current: {
         name: 'Indexing current',
         description: 'In-flight indexing operations.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_indexing_index_current_number{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_indexing_index_current_number{%(queriesSelectorGroupOnly)s,index=~"$index",context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
