@@ -384,7 +384,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -402,7 +402,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -419,7 +419,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
         + g.panel.timeSeries.standardOptions.withOverrides([
           g.panel.timeSeries.fieldOverride.byRegexp.new('/time|used|busy|util/')
@@ -439,7 +439,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
@@ -458,7 +458,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -476,7 +476,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.options.tooltip.withMode('multi')
         + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
@@ -593,7 +593,7 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2),
 
       // JVM buffer pool usage
       jvmBufferPoolUsage:
@@ -637,44 +637,21 @@ local utils = commonlib.utils;
         g.panel.timeSeries.new('Request rate')
         + g.panel.timeSeries.panelOptions.withDescription('Rate of fetch, scroll, and query requests by selected index.')
         + g.panel.timeSeries.queryOptions.withTargets([
-          signals.search.search_query_current_avg.asTarget(),
-          signals.search.search_fetch_current_avg.asTarget(),
-          signals.search.search_scroll_current_avg.asTarget(),
+          signals.search.search_query_current_avg.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+          signals.search.search_fetch_current_avg.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+          signals.search.search_scroll_current_avg.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.withUnit('reqps')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withScaleDistribution({ type: 'linear' })
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withStacking({ group: 'A', mode: 'none' })
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withThresholdsStyle({ mode: 'off' })
-        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('red')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(80),
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          {
+            matcher: {id: 'byValue', options: {reducer: 'allIsZero', op: 'gte', value: 0}},
+            properties: [{id: 'custom.hideFrom', value: {tooltip: true, viz: false, legend: true}}],
+          },
         ])
-        + g.panel.timeSeries.options.withLegend({
-          calcs: [],
-          displayMode: 'list',
-          placement: 'bottom',
-          showLegend: true,
-        })
-        + g.panel.timeSeries.options.withTooltip({
-          mode: 'multi',
-          sort: 'none',
-        }),
+        + g.panel.timeSeries.options.tooltip.withMode('multi'),
 
       searchRequestLatencyPanel:
         g.panel.timeSeries.new('Request latency')

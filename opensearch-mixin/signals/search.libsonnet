@@ -19,7 +19,8 @@ function(this)
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (opensearch_index_search_query_current_number{%(queriesSelector)s, context=~"total"})',
+            expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_query_current_number{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context=~"total"})',
+            legendCustomTemplate: '{{index}} - query',
           },
         },
       },
@@ -30,7 +31,8 @@ function(this)
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (opensearch_index_search_fetch_current_number{%(queriesSelector)s, context=~"total"})',
+            expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_fetch_current_number{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context=~"total"})',
+            legendCustomTemplate: '{{index}} - fetch',
           },
         },
       },
@@ -41,7 +43,8 @@ function(this)
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (opensearch_index_search_scroll_current_number{%(queriesSelector)s, context=~"total"})',
+            expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_scroll_current_number{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context=~"total"})',
+            legendCustomTemplate: '{{index}} - scroll',
           },
         },
       },
