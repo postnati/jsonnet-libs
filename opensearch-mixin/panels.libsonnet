@@ -16,46 +16,20 @@ local utils = commonlib.utils;
           + g.query.prometheus.withInstant(true),
         ])
         + g.panel.table.queryOptions.withTransformations([
-          {
-            id: 'labelsToFields',
-            options: {
-              mode: 'columns',
-              valueLabel: 'role',
-            },
-          },
-          {
-            id: 'merge',
-            options: {},
-          },
+          {id: 'labelsToFields', options: {mode: 'columns', valueLabel: 'role'}},
+          {id: 'merge', options: {}},
           {
             id: 'organize',
             options: {
-              excludeByName: {
-                Time: true,
-              },
+              excludeByName: {Time: true},
               indexByName: {
-                Time: 0,
-                node: 3,
-                nodeid: 3,
-                master: 104,
-                data: 105,
-                ingest: 106,
-                remote_cluster_client: 107,
-                cluster_manager: 108,
-              } + {
-                [k]: 3
-                for k in this.config.groupLabels + this.config.instanceLabels
-              },
+                Time: 0, node: 3, nodeid: 3, master: 104, data: 105,
+                ingest: 106, remote_cluster_client: 107, cluster_manager: 108,
+              } + {[k]: 3 for k in this.config.groupLabels + this.config.instanceLabels},
               renameByName: {
-                Time: '',
-                cluster: 'Cluster',
-                cluster_manager: 'Cluster manager',
-                data: 'Data',
-                ingest: 'Ingest',
-                master: 'Master',
-                node: 'Node',
-                nodeid: 'Nodeid',
-                remote_cluster_client: 'Remote cluster client',
+                Time: '', cluster: 'Cluster', cluster_manager: 'Cluster manager',
+                data: 'Data', ingest: 'Ingest', master: 'Master',
+                node: 'Node', nodeid: 'Nodeid', remote_cluster_client: 'Remote cluster client',
               },
             },
           },
@@ -63,43 +37,17 @@ local utils = commonlib.utils;
         + g.panel.table.standardOptions.withMappings([
           g.panel.table.standardOptions.mapping.ValueMap.withType()
           + g.panel.table.standardOptions.mapping.ValueMap.withOptions({
-            '0': {
-              color: 'super-light-orange',
-              index: 5,
-              text: 'False',
-            },
-            '1': {
-              color: 'light-green',
-              index: 3,
-              text: 'True',
-            },
-            Data: {
-              color: 'light-purple',
-              index: 0,
-              text: 'data',
-            },
-            Ingest: {
-              color: 'light-blue',
-              index: 2,
-              text: 'ingest',
-            },
-            Master: {
-              color: 'light-green',
-              index: 1,
-              text: 'master',
-            },
-            'Remote cluster client': {
-              color: 'light-orange',
-              index: 4,
-              text: 'remote_cluster_client',
-            },
+            '0': {color: 'super-light-orange', index: 5, text: 'False'},
+            '1': {color: 'light-green', index: 3, text: 'True'},
+            Data: {color: 'light-purple', index: 0, text: 'data'},
+            Ingest: {color: 'light-blue', index: 2, text: 'ingest'},
+            Master: {color: 'light-green', index: 1, text: 'master'},
+            'Remote cluster client': {color: 'light-orange', index: 4, text: 'remote_cluster_client'},
           }),
         ])
         + g.panel.table.standardOptions.withOverrides([
           g.panel.table.fieldOverride.byRegexp.new('/Data|Master|Ingest|Remote.+|Cluster.+/')
-          + g.panel.table.fieldOverride.byRegexp.withProperty('custom.cellOptions', {
-            type: 'color-text',
-          }),
+          + g.panel.table.fieldOverride.byRegexp.withProperty('custom.cellOptions', {type: 'color-text'}),
         ]),
 
       osRolesTimeline:
