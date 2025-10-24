@@ -23,9 +23,46 @@ local utils = commonlib.utils;
               valueLabel: 'role',
             },
           },
-        ]) + g.panel.table.standardOptions.withMappings([
-        {
-          options: {
+          {
+            id: 'merge',
+            options: {},
+          },
+          {
+            id: 'organize',
+            options: {
+              excludeByName: {
+                Time: true,
+              },
+              indexByName: {
+                Time: 0,
+                node: 3,
+                nodeid: 3,
+                master: 104,
+                data: 105,
+                ingest: 106,
+                remote_cluster_client: 107,
+                cluster_manager: 108,
+              } + {
+                [k]: 3
+                for k in this.config.groupLabels + this.config.instanceLabels
+              },
+              renameByName: {
+                Time: '',
+                cluster: 'Cluster',
+                cluster_manager: 'Cluster manager',
+                data: 'Data',
+                ingest: 'Ingest',
+                master: 'Master',
+                node: 'Node',
+                nodeid: 'Nodeid',
+                remote_cluster_client: 'Remote cluster client',
+              },
+            },
+          },
+        ])
+        + g.panel.table.standardOptions.withMappings([
+          g.panel.table.standardOptions.mapping.ValueMap.withType()
+          + g.panel.table.standardOptions.mapping.ValueMap.withOptions({
             '0': {
               color: 'super-light-orange',
               index: 5,
@@ -56,73 +93,14 @@ local utils = commonlib.utils;
               index: 4,
               text: 'remote_cluster_client',
             },
-          },
-          type: 'value',
-        },
-      ])
-      + g.panel.table.standardOptions.withOverrides([
-        {
-          matcher: {
-            id: 'byRegexp',
-            options: '/Data|Master|Ingest|Remote.+|Cluster.+/',
-          },
-          properties: [
-            {
-              id: 'custom.cellOptions',
-              value: {
-                type: 'color-text',
-              },
-            },
-          ],
-        },
-      ])
-      + g.panel.table.queryOptions.withTransformations([
-        {
-          id: 'labelsToFields',
-          options: {
-            mode: 'columns',
-            valueLabel: 'role',
-          },
-        },
-        {
-          id: 'merge',
-          options: {},
-        },
-        {
-          id: 'organize',
-          options: {
-            excludeByName: {
-              Time: true,
-            },
-            indexByName: {
-              Time: 0,  // hide time
-              node: 3,
-              nodeid: 3,
-              master: 104,
-              data: 105,
-              ingest: 106,
-              remote_cluster_client: 107,
-              cluster_manager: 108,
-            } + {
-              [k]: 3
-              for k in this.config.groupLabels + this.config.instanceLabels
-            }
-            ,
-            renameByName: {
-              Time: '',
-              cluster: 'Cluster',
-              //roles:
-              cluster_manager: 'Cluster manager',
-              data: 'Data',
-              ingest: 'Ingest',
-              master: 'Master',
-              node: 'Node',
-              nodeid: 'Nodeid',
-              remote_cluster_client: 'Remote cluster client',
-            },
-          },
-        },
-      ]),
+          }),
+        ])
+        + g.panel.table.standardOptions.withOverrides([
+          g.panel.table.fieldOverride.byRegexp.new('/Data|Master|Ingest|Remote.+|Cluster.+/')
+          + g.panel.table.fieldOverride.byRegexp.withProperty('custom.cellOptions', {
+            type: 'color-text',
+          }),
+        ]),
 
       osRolesTimeline:
         g.panel.statusHistory.new('Roles timeline')
@@ -187,7 +165,6 @@ local utils = commonlib.utils;
             '2': {index: 2, text: 'Red'},
           }),
         ])
-        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -198,15 +175,7 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('red')
           + g.panel.stat.standardOptions.threshold.step.withValue(2),
         ])
-        + g.panel.stat.standardOptions.withOverrides([])
-        + g.panel.stat.options.withColorMode('value')
-        + g.panel.stat.options.withGraphMode('none')
-        + g.panel.stat.options.withJustifyMode('auto')
-        + g.panel.stat.options.withOrientation('auto')
-        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.stat.options.reduceOptions.withFields('')
-        + g.panel.stat.options.reduceOptions.withValues(false)
-        + g.panel.stat.options.withTextMode('auto'),
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull']),
 
       nodeCountPanel:
         g.panel.stat.new('Node count')
@@ -216,8 +185,6 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.stat.standardOptions.color.withMode('thresholds')
-        + g.panel.stat.standardOptions.withMappings([])
-        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -226,15 +193,7 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(1),
         ])
-        + g.panel.stat.standardOptions.withOverrides([])
-        + g.panel.stat.options.withColorMode('value')
-        + g.panel.stat.options.withGraphMode('none')
-        + g.panel.stat.options.withJustifyMode('auto')
-        + g.panel.stat.options.withOrientation('auto')
-        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.stat.options.reduceOptions.withFields('')
-        + g.panel.stat.options.reduceOptions.withValues(false)
-        + g.panel.stat.options.withTextMode('auto'),
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull']),
 
       dataNodeCountPanel:
         g.panel.stat.new('Data node count')
@@ -244,8 +203,6 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.stat.standardOptions.color.withMode('thresholds')
-        + g.panel.stat.standardOptions.withMappings([])
-        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -254,15 +211,7 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(1),
         ])
-        + g.panel.stat.standardOptions.withOverrides([])
-        + g.panel.stat.options.withColorMode('value')
-        + g.panel.stat.options.withGraphMode('none')
-        + g.panel.stat.options.withJustifyMode('auto')
-        + g.panel.stat.options.withOrientation('auto')
-        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.stat.options.reduceOptions.withFields('')
-        + g.panel.stat.options.reduceOptions.withValues(false)
-        + g.panel.stat.options.withTextMode('auto'),
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull']),
 
       shardCountPanel:
         g.panel.stat.new('Shard count')
@@ -272,8 +221,6 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.stat.standardOptions.color.withMode('thresholds')
-        + g.panel.stat.standardOptions.withMappings([])
-        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -282,15 +229,7 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(1),
         ])
-        + g.panel.stat.standardOptions.withOverrides([])
-        + g.panel.stat.options.withColorMode('value')
-        + g.panel.stat.options.withGraphMode('none')
-        + g.panel.stat.options.withJustifyMode('auto')
-        + g.panel.stat.options.withOrientation('auto')
-        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.stat.options.reduceOptions.withFields('')
-        + g.panel.stat.options.reduceOptions.withValues(false)
-        + g.panel.stat.options.withTextMode('auto'),
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull']),
 
       activeShardsPercentagePanel:
         g.panel.stat.new('Active shards %')
@@ -300,8 +239,6 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.stat.standardOptions.color.withMode('thresholds')
-        + g.panel.stat.standardOptions.withMappings([])
-        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -313,15 +250,7 @@ local utils = commonlib.utils;
           + g.panel.stat.standardOptions.threshold.step.withValue(100),
         ])
         + g.panel.stat.standardOptions.withUnit('percent')
-        + g.panel.stat.standardOptions.withOverrides([])
-        + g.panel.stat.options.withColorMode('value')
-        + g.panel.stat.options.withGraphMode('none')
-        + g.panel.stat.options.withJustifyMode('auto')
-        + g.panel.stat.options.withOrientation('auto')
-        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.stat.options.reduceOptions.withFields('')
-        + g.panel.stat.options.reduceOptions.withValues(false)
-        + g.panel.stat.options.withTextMode('auto'),
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull']),
       
       topNodesByCPUUsagePanel:
         g.panel.barGauge.new('Top nodes by CPU usage')
@@ -331,26 +260,16 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.barGauge.standardOptions.color.withMode('thresholds')
-        + g.panel.barGauge.standardOptions.withMappings([])
-        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
           g.panel.barGauge.standardOptions.threshold.step.withColor('red')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
-        + g.panel.barGauge.standardOptions.withUnit('percent')
-        + g.panel.barGauge.standardOptions.withMax(100)
         + g.panel.barGauge.standardOptions.withMin(0)
-        + g.panel.barGauge.standardOptions.withOverrides([])
-        + g.panel.barGauge.options.withDisplayMode('gradient')
-        + g.panel.barGauge.options.withMinVizHeight(10)
-        + g.panel.barGauge.options.withMinVizWidth(0)
-        + g.panel.barGauge.options.withOrientation('horizontal')
-        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.barGauge.options.reduceOptions.withFields('')
-        + g.panel.barGauge.options.reduceOptions.withValues(false)
-        + g.panel.barGauge.options.withShowUnfilled(true),
+        + g.panel.barGauge.standardOptions.withMax(100)
+        + g.panel.barGauge.standardOptions.withUnit('percent')
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull']),
 
       breakersTrippedPanel:
         g.panel.barGauge.new('Breakers tripped')
@@ -361,8 +280,6 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.barGauge.standardOptions.color.withMode('thresholds')
-        + g.panel.barGauge.standardOptions.withMappings([])
-        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
@@ -370,15 +287,7 @@ local utils = commonlib.utils;
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
         + g.panel.barGauge.standardOptions.withUnit('trips')
-        + g.panel.barGauge.standardOptions.withOverrides([])
-        + g.panel.barGauge.options.withDisplayMode('gradient')
-        + g.panel.barGauge.options.withMinVizHeight(10)
-        + g.panel.barGauge.options.withMinVizWidth(0)
-        + g.panel.barGauge.options.withOrientation('horizontal')
-        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.barGauge.options.reduceOptions.withFields('')
-        + g.panel.barGauge.options.reduceOptions.withValues(false)
-        + g.panel.barGauge.options.withShowUnfilled(true),
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull']),
 
       shardStatusPanel:
         g.panel.barGauge.new('Shard status')
@@ -388,8 +297,6 @@ local utils = commonlib.utils;
           + g.query.prometheus.withIntervalFactor(2),
           ])
         + g.panel.barGauge.standardOptions.color.withMode('thresholds')
-        + g.panel.barGauge.standardOptions.withMappings([])
-        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
@@ -397,15 +304,7 @@ local utils = commonlib.utils;
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
         + g.panel.barGauge.standardOptions.withUnit('shards')
-        + g.panel.barGauge.standardOptions.withOverrides([])
-        + g.panel.barGauge.options.withDisplayMode('gradient')
-        + g.panel.barGauge.options.withMinVizHeight(10)
-        + g.panel.barGauge.options.withMinVizWidth(0)
-        + g.panel.barGauge.options.withShowUnfilled(true)
-        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
-        + g.panel.barGauge.options.reduceOptions.withFields('')
-        + g.panel.barGauge.options.reduceOptions.withValues(false)
-        + g.panel.barGauge.options.withOrientation('horizontal'),
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull']),
 
       topNodesByDiskUsagePanel:
         g.panel.barGauge.new('Top nodes by disk usage')
