@@ -126,7 +126,9 @@ function(this)
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'increase(opensearch_index_querycache_evictions_count{%(queriesSelector)s, context="total"}[$__interval:])',
+            expr: 'opensearch_index_querycache_evictions_count{%(queriesSelector)s, context="total"}',
+            rangeFunction: 'increase',
+            aggKeepLabels: ['index'],
           },
         },
       },
@@ -139,7 +141,9 @@ function(this)
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'increase(opensearch_index_requestcache_evictions_count{%(queriesSelector)s, context="total"}[$__interval:])',
+            expr: 'opensearch_index_requestcache_evictions_count{%(queriesSelector)s, context="total"}',
+            rangeFunction: 'increase',
+            aggKeepLabels: ['index'],
           },
         },
       },
@@ -152,7 +156,9 @@ function(this)
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'increase(opensearch_index_fielddata_evictions_count{%(queriesSelector)s, context="total"}[$__interval:])',
+            expr: 'opensearch_index_fielddata_evictions_count{%(queriesSelector)s, context="total"}',
+            rangeFunction: 'increase',
+            aggKeepLabels: ['index'],
           },
         },
       },
