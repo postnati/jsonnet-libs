@@ -1143,41 +1143,7 @@ local utils = commonlib.utils;
           + g.query.prometheus.withInterval('1m')
           + g.query.prometheus.withIntervalFactor(2),
         ])
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
-        + g.panel.timeSeries.standardOptions.withMappings([])
-        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
-        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
-        ])
-        + g.panel.timeSeries.standardOptions.withUnit('trips')
-        + g.panel.timeSeries.standardOptions.withOverrides([])
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
-        + g.panel.timeSeries.options.legend.withPlacement('bottom')
-        + g.panel.timeSeries.options.legend.withShowLegend(true)
-        + g.panel.timeSeries.options.tooltip.withMode('single')
-        + g.panel.timeSeries.options.tooltip.withSort('none'),
+        + g.panel.timeSeries.standardOptions.withUnit('trips'),
 
       // JVM heap used vs committed
       jvmHeapUsedVsCommitted:
