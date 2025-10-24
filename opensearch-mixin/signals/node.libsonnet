@@ -20,6 +20,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'opensearch_os_cpu_percent{%(queriesSelector)s}',
+            legendCustomTemplate: '{{node}}',
           },
         },
       },
@@ -31,6 +32,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'opensearch_os_mem_used_percent{%(queriesSelector)s}',
+            legendCustomTemplate: '{{node}}',
           },
         },
       },
@@ -52,7 +54,8 @@ function(this)
         unit: 'Bps',
         sources: {
           prometheus: {
-            expr: 'sum by (' + this.groupAggList + ') (rate(opensearch_fs_io_total_read_bytes{%(queriesSelector)s}[$__rate_interval]))',
+            expr: 'sum by (' + this.groupAggListWithInstance + ') (rate(opensearch_fs_io_total_read_bytes{%(queriesSelector)s}[$__rate_interval]))',
+            legendCustomTemplate: '{{node}} - read',
           },
         },
       },
@@ -63,7 +66,8 @@ function(this)
         unit: 'Bps',
         sources: {
           prometheus: {
-            expr: 'sum by (' + this.groupAggList + ') (rate(opensearch_fs_io_total_write_bytes{%(queriesSelector)s}[$__rate_interval]))',
+            expr: 'sum by (' + this.groupAggListWithInstance + ') (rate(opensearch_fs_io_total_write_bytes{%(queriesSelector)s}[$__rate_interval]))',
+            legendCustomTemplate: '{{node}} - write',
           },
         },
       },

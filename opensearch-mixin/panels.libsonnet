@@ -178,6 +178,15 @@ local utils = commonlib.utils;
           signals.cluster.cluster_status.asTarget()
           + g.query.prometheus.withIntervalFactor(2),
         ])
+        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withMappings([
+          g.panel.stat.standardOptions.mapping.ValueMap.withType()
+          + g.panel.stat.standardOptions.mapping.ValueMap.withOptions({
+            '0': {index: 0, text: 'Green'},
+            '1': {index: 1, text: 'Yellow'},
+            '2': {index: 2, text: 'Red'},
+          }),
+        ])
         + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
@@ -189,26 +198,15 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('red')
           + g.panel.stat.standardOptions.threshold.step.withValue(2),
         ])
-        + g.panel.stat.standardOptions.withMappings([{
-          type: 'value', options: {
-            '0': {index: 0, text: 'Green'},
-            '1': {index: 1, text: 'Yellow'},
-            '2': {index: 2, text: 'Red'},
-          }
-        }])
-        + g.panel.stat.options.withReduceOptions({
-          calcs: [
-            'lastNotNull',
-          ],
-          fields: '',
-          values: false,
-        })
-        + g.panel.stat.standardOptions.color.withMode('thresholds')
-        + g.panel.stat.options.withTextMode('auto')
+        + g.panel.stat.standardOptions.withOverrides([])
+        + g.panel.stat.options.withColorMode('value')
+        + g.panel.stat.options.withGraphMode('none')
         + g.panel.stat.options.withJustifyMode('auto')
         + g.panel.stat.options.withOrientation('auto')
-        + g.panel.stat.options.withColorMode('value')
-        + g.panel.stat.options.withGraphMode('none'),
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.stat.options.reduceOptions.withFields('')
+        + g.panel.stat.options.reduceOptions.withValues(false)
+        + g.panel.stat.options.withTextMode('auto'),
 
       nodeCountPanel:
         g.panel.stat.new('Node count')
@@ -217,6 +215,8 @@ local utils = commonlib.utils;
           signals.cluster.cluster_nodes_number.asTarget()
           + g.query.prometheus.withIntervalFactor(2),
         ])
+        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withMappings([])
         + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
@@ -226,18 +226,14 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(1),
         ])
-        + g.panel.stat.options.withReduceOptions({
-          calcs: [
-            'lastNotNull',
-          ],
-          fields: '',
-          values: false,
-        })
-        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withOverrides([])
         + g.panel.stat.options.withColorMode('value')
         + g.panel.stat.options.withGraphMode('none')
         + g.panel.stat.options.withJustifyMode('auto')
         + g.panel.stat.options.withOrientation('auto')
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.stat.options.reduceOptions.withFields('')
+        + g.panel.stat.options.reduceOptions.withValues(false)
         + g.panel.stat.options.withTextMode('auto'),
 
       dataNodeCountPanel:
@@ -247,6 +243,9 @@ local utils = commonlib.utils;
           signals.cluster.cluster_datanodes_number.asTarget()
           + g.query.prometheus.withIntervalFactor(2),
         ])
+        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withMappings([])
+        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -255,18 +254,14 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(1),
         ])
-        + g.panel.stat.options.withReduceOptions({
-          calcs: [
-            'lastNotNull',
-          ],
-          fields: '',
-          values: false,
-        })
-        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withOverrides([])
         + g.panel.stat.options.withColorMode('value')
         + g.panel.stat.options.withGraphMode('none')
         + g.panel.stat.options.withJustifyMode('auto')
         + g.panel.stat.options.withOrientation('auto')
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.stat.options.reduceOptions.withFields('')
+        + g.panel.stat.options.reduceOptions.withValues(false)
         + g.panel.stat.options.withTextMode('auto'),
 
       shardCountPanel:
@@ -276,6 +271,9 @@ local utils = commonlib.utils;
           signals.cluster.cluster_shards_number_total.withExprWrappersMixin(['sum(', ')']).asTarget()
           + g.query.prometheus.withIntervalFactor(2),
         ])
+        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withMappings([])
+        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -284,18 +282,14 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(1),
         ])
-        + g.panel.stat.options.withReduceOptions({
-          calcs: [
-            'lastNotNull',
-          ],
-          fields: '',
-          values: false,
-        })
-        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withOverrides([])
         + g.panel.stat.options.withColorMode('value')
         + g.panel.stat.options.withGraphMode('none')
         + g.panel.stat.options.withJustifyMode('auto')
         + g.panel.stat.options.withOrientation('auto')
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.stat.options.reduceOptions.withFields('')
+        + g.panel.stat.options.reduceOptions.withValues(false)
         + g.panel.stat.options.withTextMode('auto'),
 
       activeShardsPercentagePanel:
@@ -305,7 +299,9 @@ local utils = commonlib.utils;
           signals.cluster.cluster_shards_active_percent.asTarget()
           + g.query.prometheus.withIntervalFactor(2),
         ])
-        + g.panel.stat.standardOptions.withUnit('percent')
+        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withMappings([])
+        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(null),
@@ -316,48 +312,73 @@ local utils = commonlib.utils;
           g.panel.stat.standardOptions.threshold.step.withColor('green')
           + g.panel.stat.standardOptions.threshold.step.withValue(100),
         ])
-        + g.panel.stat.options.withReduceOptions({
-          calcs: [
-            'lastNotNull',
-          ],
-          fields: '',
-          values: false,
-        })
-        + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.withUnit('percent')
+        + g.panel.stat.standardOptions.withOverrides([])
         + g.panel.stat.options.withColorMode('value')
         + g.panel.stat.options.withGraphMode('none')
         + g.panel.stat.options.withJustifyMode('auto')
         + g.panel.stat.options.withOrientation('auto')
+        + g.panel.stat.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.stat.options.reduceOptions.withFields('')
+        + g.panel.stat.options.reduceOptions.withValues(false)
         + g.panel.stat.options.withTextMode('auto'),
+      
       topNodesByCPUUsagePanel:
         g.panel.barGauge.new('Top nodes by CPU usage')
         + g.panel.barGauge.panelOptions.withDescription('Top nodes by OS CPU usage across the OpenSearch cluster.')
-        + g.panel.barGauge.queryOptions.withTargets([signals.topk.os_cpu_percent_topk.asTarget()])
-        + g.panel.barGauge.standardOptions.withUnit('percent')
-        + g.panel.barGauge.standardOptions.withMax(100)
-        + g.panel.barGauge.standardOptions.withMin(0)
+        + g.panel.barGauge.queryOptions.withTargets([
+          signals.topk.os_cpu_percent_topk.withExprWrappersMixin(['topk(10, sort_desc(', ')']).asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.barGauge.standardOptions.color.withMode('thresholds')
+        + g.panel.barGauge.standardOptions.withMappings([])
+        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
           g.panel.barGauge.standardOptions.threshold.step.withColor('red')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
+        + g.panel.barGauge.standardOptions.withUnit('percent')
+        + g.panel.barGauge.standardOptions.withMax(100)
+        + g.panel.barGauge.standardOptions.withMin(0)
+        + g.panel.barGauge.standardOptions.withOverrides([])
         + g.panel.barGauge.options.withDisplayMode('gradient')
-        + g.panel.barGauge.options.withOrientation('horizontal'),
+        + g.panel.barGauge.options.withMinVizHeight(10)
+        + g.panel.barGauge.options.withMinVizWidth(0)
+        + g.panel.barGauge.options.withOrientation('horizontal')
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.barGauge.options.reduceOptions.withFields('')
+        + g.panel.barGauge.options.reduceOptions.withValues(false)
+        + g.panel.barGauge.options.withShowUnfilled(true),
 
       breakersTrippedPanel:
         g.panel.barGauge.new('Breakers tripped')
         + g.panel.barGauge.panelOptions.withDescription('The total count of circuit breakers tripped across the OpenSearch cluster.')
-        + g.panel.barGauge.queryOptions.withTargets([signals.topk.circuitbreaker_tripped_count_sum.asTarget() { interval: '1m' }])
-        + g.panel.barGauge.standardOptions.withUnit('trips')
+        + g.panel.barGauge.queryOptions.withTargets([
+          signals.topk.circuitbreaker_tripped_count_sum.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.barGauge.standardOptions.color.withMode('thresholds')
+        + g.panel.barGauge.standardOptions.withMappings([])
+        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
           g.panel.barGauge.standardOptions.threshold.step.withColor('red')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
+        + g.panel.barGauge.standardOptions.withUnit('trips')
+        + g.panel.barGauge.standardOptions.withOverrides([])
         + g.panel.barGauge.options.withDisplayMode('gradient')
-        + g.panel.barGauge.options.withOrientation('horizontal'),
+        + g.panel.barGauge.options.withMinVizHeight(10)
+        + g.panel.barGauge.options.withMinVizWidth(0)
+        + g.panel.barGauge.options.withOrientation('horizontal')
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.barGauge.options.reduceOptions.withFields('')
+        + g.panel.barGauge.options.reduceOptions.withValues(false)
+        + g.panel.barGauge.options.withShowUnfilled(true),
 
       shardStatusPanel:
         g.panel.barGauge.new('Shard status')
@@ -366,133 +387,611 @@ local utils = commonlib.utils;
           signals.cluster.cluster_shards_number_by_type.asTarget()
           + g.query.prometheus.withIntervalFactor(2),
           ])
-        + g.panel.barGauge.standardOptions.withUnit('shards')
+        + g.panel.barGauge.standardOptions.color.withMode('thresholds')
+        + g.panel.barGauge.standardOptions.withMappings([])
+        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
           g.panel.barGauge.standardOptions.threshold.step.withColor('red')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
-        + g.panel.barGauge.options.withReduceOptions({
-          calcs: [
-            'lastNotNull',
-          ],
-          fields: '',
-          values: false,
-        })
-        + g.panel.barGauge.standardOptions.color.withMode('thresholds')
+        + g.panel.barGauge.standardOptions.withUnit('shards')
+        + g.panel.barGauge.standardOptions.withOverrides([])
         + g.panel.barGauge.options.withDisplayMode('gradient')
         + g.panel.barGauge.options.withMinVizHeight(10)
         + g.panel.barGauge.options.withMinVizWidth(0)
         + g.panel.barGauge.options.withShowUnfilled(true)
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.barGauge.options.reduceOptions.withFields('')
+        + g.panel.barGauge.options.reduceOptions.withValues(false)
         + g.panel.barGauge.options.withOrientation('horizontal'),
 
       topNodesByDiskUsagePanel:
         g.panel.barGauge.new('Top nodes by disk usage')
         + g.panel.barGauge.panelOptions.withDescription('Top nodes by disk usage across the OpenSearch cluster.')
-        + g.panel.barGauge.queryOptions.withTargets([signals.topk.fs_path_used_percent_topk.asTarget()])
-        + g.panel.barGauge.standardOptions.withUnit('percent')
-        + g.panel.barGauge.standardOptions.withMax(100)
-        + g.panel.barGauge.standardOptions.withMin(0)
+        + g.panel.barGauge.queryOptions.withTargets([
+          signals.topk.fs_path_used_percent_topk.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.barGauge.standardOptions.color.withMode('thresholds')
+        + g.panel.barGauge.standardOptions.withMappings([])
+        + g.panel.barGauge.standardOptions.thresholds.withMode('absolute')
         + g.panel.barGauge.standardOptions.thresholds.withSteps([
           g.panel.barGauge.standardOptions.threshold.step.withColor('green')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(null),
           g.panel.barGauge.standardOptions.threshold.step.withColor('red')
           + g.panel.barGauge.standardOptions.threshold.step.withValue(80),
         ])
+        + g.panel.barGauge.standardOptions.withUnit('percent')
+        + g.panel.barGauge.standardOptions.withMax(100)
+        + g.panel.barGauge.standardOptions.withMin(0)
+        + g.panel.barGauge.standardOptions.withOverrides([])
         + g.panel.barGauge.options.withDisplayMode('gradient')
-        + g.panel.barGauge.options.withOrientation('horizontal'),
+        + g.panel.barGauge.options.withMinVizHeight(10)
+        + g.panel.barGauge.options.withMinVizWidth(0)
+        + g.panel.barGauge.options.withOrientation('horizontal')
+        + g.panel.barGauge.options.reduceOptions.withCalcs(['lastNotNull'])
+        + g.panel.barGauge.options.reduceOptions.withFields('')
+        + g.panel.barGauge.options.reduceOptions.withValues(false)
+        + g.panel.barGauge.options.withShowUnfilled(true),
 
       totalDocumentsPanel:
         g.panel.timeSeries.new('Total documents')
         + g.panel.timeSeries.panelOptions.withDescription('The total count of documents indexed across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.cluster.indices_indexing_index_count_avg.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.cluster.indices_indexing_index_count_avg.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('documents')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       pendingTasksPanel:
         g.panel.timeSeries.new('Pending tasks')
         + g.panel.timeSeries.panelOptions.withDescription('The number of tasks waiting to be executed across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.cluster.cluster_pending_tasks_number.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.cluster.cluster_pending_tasks_number.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('tasks')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       storeSizePanel:
         g.panel.timeSeries.new('Store size')
         + g.panel.timeSeries.panelOptions.withDescription('The total size of the store across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.cluster.indices_store_size_bytes_avg.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.cluster.indices_store_size_bytes_avg.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('bytes')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       maxTaskWaitTimePanel:
         g.panel.timeSeries.new('Max task wait time')
         + g.panel.timeSeries.panelOptions.withDescription('The max wait time for tasks to be executed across the OpenSearch cluster.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.cluster.cluster_task_max_wait_seconds.asTarget()])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('s')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topIndicesByRequestRatePanel:
         g.panel.timeSeries.new('Top indices by request rate')
         + g.panel.timeSeries.panelOptions.withDescription('Top indices by combined fetch, query, and scroll request rate across the OpenSearch cluster.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.topk.search_current_inflight_topk.asTarget()])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('reqps')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topIndicesByRequestLatencyPanel:
         g.panel.timeSeries.new('Top indices by request latency')
         + g.panel.timeSeries.panelOptions.withDescription('Top indices by combined fetch, query, and scroll latency across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.search_avg_latency_topk.asTarget() { interval: '1m' }])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.search_avg_latency_topk.asTarget()
+          + g.query.prometheus.withInterval('1m'),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('s')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topIndicesByCombinedCacheHitRatioPanel:
         g.panel.timeSeries.new('Top indices by combined cache hit ratio')
         + g.panel.timeSeries.panelOptions.withDescription('Top indices by cache hit ratio for the combined request and query cache across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.request_query_cache_hit_rate_topk.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.request_query_cache_hit_rate_topk.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('percent')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topNodesByIngestRatePanel:
         g.panel.timeSeries.new('Top nodes by ingest rate')
         + g.panel.timeSeries.panelOptions.withDescription('Top nodes by rate of ingest across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.ingest_throughput_topk.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.ingest_throughput_topk.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('Bps')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topNodesByIngestLatencyPanel:
         g.panel.timeSeries.new('Top nodes by ingest latency')
         + g.panel.timeSeries.panelOptions.withDescription('Top nodes by ingestion latency across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.ingest_latency_topk.asTarget() { interval: '1m' }])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.ingest_latency_topk.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('s')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topNodesByIngestErrorsPanel:
         g.panel.timeSeries.new('Top nodes by ingest errors')
         + g.panel.timeSeries.panelOptions.withDescription('Top nodes by ingestion failures across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.ingest_failures_topk.asTarget() { interval: '1m' }])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.ingest_failures_topk.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('errors')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topIndicesByIndexRatePanel:
         g.panel.timeSeries.new('Top indices by index rate')
         + g.panel.timeSeries.panelOptions.withDescription('Top indices by rate of document indexing across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.indexing_current_topk.asTarget()])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.indexing_current_topk.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('documents/s')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topIndicesByIndexLatencyPanel:
         g.panel.timeSeries.new('Top indices by index latency')
         + g.panel.timeSeries.panelOptions.withDescription('Top indices by indexing latency across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.indexing_latency_topk.asTarget() { interval: '1m' }])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.indexing_latency_topk.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('s')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       topIndicesByIndexFailuresPanel:
         g.panel.timeSeries.new('Top indices by index failures')
         + g.panel.timeSeries.panelOptions.withDescription('Top indices by index document failures across the OpenSearch cluster.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.topk.indexing_failed_topk.asTarget() { interval: '1m' }])
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.topk.indexing_failed_topk.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('failures')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       // Node Overview Panels - Refactored to use modern patterns and signals
       // Node health row
@@ -504,60 +1003,66 @@ local utils = commonlib.utils;
         g.panel.timeSeries.new('Node CPU usage')
         + g.panel.timeSeries.panelOptions.withDescription('CPU usage percentage of the node\'s Operating System.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.os_cpu_percent.asTarget()])
-        + g.panel.timeSeries.standardOptions.withUnit('percent')
-        + g.panel.timeSeries.standardOptions.withMin(0)
-        + g.panel.timeSeries.standardOptions.withMax(100)
+        + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
         + g.panel.timeSeries.standardOptions.withDecimals(1)
-        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('red')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(80),
-        ])
+        + g.panel.timeSeries.standardOptions.withMax(100)
+        + g.panel.timeSeries.standardOptions.withMin(0)
+        + g.panel.timeSeries.standardOptions.withUnit('percent')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd'),
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
       // Node memory usage
       nodeMemoryUsage:
         g.panel.timeSeries.new('Node memory usage')
-        + g.panel.timeSeries.panelOptions.withDescription('Memory usage percentage of the node\'s Operating System.')
+        + g.panel.timeSeries.panelOptions.withDescription('Memory usage percentage of the node for the Operating System and OpenSearch')
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.os_mem_used_percent.asTarget()])
-        + g.panel.timeSeries.standardOptions.withUnit('percent')
-        + g.panel.timeSeries.standardOptions.withMin(0)
-        + g.panel.timeSeries.standardOptions.withMax(100)
+        + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
         + g.panel.timeSeries.standardOptions.withDecimals(1)
-        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
-          g.panel.timeSeries.standardOptions.threshold.step.withColor('red')
-          + g.panel.timeSeries.standardOptions.threshold.step.withValue(80),
-        ])
+        + g.panel.timeSeries.standardOptions.withMax(100)
+        + g.panel.timeSeries.standardOptions.withMin(0)
+        + g.panel.timeSeries.standardOptions.withUnit('percent')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd'),
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
       // Node I/O
       nodeIO:
         g.panel.timeSeries.new('Node I/O')
-        + g.panel.timeSeries.panelOptions.withDescription('I/O operations per second on the node\'s Operating System.')
+        + g.panel.timeSeries.panelOptions.withDescription('Node file system read and write data.')
         + g.panel.timeSeries.queryOptions.withTargets([
           signals.node.fs_read_bps.asTarget(),
           signals.node.fs_write_bps.asTarget(),
         ])
-        + g.panel.timeSeries.standardOptions.withUnit('iops')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
+        + g.panel.timeSeries.standardOptions.withUnit('Bps')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          g.panel.timeSeries.fieldOverride.byRegexp.new('/time|used|busy|util/')
+          + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('custom.axisSoftMax', 100)
+          + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('custom.drawStyle', 'points')
+          + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('unit', 'percent'),
+        ])
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
       // Node open connections
       nodeOpenConnections:
