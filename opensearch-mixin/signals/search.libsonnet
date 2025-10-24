@@ -15,36 +15,45 @@ function(this)
       search_query_current_avg: {
         name: 'Search queries in-flight',
         description: 'In-flight search queries.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_query_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"})',
+            expr: 'opensearch_index_search_query_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"}',
             legendCustomTemplate: '{{index}} - query',
+            aggKeepLabels: ['index'],
           },
         },
       },
       search_fetch_current_avg: {
         name: 'Search fetch in-flight',
         description: 'In-flight fetch operations.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_fetch_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"})',
+            expr: 'opensearch_index_search_fetch_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"}',
             legendCustomTemplate: '{{index}} - fetch',
+            aggKeepLabels: ['index'],
           },
         },
       },
       search_scroll_current_avg: {
         name: 'Search scroll in-flight',
         description: 'In-flight scroll operations.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'ops',
         sources: {
           prometheus: {
-            expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_scroll_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"})',
+            expr: 'opensearch_index_search_scroll_current_number{%(queriesSelectorGroupOnly)s,index=~"$index", context=~"total"}',
             legendCustomTemplate: '{{index}} - scroll',
+            aggKeepLabels: ['index'],
           },
         },
       },
@@ -111,55 +120,65 @@ function(this)
       query_cache_evictions: {
         name: 'Query cache evictions',
         description: 'Query cache evictions per interval.',
-        type: 'raw',
+        type: 'counter',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_querycache_evictions_count{%(queriesSelector)s, context="total"}[$__interval:]))',
+            expr: 'increase(opensearch_index_querycache_evictions_count{%(queriesSelector)s, context="total"}[$__interval:])',
           },
         },
       },
       request_cache_evictions: {
         name: 'Request cache evictions',
         description: 'Request cache evictions per interval.',
-        type: 'raw',
+        type: 'counter',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_requestcache_evictions_count{%(queriesSelector)s, context="total"}[$__interval:]))',
+            expr: 'increase(opensearch_index_requestcache_evictions_count{%(queriesSelector)s, context="total"}[$__interval:])',
           },
         },
       },
       fielddata_evictions: {
         name: 'Fielddata evictions',
         description: 'Fielddata evictions per interval.',
-        type: 'raw',
+        type: 'counter',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (increase(opensearch_index_fielddata_evictions_count{%(queriesSelector)s, context="total"}[$__interval:]))',
+            expr: 'increase(opensearch_index_fielddata_evictions_count{%(queriesSelector)s, context="total"}[$__interval:])',
           },
         },
       },
       query_cache_memory: {
         name: 'Query cache memory bytes',
         description: 'Query cache memory.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'bytes',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_querycache_memory_size_bytes{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_querycache_memory_size_bytes{%(queriesSelector)s, context="total"}',
           },
         },
       },
       request_cache_memory: {
         name: 'Request cache memory bytes',
         description: 'Request cache memory.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'bytes',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_requestcache_memory_size_bytes{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_requestcache_memory_size_bytes{%(queriesSelector)s, context="total"}',
           },
         },
       },
