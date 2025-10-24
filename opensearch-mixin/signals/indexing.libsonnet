@@ -161,7 +161,8 @@ function(this)
         unit: 'bytes',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_merges_current_size_bytes{%(queriesSelector)s, context="total"}) > 0',
+            expr: 'avg by(' + this.groupAggList + ',index) (opensearch_index_merges_current_size_bytes{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}) > 0',
+            legendCustomTemplate: '{{index}}',
           },
         },
       },
@@ -221,11 +222,15 @@ function(this)
       segments_memory_bytes: {
         name: 'Segments memory bytes',
         description: 'Segment memory usage.',
-        type: 'raw',
+        type: 'gauge',
+        aggLevel: 'group',
+        aggFunction: 'avg',
         unit: 'bytes',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (opensearch_index_segments_memory_bytes{%(queriesSelector)s, context="total"})',
+            expr: 'opensearch_index_segments_memory_bytes{%(queriesSelectorGroupOnly)s,index=~"$index", context="total"}',
+            legendCustomTemplate: '{{index}}',
+            aggKeepLabels: ['index'],
           },
         },
       },
