@@ -103,7 +103,8 @@ function(this)
         unit: 'bit/s',
         sources: {
           prometheus: {
-            expr: 'sum by (' + this.groupAggList + ') (rate(opensearch_transport_tx_bytes_count{%(queriesSelector)s}[$__rate_interval])) * 8',
+            expr: 'sum by (' + this.groupAggListWithInstance + ') (rate(opensearch_transport_tx_bytes_count{%(queriesSelector)s}[$__rate_interval])) * 8',
+            legendCustomTemplate: '{{node}} - sent',
           },
         },
       },
@@ -114,7 +115,8 @@ function(this)
         unit: 'bit/s',
         sources: {
           prometheus: {
-            expr: 'sum by (' + this.groupAggList + ') (rate(opensearch_transport_rx_bytes_count{%(queriesSelector)s}[$__rate_interval])) * 8',
+            expr: 'sum by (' + this.groupAggListWithInstance + ') (rate(opensearch_transport_rx_bytes_count{%(queriesSelector)s}[$__rate_interval])) * 8',
+            legendCustomTemplate: '{{node}} - received',
           },
         },
       },

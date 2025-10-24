@@ -1124,18 +1124,29 @@ local utils = commonlib.utils;
       // Node network traffic
       nodeNetworkTraffic:
         g.panel.timeSeries.new('Node network traffic')
-        + g.panel.timeSeries.panelOptions.withDescription('Network traffic on the node\'s Operating System.')
+        + g.panel.timeSeries.panelOptions.withDescription('Node network traffic sent and received.')
         + g.panel.timeSeries.queryOptions.withTargets([
-          signals.node.transport_rx_bps.asTarget(),
           signals.node.transport_tx_bps.asTarget(),
+          signals.node.transport_rx_bps.asTarget(),
         ])
-        + g.panel.timeSeries.standardOptions.withUnit('Bps')
+        + g.panel.timeSeries.standardOptions.withUnit('bps')
+        + g.panel.timeSeries.standardOptions.withDecimals(1)
+        + g.panel.timeSeries.standardOptions.withNoValue('No traffic')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('out(-) | in(+)')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          g.panel.timeSeries.fieldOverride.byRegexp.new('/sent/')
+          + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('custom.transform', 'negative-Y'),
+        ])
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
       // Circuit breakers
       circuitBreakers:
