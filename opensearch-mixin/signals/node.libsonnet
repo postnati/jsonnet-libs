@@ -44,6 +44,7 @@ function(this)
         sources: {
           prometheus: {
             expr: '100 * opensearch_os_swap_used_bytes{%(queriesSelector)s} / clamp_min((opensearch_os_swap_used_bytes{%(queriesSelector)s} + opensearch_os_swap_free_bytes{%(queriesSelector)s}), 1)',
+            legendCustomTemplate: '{{node}}',
           },
         },
       },

@@ -1104,15 +1104,22 @@ local utils = commonlib.utils;
       // Node memory swap
       nodeMemorySwap:
         g.panel.timeSeries.new('Node memory swap')
-        + g.panel.timeSeries.panelOptions.withDescription('Memory swap usage of the node\'s Operating System.')
+        + g.panel.timeSeries.panelOptions.withDescription('Percentage of swap space used by OpenSearch and the Operating System on the selected node.')
         + g.panel.timeSeries.queryOptions.withTargets([signals.node.os_swap_used_percent.asTarget()])
-        + g.panel.timeSeries.standardOptions.withUnit('bytes')
+        + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
+        + g.panel.timeSeries.standardOptions.withDecimals(1)
+        + g.panel.timeSeries.standardOptions.withMax(100)
+        + g.panel.timeSeries.standardOptions.withMin(0)
+        + g.panel.timeSeries.standardOptions.withUnit('percent')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.tooltip.withMode('multi')
+        + g.panel.timeSeries.options.tooltip.withSort('desc'),
 
       // Node network traffic
       nodeNetworkTraffic:
