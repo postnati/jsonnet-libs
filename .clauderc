@@ -12,19 +12,85 @@
   3. c. Find the signal definition in the appropriate signals file (e.g., opensearch-mixin/signals/cluster.libsonnet)
 
   3. d. Update the signal properties to match the legacy expression:
+
+    IMPORTANT: Use signal framework helpers for simple aggregations instead of type: 'raw'
+
     - type: Set to 'gauge', 'counter', or 'raw'
-        - Use 'raw' if you need full control over the expression
-      - Use 'gauge' or 'counter' if using the signal framework's aggregation
-    - aggLevel: Controls the aggregation scope
-        - 'group' → aggregates by job,opensearch_cluster (uses queriesSelectorGroupOnly)
-      - 'instance' → aggregates by job,opensearch_cluster,node (uses queriesSelector)
+      - Use 'gauge' for current values that can go up or down (e.g., cpu_percent, memory_bytes)
+      - Use 'counter' for monotonically increasing values (e.g., request_count, evictions_count)
+      - Use 'raw' ONLY for complex expressions with multiple operations (division, clamp_min, etc.)
+
+    - aggLevel: Controls the aggregation scope (when type is 'gauge' or 'counter')
+      - 'group' → aggregates by job,opensearch_cluster (groupLabels only)
+      - 'instance' → aggregates by job,opensearch_cluster,node (groupLabels + instanceLabels)
       - 'none' → no automatic aggregation wrapper
-    - aggFunction: The aggregation function to use
-        - 'min', 'max', 'avg', 'sum' → generates min by(...), max by(...), etc.
-    - aggKeepLabels: Additional labels to keep in aggregation (e.g., ['type'])
+
+    - aggFunction: The aggregation function to use (when type is 'gauge' or 'counter')
+      - 'min', 'max', 'avg', 'sum' → generates min by(...), max by(...), etc.
+      - Framework automatically wraps the expr with: aggFunction by (labels) (expr)
+
+    - aggKeepLabels: Additional labels to preserve in aggregation (e.g., ['index'], ['type'])
+      - Example: aggKeepLabels: ['index'] generates avg by (job,opensearch_cluster,index) (...)
+      - Without this, you get avg by (job,opensearch_cluster) (...)
+
+    - rangeFunction: For counter metrics that need increase() or rate() (when type is 'counter')
+      - 'increase' → wraps expr with increase(expr[$__interval:] offset -$__interval)
+      - 'rate' → wraps expr with rate(expr[$__rate_interval])
+      - Framework handles the range window and offset automatically
+      - IMPORTANT: When using rangeFunction, DO NOT include increase() or rate() in expr
+
     - legendCustomTemplate: Must match the legendFormat from legacy JSON
-        - Example: '{{opensearch_cluster}}', '{{node}}', '{{type}}'
+      - Example: '{{opensearch_cluster}}', '{{node}}', '{{type}}', '{{index}}'
       - IMPORTANT: No spaces around label names: '{{index}}' NOT '{{ index }}'
+
+    Examples of when to use each approach:
+
+    Example 1: Simple gauge aggregation (USE FRAMEWORK HELPERS)
+    Legacy expr: avg by (job,opensearch_cluster,index) (opensearch_index_search_query_current_number{...})
+
+    OLD (type: 'raw'):
+      type: 'raw',
+      expr: 'avg by (job,opensearch_cluster,index) (opensearch_index_search_query_current_number{%(queriesSelectorGroupOnly)s,index=~"$index"})',
+
+    NEW (use framework):
+      type: 'gauge',
+      aggLevel: 'group',
+      aggFunction: 'avg',
+      expr: 'opensearch_index_search_query_current_number{%(queriesSelectorGroupOnly)s,index=~"$index"}',
+      aggKeepLabels: ['index'],
+
+    Example 2: Counter with increase (USE FRAMEWORK HELPERS)
+    Legacy expr: avg by (job,opensearch_cluster,index) (increase(opensearch_index_querycache_evictions_count{...}[$__interval:]))
+
+    OLD (type: 'raw'):
+      type: 'raw',
+      expr: 'avg by (job,opensearch_cluster,index) (increase(opensearch_index_querycache_evictions_count{%(queriesSelector)s}[$__interval:]))',
+
+    NEW (use framework):
+      type: 'counter',
+      aggLevel: 'group',
+      aggFunction: 'avg',
+      expr: 'opensearch_index_querycache_evictions_count{%(queriesSelector)s}',
+      rangeFunction: 'increase',
+      aggKeepLabels: ['index'],
+
+    Example 3: Complex expression (MUST USE 'raw')
+    Legacy expr: avg by (job,opensearch_cluster,index) (increase(time_seconds{...})[$__interval:] / clamp_min(increase(count{...})[$__interval:], 1))
+
+    MUST use type: 'raw' because:
+    - Has division operation
+    - Has clamp_min() function
+    - Uses multiple metrics
+    - Cannot be expressed with simple aggregation + rangeFunction
+
+    Keep as:
+      type: 'raw',
+      expr: 'avg by (job,opensearch_cluster,index) (increase(opensearch_index_search_query_time_seconds{%(queriesSelectorGroupOnly)s,index=~"$index"}[$__interval:]) / clamp_min(increase(opensearch_index_search_query_count{%(queriesSelectorGroupOnly)s,index=~"$index"}[$__interval:]), 1))',
+
+    Rule of thumb:
+    - If legacy has ONLY: avg/sum/min/max by (...) (metric{...}) → use type: 'gauge' with helpers
+    - If legacy has ONLY: avg/sum/min/max by (...) (increase/rate(metric{...})) → use type: 'counter' with rangeFunction
+    - If legacy has: division, multiplication, addition, clamp_min, or multiple metrics → use type: 'raw'
     - IMPORTANT - Selector template variables (%(queriesSelector)s and %(queriesSelectorGroupOnly)s):
         - These template variables are substituted during the build process
       - They are constructed from the mixin's groupLabels and instanceLabels configuration
