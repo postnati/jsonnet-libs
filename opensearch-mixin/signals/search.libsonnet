@@ -55,7 +55,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (increase(opensearch_index_search_query_time_seconds{%(queriesSelector)s}[$__interval:]) / clamp_min(increase(opensearch_index_search_query_count{%(queriesSelector)s, context="total"}[$__interval:]), 1))',
+            expr: 'avg by (job,opensearch_cluster,index) (increase(opensearch_index_search_query_time_seconds{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index"}[$__interval:]) / clamp_min(increase(opensearch_index_search_query_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}[$__interval:]), 1))',
+            legendCustomTemplate: '{{index}} - query',
           },
         },
       },
@@ -66,7 +67,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (increase(opensearch_index_search_fetch_time_seconds{%(queriesSelector)s, context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_search_fetch_count{%(queriesSelector)s, context="total"}[$__interval:]), 1))',
+            expr: 'avg by (job,opensearch_cluster,index) (increase(opensearch_index_search_fetch_time_seconds{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_search_fetch_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}[$__interval:]), 1))',
+            legendCustomTemplate: '{{index}} - fetch',
           },
         },
       },
@@ -77,7 +79,8 @@ function(this)
         unit: 's',
         sources: {
           prometheus: {
-            expr: 'avg by (' + this.groupAggList + ') (increase(opensearch_index_search_scroll_time_seconds{%(queriesSelector)s, context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_search_scroll_count{%(queriesSelector)s, context="total"}[$__interval:]), 1))',
+            expr: 'avg by (job,opensearch_cluster,index) (increase(opensearch_index_search_scroll_time_seconds{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}[$__interval:]) / clamp_min(increase(opensearch_index_search_scroll_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}[$__interval:]), 1))',
+            legendCustomTemplate: '{{index}} - scroll',
           },
         },
       },
@@ -88,7 +91,8 @@ function(this)
         unit: 'percent',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (100 * (opensearch_index_requestcache_hit_count{%(queriesSelector)s, context="total"}) / clamp_min(opensearch_index_requestcache_hit_count{%(queriesSelector)s, context="total"} + opensearch_index_requestcache_miss_count{%(queriesSelector)s, context="total"}, 1))',
+            expr: 'avg by(job,opensearch_cluster,index) (100 * (opensearch_index_requestcache_hit_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}) / clamp_min(opensearch_index_requestcache_hit_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"} + opensearch_index_requestcache_miss_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}, 1))',
+            legendCustomTemplate: '{{index}} - request',
           },
         },
       },
@@ -99,7 +103,8 @@ function(this)
         unit: 'percent',
         sources: {
           prometheus: {
-            expr: 'avg by(' + this.groupAggList + ') (100 * (opensearch_index_querycache_hit_count{%(queriesSelector)s, context="total"}) / clamp_min(opensearch_index_querycache_hit_count{%(queriesSelector)s, context="total"} + opensearch_index_querycache_miss_number{%(queriesSelector)s, context="total"}, 1))',
+            expr: 'avg by(job,opensearch_cluster,index) (100 * (opensearch_index_querycache_hit_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}) / clamp_min(opensearch_index_querycache_hit_count{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"} + opensearch_index_querycache_miss_number{opensearch_cluster!="",job=~"$job",opensearch_cluster=~"$opensearch_cluster",index=~"$index", context="total"}, 1))',
+            legendCustomTemplate: '{{index}} - query',
           },
         },
       },

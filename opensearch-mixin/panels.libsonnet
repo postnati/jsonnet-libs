@@ -658,23 +658,40 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.panelOptions.withDescription('Latency of fetch, scroll, and query requests by selected index.')
         + g.panel.timeSeries.queryOptions.withTargets([
           signals.search.search_query_latency_avg.asTarget()
-          + g.query.prometheus.withInterval('1m'),
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
           signals.search.search_fetch_latency_avg.asTarget()
-          + g.query.prometheus.withInterval('1m'),
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
           signals.search.search_scroll_latency_avg.asTarget()
-          + g.query.prometheus.withInterval('1m'),
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.withUnit('s')
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          {
+            matcher: {id: 'byValue', options: {op: 'gte', reducer: 'allIsZero', value: 0}},
+            properties: [{id: 'custom.hideFrom', value: {legend: true, tooltip: true, viz: false}}],
+          },
+        ])
         + g.panel.timeSeries.options.tooltip.withMode('multi'),
 
       searchCacheHitRatioPanel:
         g.panel.timeSeries.new('Cache hit ratio')
         + g.panel.timeSeries.panelOptions.withDescription('Ratio of query cache and request cache hits and misses.')
         + g.panel.timeSeries.queryOptions.withTargets([
-          signals.search.request_cache_hit_rate.asTarget(),
-          signals.search.query_cache_hit_rate.asTarget(),
+          signals.search.request_cache_hit_rate.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+          signals.search.query_cache_hit_rate.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.withUnit('percent')
+        + g.panel.timeSeries.standardOptions.withOverrides([
+          {
+            matcher: {id: 'byValue', options: {op: 'gte', reducer: 'allIsZero', value: 0}},
+            properties: [{id: 'custom.hideFrom', value: {legend: true, tooltip: true, viz: false}}],
+          },
+        ])
         + g.panel.timeSeries.options.tooltip.withMode('multi'),
 
       searchCacheEvictionsPanel:
