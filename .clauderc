@@ -1,7 +1,9 @@
+CRITICAL: ALWAYS follow the complete workflow including step 7 (comparison). DO NOT skip the comparison step.
+
 1. Identify the panel in opensearch-mixin/panels.libsonnet and determine its type (stat, barGauge, timeSeries, table, etc.)
   2. Locate the legacy reference panel:
-    - Find the corresponding dashboard in opensearch-mixin-legacy/dashboards/
-    - Extract the panel JSON by title
+    - Find the corresponding dashboard in opensearch-mixin-legacy/dashboards_out/ (NOT dashboards/)
+    - Extract the panel JSON by title: jq '.panels[] | select(.title == "TITLE")' legacy.json
     - This becomes the source of truth for all comparisons
   3. Compare and update the signal definition:
 
@@ -446,23 +448,34 @@
 
   7. Build and compare the generated output:
 
-  7.a. Run make all in the opensearch-mixin directory to generate the JSON output
+  ⚠️ CRITICAL: This step is MANDATORY. DO NOT skip it. Even if you think the panel is correct,
+  you MUST build and compare to verify. Missing configurations are common and only caught by comparison.
+
+  7.a. Run make dashboards_out in the opensearch-mixin directory to generate the JSON output
 
   7.b. Extract both panels for comparison:
+  cd /path/to/opensearch-jsonnet-libs  # Go to repo root
+  jq '.panels[] | select(.title == "[PANEL_TITLE]")' opensearch-mixin-legacy/dashboards_out/[DASHBOARD_NAME].json > /tmp/legacy_panel.json
   jq '.panels[] | select(.title == "[PANEL_TITLE]")' opensearch-mixin/dashboards_out/[DASHBOARD_NAME].json > /tmp/new_panel.json
-  jq '.panels[] | select(.title == "[PANEL_TITLE]")' [LEGACY_JSON_PATH] > /tmp/legacy_panel.json
 
   7.c. Compare the panels excluding auto-generated fields:
   diff -u \
-    <(jq --sort-keys 'del(.gridPos, .id, .pluginVersion, .datasource, .targets[0].datasource, .targets[0].instant, .targets[0].refId)' /tmp/legacy_panel.json) \
-    <(jq --sort-keys 'del(.gridPos, .id, .pluginVersion, .datasource, .targets[0].datasource, .targets[0].instant, .targets[0].refId)' /tmp/new_panel.json)
+    <(jq --sort-keys 'del(.gridPos, .id, .pluginVersion, .datasource, .targets[].datasource, .targets[].instant, .targets[].refId)' /tmp/legacy_panel.json) \
+    <(jq --sort-keys 'del(.gridPos, .id, .pluginVersion, .datasource, .targets[].datasource, .targets[].instant, .targets[].refId)' /tmp/new_panel.json)
 
-  7.d. Analyze differences:
+  Note: Use .targets[] (with brackets) to handle multiple targets correctly.
+
+  7.d. Analyze differences - Common missing items that comparison catches:
+    - Field overrides (byName, byRegexp, byValue matchers)
+    - Custom legend formats in signals (legendCustomTemplate)
+    - Wrong selector template variable (queriesSelector vs queriesSelectorGroupOnly)
+    - Missing label filters in signal expressions (e.g., index=~"$index")
+    - Non-default tooltip/legend options
     - Ignore cosmetic differences like expression formatting (newlines/spaces)
-    - Identify any missing fields or incorrect values
+    - Signal framework differences (offset -$__interval added automatically)
     - If differences exist, go back to step 3-5 and add the missing configuration
 
-  7.e. Repeat until the panels match - Continue iterating through steps 3-7 until the diff shows only acceptable differences (formatting, auto-generated fields)
+  7.e. Repeat until the panels match - Continue iterating through steps 3-7 until the diff shows only acceptable differences (formatting, auto-generated fields, signal framework patterns)
 
   8. Important notes:
     - OMIT withMappings([]) - empty array is default (only include if has actual mappings)
