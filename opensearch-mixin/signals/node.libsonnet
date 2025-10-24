@@ -127,8 +127,8 @@ function(this)
         unit: 'count',
         sources: {
           prometheus: {
-            expr: 'sum by (' + this.groupAggList + ') (increase(opensearch_circuitbreaker_tripped_count{%(queriesSelectorGroupOnly)s}[$__interval:]))',
-            legendCustomTemplate: '{{ name }}',
+            expr: 'sum by (name, ' + this.groupAggListWithInstance + ') (increase(opensearch_circuitbreaker_tripped_count{%(queriesSelector)s}[$__interval:]))',
+            legendCustomTemplate: '{{node}} - {{ name }}',
           },
         },
       },

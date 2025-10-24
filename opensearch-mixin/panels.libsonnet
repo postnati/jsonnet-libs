@@ -994,9 +994,6 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       // Node Overview Panels - Refactored to use modern patterns and signals
-      // Node health row
-      nodeHealthRow:
-        g.panel.row.new('Node health'),
 
       // Node CPU usage
       nodeCpuUsage:
@@ -1124,36 +1121,12 @@ local utils = commonlib.utils;
       // Node network traffic
       nodeNetworkTraffic:
         g.panel.timeSeries.new('Node network traffic')
-        + g.panel.timeSeries.panelOptions.withDescription('Node network traffic sent and received.')
+        + g.panel.timeSeries.panelOptions.withDescription('Network traffic on the node\'s Operating System.')
         + g.panel.timeSeries.queryOptions.withTargets([
-          signals.node.transport_tx_bps.asTarget(),
           signals.node.transport_rx_bps.asTarget(),
+          signals.node.transport_tx_bps.asTarget(),
         ])
-        + g.panel.timeSeries.standardOptions.withUnit('bps')
-        + g.panel.timeSeries.standardOptions.withDecimals(1)
-        + g.panel.timeSeries.standardOptions.withNoValue('No traffic')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('out(-) | in(+)')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('opacity')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-        + g.panel.timeSeries.standardOptions.withOverrides([
-          g.panel.timeSeries.fieldOverride.byRegexp.new('/sent/')
-          + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('custom.transform', 'negative-Y'),
-        ])
-        + g.panel.timeSeries.options.legend.withCalcs([])
-        + g.panel.timeSeries.options.legend.withDisplayMode('list')
-        + g.panel.timeSeries.options.tooltip.withMode('multi')
-        + g.panel.timeSeries.options.tooltip.withSort('desc'),
-
-      // Circuit breakers
-      circuitBreakers:
-        g.panel.timeSeries.new('Circuit breakers')
-        + g.panel.timeSeries.panelOptions.withDescription('Circuit breaker trips on the node.')
-        + g.panel.timeSeries.queryOptions.withTargets([signals.node.circuitbreaker_tripped_sum_by_name.asTarget()])
-        + g.panel.timeSeries.standardOptions.withUnit('trips')
+        + g.panel.timeSeries.standardOptions.withUnit('Bps')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(5)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('scheme')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('smooth')
@@ -1161,9 +1134,50 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
 
-      // Node JVM row
-      nodeJVMRow:
-        g.panel.row.new('Node JVM'),
+      // Circuit breakers
+      circuitBreakers:
+        g.panel.timeSeries.new('Circuit breakers')
+        + g.panel.timeSeries.panelOptions.withDescription('Circuit breakers tripped on the selected node by type')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.node.circuitbreaker_tripped_sum_by_name.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.color.withMode('palette-classic')
+        + g.panel.timeSeries.standardOptions.withMappings([])
+        + g.panel.timeSeries.standardOptions.thresholds.withMode('absolute')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          g.panel.timeSeries.standardOptions.threshold.step.withColor('green')
+          + g.panel.timeSeries.standardOptions.threshold.step.withValue(null),
+        ])
+        + g.panel.timeSeries.standardOptions.withUnit('trips')
+        + g.panel.timeSeries.standardOptions.withOverrides([])
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisCenteredZero(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisColorMode('text')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisLabel('')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withAxisPlacement('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withBarAlignment(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withDrawStyle('line')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withGradientMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withLegend(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withTooltip(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.hideFrom.withViz(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineInterpolation('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(1)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withPointSize(5)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.scaleDistribution.withType('linear')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('auto')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withGroup('A')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('none')
+        + g.panel.timeSeries.fieldConfig.defaults.custom.thresholdsStyle.withMode('off')
+        + g.panel.timeSeries.options.legend.withCalcs([])
+        + g.panel.timeSeries.options.legend.withDisplayMode('list')
+        + g.panel.timeSeries.options.legend.withPlacement('bottom')
+        + g.panel.timeSeries.options.legend.withShowLegend(true)
+        + g.panel.timeSeries.options.tooltip.withMode('single')
+        + g.panel.timeSeries.options.tooltip.withSort('none'),
 
       // JVM heap used vs committed
       jvmHeapUsedVsCommitted:
@@ -1274,10 +1288,6 @@ local utils = commonlib.utils;
         + g.panel.timeSeries.fieldConfig.defaults.custom.withLineWidth(2)
         + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
         + g.panel.timeSeries.standardOptions.color.withMode('palette-classic'),
-
-      // Thread pools row
-      threadPoolsRow:
-        g.panel.row.new('Thread pools'),
 
       // Thread pool threads
       threadPoolThreads:
