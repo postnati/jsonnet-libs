@@ -80,11 +80,17 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       transactionsCreatedPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Created Transactions',
-          targets=[signals.transactions.transactionsCreated.asTarget() { interval: '5m' }],
-          description='Number of transactions that were created over time'
-        )
+        g.panel.timeSeries.new('Created transactions')
+        + g.panel.timeSeries.panelOptions.withDescription('Number of transactions that were created over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.transactions.transactionsCreated.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       transactionsInFlightPanel:
