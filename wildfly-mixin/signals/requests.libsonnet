@@ -20,8 +20,8 @@ function(this)
         unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'rate(wildfly_undertow_request_count_total{%(queriesSelector)s}[$__rate_interval])',
-            legendCustomTemplate: '{{ server }} - {{ http_listener }} - {{ https_listener }}',
+            expr: 'rate(wildfly_undertow_request_count_total{%(queriesSelector)s,server=~"$server"}[$__rate_interval])',
+            legendCustomTemplate: '{{server}} - {{http_listener}}{{https_listener}}',
           },
         },
       },

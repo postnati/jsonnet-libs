@@ -7,13 +7,13 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       local signals = this.signals,
 
       requestsPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Requests',
-          targets=[signals.requests.requestsRate.asTarget() { interval: '5m' }],
-          description='Requests rate over time'
-        )
-        + g.panel.timeSeries.standardOptions.withUnit('reqps')
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+        g.panel.timeSeries.new('Requests')
+        + g.panel.timeSeries.panelOptions.withDescription('Requests rate over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.requests.requestsRate.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.withUnit('reqps'),
       requestErrorsPanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Request Errors',
