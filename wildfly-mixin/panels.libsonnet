@@ -149,11 +149,18 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       sessionsRejectedPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Rejected Sessions',
-           targets=[signals.sessions.rejectedSessions.asTarget() { interval: '5m' }],
-          description='Number of sessions that have been rejected from a deployment over time'
-        )
+        g.panel.timeSeries.new('Rejected sessions')
+        + g.panel.timeSeries.panelOptions.withDescription('Number of sessions that have been rejected from a deployment over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.sessions.rejectedSessions.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.withDecimals(0)
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
     },
 }

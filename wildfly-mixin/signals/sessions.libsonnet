@@ -41,10 +41,9 @@ function(this)
         nameShort: 'Rejected Sessions',
         type: 'raw',
         description: 'Number of sessions that have been rejected from a deployment over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'increase(wildfly_undertow_rejected_sessions_total{%(queriesSelector)s}[$__interval])',
+            expr: 'increase(wildfly_undertow_rejected_sessions_total{%(queriesSelector)s,deployment=~"$deployment"}[$__interval])',
             legendCustomTemplate: '{{deployment}}',
           },
         },
