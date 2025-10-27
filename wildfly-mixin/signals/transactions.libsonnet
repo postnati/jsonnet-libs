@@ -41,7 +41,6 @@ function(this)
         nameShort: 'Aborted Transactions',
         type: 'raw',
         description: 'Number of transactions that have been aborted over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
             expr: 'increase(wildfly_transactions_number_of_aborted_transactions_total{%(queriesSelector)s}[$__interval])',

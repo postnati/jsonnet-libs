@@ -258,19 +258,26 @@
          },
          {
             "datasource": {
-               "type": "prometheus",
-               "uid": "${prometheus_datasource}"
+               "type": "datasource",
+               "uid": "-- Mixed --"
             },
             "description": "Number of transactions that have been aborted over time",
             "fieldConfig": {
                "defaults": {
                   "custom": {
-                     "fillOpacity": 30,
-                     "gradientMode": "opacity",
-                     "lineInterpolation": "smooth",
-                     "lineWidth": 2,
-                     "showPoints": "never",
                      "spanNulls": false
+                  },
+                  "thresholds": {
+                     "steps": [
+                        {
+                           "color": "green",
+                           "value": null
+                        },
+                        {
+                           "color": "red",
+                           "value": 80
+                        }
+                     ]
                   }
                }
             },
@@ -281,16 +288,6 @@
                "y": 18
             },
             "id": 7,
-            "options": {
-               "legend": {
-                  "calcs": [ ],
-                  "displayMode": "list"
-               },
-               "tooltip": {
-                  "mode": "multi",
-                  "sort": "desc"
-               }
-            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -301,12 +298,13 @@
                   "expr": "increase(wildfly_transactions_number_of_aborted_transactions_total{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}[$__interval])",
                   "format": "time_series",
                   "instant": false,
-                  "interval": "5m",
+                  "interval": "1m",
+                  "intervalFactor": 2,
                   "legendFormat": "{{instance}}",
                   "refId": "Aborted Transactions"
                }
             ],
-            "title": "Aborted Transactions",
+            "title": "Aborted transactions",
             "type": "timeseries"
          }
       ],
