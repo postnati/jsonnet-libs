@@ -28,12 +28,12 @@ function(this)
       networkSentThroughput: {
         name: 'Network Sent Throughput',
         nameShort: 'Network Sent',
-        type: 'raw',
+        type: 'counter',
         description: 'Throughput rate of data sent over time',
-        unit: 'reqps',
+        unit: 'binBps',
         sources: {
           prometheus: {
-            expr: 'rate(wildfly_undertow_bytes_sent_total_bytes{%(queriesSelector)s}[$__rate_interval])',
+            expr: 'wildfly_undertow_bytes_sent_total_bytes{%(queriesSelector)s,server=~"$server"}',
             legendCustomTemplate: '{{server}} - {{http_listener}}{{https_listener}}',
           },
         },
