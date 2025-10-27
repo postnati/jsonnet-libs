@@ -27,9 +27,8 @@ function(this)
       transactionsInFlight: {
         name: 'In-flight Transactions',
         nameShort: 'In-flight Transactions',
-        type: 'raw',
+        type: 'gauge',
         description: 'Number of transactions that are in-flight over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
             expr: 'wildfly_transactions_number_of_inflight_transactions{%(queriesSelector)s}',

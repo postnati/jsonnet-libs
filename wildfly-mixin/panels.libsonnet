@@ -94,11 +94,16 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       transactionsInFlightPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'In-flight Transactions',
-          targets=[signals.transactions.transactionsInFlight.asTarget() { interval: '5m' }],
-          description='Number of transactions that are in-flight over time'
-        )
+        g.panel.timeSeries.new('In-flight transactions')
+        + g.panel.timeSeries.panelOptions.withDescription('Number of transactions that are in-flight over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.transactions.transactionsInFlight.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       transactionsAbortedPanel:
