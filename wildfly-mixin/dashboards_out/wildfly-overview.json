@@ -170,7 +170,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "rate(wildfly_undertow_bytes_received_total_bytes{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}[$__rate_interval])",
+                  "expr": "rate(wildfly_undertow_bytes_received_total_bytes{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",server=~\"$server\"}[$__rate_interval])",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,

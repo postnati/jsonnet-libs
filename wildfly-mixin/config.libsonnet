@@ -3,7 +3,7 @@
   filteringSelector: 'job="integrations/wildfly"',
   groupLabels: ['job', 'cluster'],
   logLabels: ['job', 'cluster', 'instance'],
-  instanceLabels: ['instance', 'deployment'],
+  instanceLabels: ['instance'],
 
   dashboardTags: [self.uid],
   uid: 'wildfly',
@@ -12,10 +12,6 @@
   dashboardTimezone: 'default',
   dashboardRefresh: '1m',
   metricsSource: 'prometheus',  // metrics source for signals
-
-  // Multi-cluster support
-  enableMultiCluster: false,
-  wildflySelector: if self.enableMultiCluster then 'job=~"$job", instance=~"$instance", cluster=~"$cluster"' else 'job=~"$job", instance=~"$instance"',
 
   // Logging configuration
   enableLokiLogs: true,
