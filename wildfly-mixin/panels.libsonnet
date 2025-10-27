@@ -134,11 +134,18 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       sessionsExpiredPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Expired Sessions',
-          targets=[signals.sessions.expiredSessions.asTarget() { interval: '5m' }],
-          description='Number of sessions that have expired for a deployment over time'
-        )
+        g.panel.timeSeries.new('Expired sessions')
+        + g.panel.timeSeries.panelOptions.withDescription('Number of sessions that have expired for a deployment over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.sessions.expiredSessions.asTarget()
+          + g.query.prometheus.withInterval('1m')
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.withDecimals(0)
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       sessionsRejectedPanel:

@@ -297,19 +297,27 @@
          },
          {
             "datasource": {
-               "type": "prometheus",
-               "uid": "${prometheus_datasource}"
+               "type": "datasource",
+               "uid": "-- Mixed --"
             },
             "description": "Number of sessions that have expired for a deployment over time",
             "fieldConfig": {
                "defaults": {
                   "custom": {
-                     "fillOpacity": 30,
-                     "gradientMode": "opacity",
-                     "lineInterpolation": "smooth",
-                     "lineWidth": 2,
-                     "showPoints": "never",
                      "spanNulls": false
+                  },
+                  "decimals": 0,
+                  "thresholds": {
+                     "steps": [
+                        {
+                           "color": "green",
+                           "value": null
+                        },
+                        {
+                           "color": "red",
+                           "value": 80
+                        }
+                     ]
                   }
                }
             },
@@ -320,16 +328,6 @@
                "y": 27
             },
             "id": 9,
-            "options": {
-               "legend": {
-                  "calcs": [ ],
-                  "displayMode": "list"
-               },
-               "tooltip": {
-                  "mode": "multi",
-                  "sort": "desc"
-               }
-            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -337,15 +335,16 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(wildfly_undertow_expired_sessions_total{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}[$__interval])",
+                  "expr": "increase(wildfly_undertow_expired_sessions_total{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",deployment=~\"$deployment\"}[$__interval])",
                   "format": "time_series",
                   "instant": false,
-                  "interval": "5m",
+                  "interval": "1m",
+                  "intervalFactor": 2,
                   "legendFormat": "{{deployment}}",
                   "refId": "Expired Sessions"
                }
             ],
-            "title": "Expired Sessions",
+            "title": "Expired sessions",
             "type": "timeseries"
          },
          {

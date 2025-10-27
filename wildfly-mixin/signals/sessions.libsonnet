@@ -29,10 +29,9 @@ function(this)
         nameShort: 'Expired Sessions',
         type: 'raw',
         description: 'Number of sessions that have expired for a deployment over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'increase(wildfly_undertow_expired_sessions_total{%(queriesSelector)s}[$__interval])',
+            expr: 'increase(wildfly_undertow_expired_sessions_total{%(queriesSelector)s,deployment=~"$deployment"}[$__interval])',
             legendCustomTemplate: '{{deployment}}',
           },
         },
