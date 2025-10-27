@@ -81,7 +81,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "wildfly_datasources_pool_in_use_count{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",data_source=~\"$datasource\"}",
+                  "expr": "wildfly_datasources_pool_in_use_count{job=\"integrations/wildfly\",job=~\"$job\",instance=~\"$instance\",data_source=~\"$datasource\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -131,7 +131,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "wildfly_datasources_pool_idle_count{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",data_source=~\"$datasource\"}",
+                  "expr": "wildfly_datasources_pool_idle_count{job=\"integrations/wildfly\",job=~\"$job\",instance=~\"$instance\",data_source=~\"$datasource\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -194,7 +194,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(wildfly_transactions_number_of_transactions_total{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}[$__interval])",
+                  "expr": "increase(wildfly_transactions_number_of_transactions_total{job=\"integrations/wildfly\",job=~\"$job\",instance=~\"$instance\"}[$__interval])",
                   "format": "time_series",
                   "instant": false,
                   "interval": "1m",
@@ -245,7 +245,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "wildfly_transactions_number_of_inflight_transactions{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}",
+                  "expr": "wildfly_transactions_number_of_inflight_transactions{job=\"integrations/wildfly\",job=~\"$job\",instance=~\"$instance\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -295,7 +295,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(wildfly_transactions_number_of_aborted_transactions_total{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}[$__interval])",
+                  "expr": "increase(wildfly_transactions_number_of_aborted_transactions_total{job=\"integrations/wildfly\",job=~\"$job\",instance=~\"$instance\"}[$__interval])",
                   "format": "time_series",
                   "instant": false,
                   "interval": "1m",
@@ -338,21 +338,6 @@
                "type": "query"
             },
             {
-               "allValue": ".*",
-               "datasource": {
-                  "type": "prometheus",
-                  "uid": "${prometheus_datasource}"
-               },
-               "includeAll": true,
-               "label": "Cluster",
-               "multi": true,
-               "name": "cluster",
-               "query": "label_values(wildfly_server_sessions_total{job=\"integrations/wildfly\",job=~\"$job\"}, cluster)",
-               "refresh": 2,
-               "sort": 1,
-               "type": "query"
-            },
-            {
                "allValue": ".+",
                "datasource": {
                   "type": "prometheus",
@@ -362,7 +347,7 @@
                "label": "Instance",
                "multi": true,
                "name": "instance",
-               "query": "label_values(wildfly_server_sessions_total{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\"}, instance)",
+               "query": "label_values(wildfly_server_sessions_total{job=\"integrations/wildfly\",job=~\"$job\"}, instance)",
                "refresh": 2,
                "sort": 1,
                "type": "query"

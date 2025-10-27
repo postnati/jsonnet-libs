@@ -27,7 +27,16 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
             ])
           )
         ) + root.applyCommon(
-          vars.multiInstance,
+          vars.multiInstance + [
+            g.dashboard.variable.query.new('server')
+            + g.dashboard.variable.custom.selectionOptions.withMulti(true)
+            + g.dashboard.variable.query.queryTypes.withLabelValues(label='server', metric='wildfly_undertow_request_count_total{%(queriesSelectorGroupOnly)s}' % vars)
+            + g.dashboard.variable.query.withDatasourceFromVariable(vars.datasources.prometheus),
+            g.dashboard.variable.query.new('deployment')
+            + g.dashboard.variable.custom.selectionOptions.withMulti(true)
+            + g.dashboard.variable.query.queryTypes.withLabelValues(label='deployment', metric='wildfly_undertow_active_sessions{%(queriesSelectorGroupOnly)s}' % vars)
+            + g.dashboard.variable.query.withDatasourceFromVariable(vars.datasources.prometheus),
+          ],
           uid + '-overview',
           tags,
           links { wildflyOverview+:: {} },

@@ -1,7 +1,8 @@
 {
   local this = self,
+  enableMultiCluster: false,
   filteringSelector: 'job="integrations/wildfly"',
-  groupLabels: ['job', 'cluster'],
+  groupLabels: if self.enableMultiCluster then ['job', 'cluster'] else ['job'],
   logLabels: ['job', 'cluster', 'instance'],
   instanceLabels: ['instance'],
 
