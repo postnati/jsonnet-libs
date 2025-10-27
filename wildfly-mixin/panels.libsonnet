@@ -67,11 +67,16 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       connectionsIdlePanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Idle Connections',
-          targets=[signals.connections.connectionsIdle.asTarget() { interval: '5m' }],
-          description='Idle connections to the datasource over time'
-        )
+        g.panel.timeSeries.new('Idle connections')
+        + g.panel.timeSeries.panelOptions.withDescription('Connections to the datasource over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.connections.connectionsIdle.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       transactionsCreatedPanel:

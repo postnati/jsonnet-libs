@@ -27,12 +27,11 @@ function(this)
       connectionsIdle: {
         name: 'Idle Connections',
         nameShort: 'Idle Connections',
-        type: 'raw',
+        type: 'gauge',
         description: 'Idle connections to the datasource over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'wildfly_datasources_pool_idle_count{%(queriesSelector)s}',
+            expr: 'wildfly_datasources_pool_idle_count{%(queriesSelector)s,data_source=~"$datasource"}',
             legendCustomTemplate: '{{data_source}}',
           },
         },

@@ -94,19 +94,26 @@
          },
          {
             "datasource": {
-               "type": "prometheus",
-               "uid": "${prometheus_datasource}"
+               "type": "datasource",
+               "uid": "-- Mixed --"
             },
-            "description": "Idle connections to the datasource over time",
+            "description": "Connections to the datasource over time",
             "fieldConfig": {
                "defaults": {
                   "custom": {
-                     "fillOpacity": 30,
-                     "gradientMode": "opacity",
-                     "lineInterpolation": "smooth",
-                     "lineWidth": 2,
-                     "showPoints": "never",
                      "spanNulls": false
+                  },
+                  "thresholds": {
+                     "steps": [
+                        {
+                           "color": "green",
+                           "value": null
+                        },
+                        {
+                           "color": "red",
+                           "value": 80
+                        }
+                     ]
                   }
                }
             },
@@ -117,16 +124,6 @@
                "y": 1
             },
             "id": 3,
-            "options": {
-               "legend": {
-                  "calcs": [ ],
-                  "displayMode": "list"
-               },
-               "tooltip": {
-                  "mode": "multi",
-                  "sort": "desc"
-               }
-            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -134,15 +131,15 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "wildfly_datasources_pool_idle_count{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}",
+                  "expr": "wildfly_datasources_pool_idle_count{job=\"integrations/wildfly\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",data_source=~\"$datasource\"}",
                   "format": "time_series",
                   "instant": false,
-                  "interval": "5m",
+                  "intervalFactor": 2,
                   "legendFormat": "{{data_source}}",
                   "refId": "Idle Connections"
                }
             ],
-            "title": "Idle Connections",
+            "title": "Idle connections",
             "type": "timeseries"
          },
          {
