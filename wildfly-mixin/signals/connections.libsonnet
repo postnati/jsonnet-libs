@@ -15,12 +15,11 @@ function(this)
       connectionsActive: {
         name: 'Active Connections',
         nameShort: 'Active Connections',
-        type: 'raw',
+        type: 'gauge',
         description: 'Connections to the datasource over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'wildfly_datasources_pool_in_use_count{%(queriesSelector)s}',
+            expr: 'wildfly_datasources_pool_in_use_count{%(queriesSelector)s,data_source=~"$datasource"}',
             legendCustomTemplate: '{{data_source}}',
           },
         },

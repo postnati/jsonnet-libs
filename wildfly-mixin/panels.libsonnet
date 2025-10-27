@@ -14,6 +14,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.withUnit('reqps'),
+
       requestErrorsPanel:
         g.panel.timeSeries.new('Request errors')
         + g.panel.timeSeries.panelOptions.withDescription('Rate of requests that result in 500 over time')
@@ -27,6 +28,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           {color: 'red', value: 80},
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       networkReceivedThroughputPanel:
         g.panel.timeSeries.new('Network received throughput')
         + g.panel.timeSeries.panelOptions.withDescription('Throughput rate of data received over time')
@@ -36,6 +38,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         ])
         + g.panel.timeSeries.standardOptions.withUnit('binBps')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       networkSentThroughputPanel:
         g.panel.timeSeries.new('Network sent throughput')
         + g.panel.timeSeries.panelOptions.withDescription('Throughput rate of data sent over time')
@@ -49,13 +52,20 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           {color: 'red', value: 80},
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       connectionsActivePanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Active Connections',
-          targets=[signals.connections.connectionsActive.asTarget() { interval: '5m' }],
-          description='Active connections to the datasource over time'
-        )
+        g.panel.timeSeries.new('Active connections')
+        + g.panel.timeSeries.panelOptions.withDescription('Connections to the datasource over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.connections.connectionsActive.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       connectionsIdlePanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Idle Connections',
@@ -63,6 +73,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           description='Idle connections to the datasource over time'
         )
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       transactionsCreatedPanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Created Transactions',
@@ -70,6 +81,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           description='Number of transactions that were created over time'
         )
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       transactionsInFlightPanel:
         commonlib.panels.generic.timeSeries.base.new(
           'In-flight Transactions',
@@ -77,6 +89,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           description='Number of transactions that are in-flight over time'
         )
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       transactionsAbortedPanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Aborted Transactions',
@@ -84,6 +97,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           description='Number of transactions that have been aborted over time'
         )
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       sessionsActivePanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Active Sessions',
@@ -91,6 +105,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           description='Number of active sessions to deployment over time'
         )
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       sessionsExpiredPanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Expired Sessions',
@@ -98,6 +113,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           description='Number of sessions that have expired for a deployment over time'
         )
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+
       sessionsRejectedPanel:
         commonlib.panels.generic.timeSeries.base.new(
           'Rejected Sessions',
