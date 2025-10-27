@@ -15,12 +15,11 @@ function(this)
       activeSessions: {
         name: 'Active Sessions',
         nameShort: 'Active Sessions',
-        type: 'raw',
+        type: 'gauge',
         description: 'Number of active sessions to deployment over time',
-        unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'wildfly_undertow_active_sessions{%(queriesSelector)s}',
+            expr: 'wildfly_undertow_active_sessions{%(queriesSelector)s,deployment=~"$deployment"}',
             legendCustomTemplate: '{{deployment}}',
           },
         },

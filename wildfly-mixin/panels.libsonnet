@@ -121,11 +121,16 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       sessionsActivePanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Active Sessions',
-          targets=[signals.sessions.activeSessions.asTarget() { interval: '5m' }],
-          description='Number of active sessions to deployment over time'
-        )
+        g.panel.timeSeries.new('Active sessions')
+        + g.panel.timeSeries.panelOptions.withDescription('Number of active sessions to deployment over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.sessions.activeSessions.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
       sessionsExpiredPanel:
