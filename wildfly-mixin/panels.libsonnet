@@ -15,19 +15,25 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         ])
         + g.panel.timeSeries.standardOptions.withUnit('reqps'),
       requestErrorsPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Request Errors',
-          targets=[signals.requests.requestErrorsRate.asTarget() { interval: '5m' }],
-          description='Rate of requests that result in 500 over time'
-        )
+        g.panel.timeSeries.new('Request errors')
+        + g.panel.timeSeries.panelOptions.withDescription('Rate of requests that result in 500 over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.requests.requestErrorsRate.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('reqps')
+        + g.panel.timeSeries.standardOptions.thresholds.withSteps([
+          {color: 'green', value: null},
+          {color: 'red', value: 80},
+        ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
       networkReceivedThroughputPanel:
-        commonlib.panels.generic.timeSeries.base.new(
-          'Network Received Throughput',
-          targets=[signals.network.networkReceivedThroughput.asTarget() { interval: '5m' }],
-          description='Throughput rate of data received over time'
-        )
+        g.panel.timeSeries.new('Network received throughput')
+        + g.panel.timeSeries.panelOptions.withDescription('Throughput rate of data received over time')
+        + g.panel.timeSeries.queryOptions.withTargets([
+          signals.network.networkReceivedThroughput.asTarget()
+          + g.query.prometheus.withIntervalFactor(2),
+        ])
         + g.panel.timeSeries.standardOptions.withUnit('binBps')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
       networkSentThroughputPanel:

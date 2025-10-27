@@ -15,12 +15,12 @@ function(this)
       requestsRate: {
         name: 'Requests Rate',
         nameShort: 'Requests',
-        type: 'raw',
+        type: 'counter',
         description: 'Requests rate over time',
         unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'rate(wildfly_undertow_request_count_total{%(queriesSelector)s,server=~"$server"}[$__rate_interval])',
+            expr: 'wildfly_undertow_request_count_total{%(queriesSelector)s,server=~"$server"}',
             legendCustomTemplate: '{{server}} - {{http_listener}}{{https_listener}}',
           },
         },
@@ -28,12 +28,12 @@ function(this)
       requestErrorsRate: {
         name: 'Request Errors Rate',
         nameShort: 'Request Errors',
-        type: 'raw',
+        type: 'counter',
         description: 'Rate of requests that result in 500 over time',
         unit: 'reqps',
         sources: {
           prometheus: {
-            expr: 'rate(wildfly_undertow_error_count_total{%(queriesSelector)s}[$__rate_interval])',
+            expr: 'wildfly_undertow_error_count_total{%(queriesSelector)s,server=~"$server"}',
             legendCustomTemplate: '{{server}} - {{http_listener}}{{https_listener}}',
           },
         },
