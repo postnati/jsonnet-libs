@@ -29,7 +29,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         filteringSelector=this.config.filteringSelector,
         groupLabels=this.config.groupLabels,
         instanceLabels=this.config.instanceLabels,
-        varMetric='',
+        varMetric='opensearch_cluster_status',
         customAllValue='.+',
         enableLokiLogs=this.config.enableLokiLogs,
       ),

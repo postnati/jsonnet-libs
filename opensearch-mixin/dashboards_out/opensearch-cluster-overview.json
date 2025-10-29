@@ -1425,7 +1425,7 @@
                "label": "Job",
                "multi": true,
                "name": "job",
-               "query": "label_values({opensearch_cluster!=\"\"}, job)",
+               "query": "label_values(opensearch_cluster_status{opensearch_cluster!=\"\"}, job)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -1440,7 +1440,7 @@
                "label": "Opensearch_cluster",
                "multi": true,
                "name": "opensearch_cluster",
-               "query": "label_values({opensearch_cluster!=\"\",job=~\"$job\"}, opensearch_cluster)",
+               "query": "label_values(opensearch_cluster_status{opensearch_cluster!=\"\",job=~\"$job\"}, opensearch_cluster)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -1455,7 +1455,7 @@
                "label": "Node",
                "multi": true,
                "name": "node",
-               "query": "label_values({opensearch_cluster!=\"\",job=~\"$job\",opensearch_cluster=~\"$opensearch_cluster\"}, node)",
+               "query": "label_values(opensearch_cluster_status{opensearch_cluster!=\"\",job=~\"$job\",opensearch_cluster=~\"$opensearch_cluster\"}, node)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
