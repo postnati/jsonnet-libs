@@ -29,14 +29,14 @@
   logExpression: '{job=~"$job", cluster=~"$cluster", instance=~"$instance", exception_class=~".+"} | json | line_format "{{.severity}} {{.exception_class}} - {{.exception_message}}" | drop time_extracted, severity_extracted, exception_class_extracted, correlation_id_extracted',
 
   // Alerts configuration
-  alertsWarningShardReallocations: 0,
-  alertsWarningShardUnassigned: 0,
-  alertsWarningDiskUsage: 60,
-  alertsCriticalDiskUsage: 80,
-  alertsWarningCPUUsage: 70,
-  alertsCriticalCPUUsage: 85,
-  alertsWarningMemoryUsage: 70,
-  alertsCriticalMemoryUsage: 85,
+  alertsWarningShardReallocations: 0,  // count
+  alertsWarningShardUnassigned: 0,  // count
+  alertsWarningDiskUsage: 60,  // %
+  alertsCriticalDiskUsage: 80,  // %
+  alertsWarningCPUUsage: 70,  // %
+  alertsCriticalCPUUsage: 85,  // %
+  alertsWarningMemoryUsage: 70,  // %
+  alertsCriticalMemoryUsage: 85,  // %
   alertsWarningRequestLatency: 0.5,  // seconds
   alertsWarningIndexLatency: 0.5,  // seconds
   
