@@ -1,8 +1,8 @@
 {
   local this = self,
   enableMultiCluster: false,
-  filteringSelector: 'job="integrations/wildfly"',
-  groupLabels: if self.enableMultiCluster then ['job', 'cluster'] else ['job'],
+  filteringSelector: '',  // set to apply static filters to all queries and alerts, i.e. job="integrations/wildfly"
+  groupLabels: ['job', 'cluster'],
   logLabels: ['job', 'cluster', 'instance'],
   instanceLabels: ['instance'],
 

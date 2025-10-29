@@ -29,7 +29,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         filteringSelector=this.config.filteringSelector,
         groupLabels=this.config.groupLabels,
         instanceLabels=this.config.instanceLabels,
-        varMetric='wildfly_server_sessions_total',
+        varMetric='wildfly_batch_jberet_active_count',
         customAllValue='.+',
         enableLokiLogs=this.config.enableLokiLogs,
       ),
