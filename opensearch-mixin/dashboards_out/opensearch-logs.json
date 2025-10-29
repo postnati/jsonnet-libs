@@ -226,96 +226,63 @@
       "templating": {
          "list": [
             {
-               "label": "Loki data source",
-               "name": "loki_datasource",
-               "query": "loki",
-               "regex": "(?!grafanacloud.+usage-insights|grafanacloud.+alert-state-history).+",
+               "label": "Prometheus data source",
+               "name": "prometheus_datasource",
+               "query": "prometheus",
+               "regex": "(?!grafanacloud-usage|grafanacloud-ml-metrics).+",
                "type": "datasource"
             },
             {
-               "allValue": ".*",
+               "allValue": ".+",
                "datasource": {
-                  "type": "loki",
-                  "uid": "${loki_datasource}"
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
                },
                "includeAll": true,
                "label": "Job",
                "multi": true,
                "name": "job",
-               "query": "label_values({opensearch_cluster!=\"\"}, job)",
+               "query": "label_values(opensearch_cluster_status{opensearch_cluster!=\"\"}, job)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
             },
             {
-               "allValue": ".*",
+               "allValue": ".+",
                "datasource": {
-                  "type": "loki",
-                  "uid": "${loki_datasource}"
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
                },
                "includeAll": true,
                "label": "Opensearch_cluster",
                "multi": true,
                "name": "opensearch_cluster",
-               "query": "label_values({opensearch_cluster!=\"\",job=~\"$job\"}, opensearch_cluster)",
+               "query": "label_values(opensearch_cluster_status{opensearch_cluster!=\"\",job=~\"$job\"}, opensearch_cluster)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
             },
             {
-               "allValue": ".*",
+               "allValue": ".+",
                "datasource": {
-                  "type": "loki",
-                  "uid": "${loki_datasource}"
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
                },
                "includeAll": true,
-               "label": "Level",
+               "label": "Node",
                "multi": true,
-               "name": "level",
-               "query": "label_values({opensearch_cluster!=\"\",job=~\"$job\",opensearch_cluster=~\"$opensearch_cluster\"}, level)",
+               "name": "node",
+               "query": "label_values(opensearch_cluster_status{opensearch_cluster!=\"\",job=~\"$job\",opensearch_cluster=~\"$opensearch_cluster\"}, node)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
-            },
-            {
-               "allValue": ".*",
-               "datasource": {
-                  "type": "loki",
-                  "uid": "${loki_datasource}"
-               },
-               "includeAll": true,
-               "label": "Severity",
-               "multi": true,
-               "name": "severity",
-               "query": "label_values({opensearch_cluster!=\"\",job=~\"$job\",opensearch_cluster=~\"$opensearch_cluster\",level=~\"$level\"}, severity)",
-               "refresh": 2,
-               "sort": 1,
-               "type": "query"
-            },
-            {
-               "current": {
-                  "selected": false,
-                  "text": "",
-                  "value": ""
-               },
-               "label": "Regex search",
-               "name": "regex_search",
-               "options": [
-                  {
-                     "selected": true,
-                     "text": "",
-                     "value": ""
-                  }
-               ],
-               "query": "",
-               "type": "textbox"
             },
             {
                "hide": 2,
-               "label": "Prometheus data source",
-               "name": "prometheus_datasource",
-               "query": "prometheus",
-               "regex": "(?!grafanacloud-usage|grafanacloud-ml-metrics).+",
+               "label": "Loki data source",
+               "name": "loki_datasource",
+               "query": "loki",
+               "regex": "(?!grafanacloud.+usage-insights|grafanacloud.+alert-state-history).+",
                "type": "datasource"
             }
          ]
