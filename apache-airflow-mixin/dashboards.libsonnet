@@ -82,8 +82,8 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
         'apache-airflow-logs.json':
           logslib.new(
             prefix + ' logs',
-            datasourceName=vars.loki.name,
-            datasourceRegex=vars.loki.regex,
+            datasourceName=vars.datasources.loki.name,
+            datasourceRegex=vars.datasources.loki.regex,
             filterSelector=this.config.filteringSelector,
             labels=this.config.logLabels + this.config.extraLogLabels,
             formatParser=null,
