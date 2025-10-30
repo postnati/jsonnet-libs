@@ -55,7 +55,12 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
             ])
           )
         ) + root.applyCommon(
-          vars.multiInstance,
+          vars.multiInstance + [
+            g.dashboard.variable.query.new('datasource')
+            + g.dashboard.variable.custom.selectionOptions.withMulti(true)
+            + g.dashboard.variable.query.queryTypes.withLabelValues(label='data_source', metric='wildfly_datasources_pool_in_use_count{%(queriesSelectorGroupOnly)s}' % vars)
+            + g.dashboard.variable.query.withDatasourceFromVariable(vars.datasources.prometheus),
+          ],
           uid + '-datasource',
           tags,
           links { wildflyDatasource+:: {} },

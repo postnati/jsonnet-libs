@@ -15,12 +15,12 @@ function(this)
       networkReceivedThroughput: {
         name: 'Network Received Throughput',
         nameShort: 'Network Received',
-        type: 'raw',
+        type: 'counter',
         description: 'Throughput rate of data received over time',
         unit: 'binBps',
         sources: {
           prometheus: {
-            expr: 'rate(wildfly_undertow_bytes_received_total_bytes{%(queriesSelector)s,server=~"$server"}[$__rate_interval])',
+            expr: 'wildfly_undertow_bytes_received_total_bytes{%(queriesSelector)s,server=~"$server"}',
             legendCustomTemplate: '{{server}} - {{http_listener}}{{https_listener}}',
           },
         },

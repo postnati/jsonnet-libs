@@ -20,7 +20,7 @@
   logsVolumeGroupBy: 'level',
   showLogsVolume: true,
 
-    // alerts thresholds
+  // alerts thresholds
   alertsErrorRequestErrorRate: '30',
   alertsErrorRejectedSessions: '20',
 

@@ -374,6 +374,17 @@
                "query": "loki",
                "regex": "(?!grafanacloud.+usage-insights|grafanacloud.+alert-state-history).+",
                "type": "datasource"
+            },
+            {
+               "datasource": {
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
+               },
+               "multi": true,
+               "name": "datasource",
+               "query": "label_values(wildfly_datasources_pool_in_use_count{job=~\"$job\",cluster=~\"$cluster\"}, data_source)",
+               "refresh": 2,
+               "type": "query"
             }
          ]
       },

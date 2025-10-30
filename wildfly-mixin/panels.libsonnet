@@ -24,8 +24,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         ])
         + g.panel.timeSeries.standardOptions.withUnit('reqps')
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -48,8 +48,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         ])
         + g.panel.timeSeries.standardOptions.withUnit('binBps')
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -61,8 +61,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -74,8 +74,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -88,8 +88,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -101,8 +101,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -115,8 +115,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -128,8 +128,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.query.prometheus.withIntervalFactor(2),
         ])
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -143,8 +143,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         ])
         + g.panel.timeSeries.standardOptions.withDecimals(0)
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
 
@@ -158,8 +158,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         ])
         + g.panel.timeSeries.standardOptions.withDecimals(0)
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          {color: 'green', value: null},
-          {color: 'red', value: 80},
+          { color: 'green', value: null },
+          { color: 'red', value: 80 },
         ])
         + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
     },

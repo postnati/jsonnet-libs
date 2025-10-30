@@ -21,7 +21,7 @@
             },
           },
           {
-            alert: 'HighNumberOfRejectedSessionsForDeployment',
+            alert: 'HighRejectedSessionsForDeployment',
             expr: |||
               sum by (deployment, instance, job) (increase(wildfly_undertow_rejected_sessions_total{}[5m])) > %(alertsErrorRejectedSessions)s
             ||| % this.config,
@@ -32,7 +32,7 @@
             annotations: {
               summary: 'Large number of sessions are being rejected for a deployment.',
               description: |||
-                Deployemnt {{ $labels.deployment }} on {{ $labels.instance }} is exceeding the threshold for rejected sessions {{ printf "%%.0f" $value }} is higher than %(alertsErrorRejectedSessions)s.
+                Deployment {{ $labels.deployment }} on {{ $labels.instance }} is exceeding the threshold for rejected sessions {{ printf "%%.0f" $value }} is higher than %(alertsErrorRejectedSessions)s.
               ||| % this.config,
             },
           },
