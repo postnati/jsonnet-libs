@@ -40,7 +40,7 @@
             },
             "id": 1,
             "panels": [ ],
-            "title": "Overview",
+            "title": "Shard",
             "type": "row"
          },
          {
@@ -48,19 +48,663 @@
                "type": "datasource",
                "uid": "-- Mixed --"
             },
-            "description": "Disk read and write operations per second.",
+            "description": "An inventory table for shard nodes in the environment.",
             "fieldConfig": {
                "defaults": {
-                  "unit": "ops"
-               }
+                  "color": {
+                     "mode": "thresholds"
+                  },
+                  "mappings": [
+                     {
+                        "options": {
+                           "1": {
+                              "index": 0,
+                              "text": "Primary"
+                           },
+                           "2": {
+                              "index": 1,
+                              "text": "Secondary"
+                           }
+                        },
+                        "type": "value"
+                     }
+                  ]
+               },
+               "overrides": [
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "cl_role"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 150
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "rs_state"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 100
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "rs_nm"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 250
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "cl_name"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 300
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "group_id"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 300
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "State"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.cellOptions",
+                           "value": {
+                              "type": "color-text"
+                           }
+                        },
+                        {
+                           "id": "mappings",
+                           "value": [
+                              {
+                                 "options": {
+                                    "1": {
+                                       "color": "green",
+                                       "index": 0,
+                                       "text": "Primary"
+                                    },
+                                    "2": {
+                                       "color": "yellow",
+                                       "index": 1,
+                                       "text": "Secondary"
+                                    }
+                                 },
+                                 "type": "value"
+                              }
+                           ]
+                        }
+                     ]
+                  }
+               ]
             },
             "gridPos": {
-               "h": 8,
+               "h": 6,
                "w": 24,
                "x": 0,
                "y": 1
             },
             "id": 2,
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${prometheus_datasource}"
+                  },
+                  "expr": "mongodb_network_bytesIn{job=~\"$job\",cl_name=~\"$cl_name\"}",
+                  "instant": true
+               }
+            ],
+            "title": "Shard nodes",
+            "transformations": [
+               {
+                  "id": "reduce",
+                  "options": {
+                     "labelsToFields": true,
+                     "reducers": [
+                        "lastNotNull"
+                     ]
+                  }
+               },
+               {
+                  "id": "organize",
+                  "options": {
+                     "excludeByName": {
+                        "Field": true,
+                        "Last *": true,
+                        "__name__": true,
+                        "job": true,
+                        "org_id": true,
+                        "process_port": true
+                     },
+                     "indexByName": {
+                        "Field": 6,
+                        "Last *": 11,
+                        "__name__": 7,
+                        "cl_name": 1,
+                        "cl_role": 2,
+                        "group_id": 0,
+                        "instance": 3,
+                        "job": 8,
+                        "org_id": 9,
+                        "process_port": 10,
+                        "rs_nm": 4,
+                        "rs_state": 5
+                     },
+                     "renameByName": {
+                        "cl_name": "Cluster",
+                        "cl_role": "Role",
+                        "group_id": "Group",
+                        "instance": "Node",
+                        "rs_nm": "Replica set",
+                        "rs_state": "State"
+                     }
+                  }
+               },
+               {
+                  "id": "filterByValue",
+                  "options": {
+                     "filters": [
+                        {
+                           "config": {
+                              "id": "equal",
+                              "options": {
+                                 "value": "shardsvr"
+                              }
+                           },
+                           "fieldName": "Role"
+                        }
+                     ],
+                     "match": "all",
+                     "type": "include"
+                  }
+               }
+            ],
+            "type": "table"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 7
+            },
+            "id": 3,
+            "panels": [ ],
+            "title": "Config",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "An inventory table for config nodes in the environment.",
+            "fieldConfig": {
+               "defaults": {
+                  "color": {
+                     "mode": "thresholds"
+                  },
+                  "mappings": [
+                     {
+                        "options": {
+                           "1": {
+                              "index": 0,
+                              "text": "Primary"
+                           },
+                           "2": {
+                              "index": 1,
+                              "text": "Secondary"
+                           }
+                        },
+                        "type": "value"
+                     }
+                  ]
+               },
+               "overrides": [
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "cl_role"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 150
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "rs_state"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 100
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "rs_nm"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 250
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "cl_name"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 300
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "group_id"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 300
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "State"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.cellOptions",
+                           "value": {
+                              "type": "color-text"
+                           }
+                        },
+                        {
+                           "id": "mappings",
+                           "value": [
+                              {
+                                 "options": {
+                                    "1": {
+                                       "color": "green",
+                                       "index": 0,
+                                       "text": "Primary"
+                                    },
+                                    "2": {
+                                       "color": "yellow",
+                                       "index": 1,
+                                       "text": "Secondary"
+                                    }
+                                 },
+                                 "type": "value"
+                              }
+                           ]
+                        }
+                     ]
+                  }
+               ]
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 24,
+               "x": 0,
+               "y": 8
+            },
+            "id": 4,
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${prometheus_datasource}"
+                  },
+                  "expr": "mongodb_network_bytesIn{job=~\"$job\",cl_name=~\"$cl_name\"}",
+                  "instant": true
+               }
+            ],
+            "title": "Config nodes",
+            "transformations": [
+               {
+                  "id": "reduce",
+                  "options": {
+                     "labelsToFields": true,
+                     "reducers": [
+                        "lastNotNull"
+                     ]
+                  }
+               },
+               {
+                  "id": "organize",
+                  "options": {
+                     "excludeByName": {
+                        "Field": true,
+                        "Last *": true,
+                        "__name__": true,
+                        "job": true,
+                        "org_id": true,
+                        "process_port": true
+                     },
+                     "indexByName": {
+                        "Field": 6,
+                        "Last *": 11,
+                        "__name__": 7,
+                        "cl_name": 1,
+                        "cl_role": 2,
+                        "group_id": 0,
+                        "instance": 3,
+                        "job": 8,
+                        "org_id": 9,
+                        "process_port": 10,
+                        "rs_nm": 4,
+                        "rs_state": 5
+                     },
+                     "renameByName": {
+                        "cl_name": "Cluster",
+                        "cl_role": "Role",
+                        "group_id": "Group",
+                        "instance": "Node",
+                        "rs_nm": "Replica set",
+                        "rs_state": "State"
+                     }
+                  }
+               },
+               {
+                  "id": "filterByValue",
+                  "options": {
+                     "filters": [
+                        {
+                           "config": {
+                              "id": "equal",
+                              "options": {
+                                 "value": "configsvr"
+                              }
+                           },
+                           "fieldName": "Role"
+                        }
+                     ],
+                     "match": "all",
+                     "type": "include"
+                  }
+               }
+            ],
+            "type": "table"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 14
+            },
+            "id": 5,
+            "panels": [ ],
+            "title": "mongos",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "An inventory table for mongos nodes in the environment.",
+            "fieldConfig": {
+               "defaults": {
+                  "color": {
+                     "mode": "thresholds"
+                  },
+                  "mappings": [
+                     {
+                        "options": {
+                           "1": {
+                              "index": 0,
+                              "text": "Primary"
+                           },
+                           "2": {
+                              "index": 1,
+                              "text": "Secondary"
+                           }
+                        },
+                        "type": "value"
+                     }
+                  ]
+               },
+               "overrides": [
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "cl_role"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 150
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "rs_state"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 100
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "rs_nm"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 250
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "cl_name"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 300
+                        }
+                     ]
+                  },
+                  {
+                     "matcher": {
+                        "id": "byName",
+                        "options": "group_id"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.width",
+                           "value": 300
+                        }
+                     ]
+                  }
+               ]
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 24,
+               "x": 0,
+               "y": 15
+            },
+            "id": 6,
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${prometheus_datasource}"
+                  },
+                  "expr": "mongodb_network_bytesIn{job=~\"$job\",cl_name=~\"$cl_name\"}",
+                  "instant": true
+               }
+            ],
+            "title": "mongos nodes",
+            "transformations": [
+               {
+                  "id": "reduce",
+                  "options": {
+                     "labelsToFields": true,
+                     "reducers": [
+                        "lastNotNull"
+                     ]
+                  }
+               },
+               {
+                  "id": "organize",
+                  "options": {
+                     "excludeByName": {
+                        "Field": true,
+                        "Last *": true,
+                        "__name__": true,
+                        "job": true,
+                        "org_id": true,
+                        "process_port": true,
+                        "rs_state": true
+                     },
+                     "indexByName": {
+                        "Field": 6,
+                        "Last *": 11,
+                        "__name__": 7,
+                        "cl_name": 1,
+                        "cl_role": 2,
+                        "group_id": 0,
+                        "instance": 3,
+                        "job": 8,
+                        "org_id": 9,
+                        "process_port": 10,
+                        "rs_nm": 4,
+                        "rs_state": 5
+                     },
+                     "renameByName": {
+                        "cl_name": "Cluster",
+                        "cl_role": "Role",
+                        "group_id": "Group",
+                        "instance": "Node",
+                        "rs_nm": "Replica set"
+                     }
+                  }
+               },
+               {
+                  "id": "filterByValue",
+                  "options": {
+                     "filters": [
+                        {
+                           "config": {
+                              "id": "equal",
+                              "options": {
+                                 "value": "mongos"
+                              }
+                           },
+                           "fieldName": "Role"
+                        }
+                     ],
+                     "match": "all",
+                     "type": "include"
+                  }
+               }
+            ],
+            "type": "table"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 21
+            },
+            "id": 7,
+            "panels": [ ],
+            "title": "Performance",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of read and write I/O's processed.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  },
+                  "unit": "iops"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 0,
+               "y": 22
+            },
+            "id": 8,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -86,7 +730,929 @@
                   "refId": "Disk write operations"
                }
             ],
-            "title": "Disk operations",
+            "title": "Hardware I/O",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The amount of time spent waiting for I/O requests.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  },
+                  "unit": "ms"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 6,
+               "y": 22
+            },
+            "id": 9,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(hardware_disk_metrics_read_time_milliseconds{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - reads",
+                  "refId": "Disk read I/O time"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(hardware_disk_metrics_write_time_milliseconds{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - writes",
+                  "refId": "Disk write I/O time"
+               }
+            ],
+            "title": "Hardware I/O wait time / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The amount of time spent servicing CPU interrupts.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "ms"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 12,
+               "y": 22
+            },
+            "id": 10,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(hardware_system_cpu_irq_milliseconds{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}}",
+                  "refId": "CPU interrupt service time"
+               }
+            ],
+            "title": "Hardware CPU interrupt service time / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The amount of RAM and virtual memory being used.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "mbytes"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 18,
+               "y": 22
+            },
+            "id": 11,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  mongodb_mem_resident{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - RAM",
+                  "refId": "Memory resident (RAM)"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  mongodb_mem_virtual{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - virtual",
+                  "refId": "Memory virtual"
+               }
+            ],
+            "title": "Memory used",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The percentage of hardware space used.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "max": 1,
+                  "min": 0,
+                  "unit": "percentunit"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 0,
+               "y": 28
+            },
+            "id": 12,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "100 * ((sum without (disk_name) (hardware_disk_metrics_disk_space_used_bytes{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"})) / clamp_min((sum without (disk_name) (hardware_disk_metrics_disk_space_used_bytes{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"})) + (sum without (disk_name) (hardware_disk_metrics_disk_space_free_bytes{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"})), 1))",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}}",
+                  "refId": "Disk space utilization"
+               }
+            ],
+            "title": "Disk space usage",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of distinct requests that the server has received.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "reqps"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 6,
+               "y": 28
+            },
+            "id": 13,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_network_numRequests{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}}",
+                  "refId": "Network requests"
+               }
+            ],
+            "title": "Network requests",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of bytes sent and received over network connections.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  },
+                  "unit": "Bps"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 12,
+               "y": 28
+            },
+            "id": 14,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_network_bytesIn{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - received",
+                  "refId": "Network bytes received"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_network_bytesOut{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - sent",
+                  "refId": "Network bytes sent"
+               }
+            ],
+            "title": "Network throughput",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The rate of DNS and SSL operations that took longer than 1 second.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "reqps"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 6,
+               "x": 18,
+               "y": 28
+            },
+            "id": 15,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_network_numSlowDNSOperations{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - DNS",
+                  "refId": "Slow DNS operations"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_network_numSlowSSLOperations{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - SSL",
+                  "refId": "Slow SSL operations"
+               }
+            ],
+            "title": "Slow requests",
+            "type": "timeseries"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 34
+            },
+            "id": 16,
+            "panels": [ ],
+            "title": "Operations",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The rate of incoming connections to the cluster created.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "conns/s"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 12,
+               "x": 0,
+               "y": 35
+            },
+            "id": 17,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_connections_totalCreated{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}}",
+                  "refId": "Connections created"
+               }
+            ],
+            "title": "Connections",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of read and write operations.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  },
+                  "unit": "ops"
+               }
+            },
+            "gridPos": {
+               "h": 12,
+               "w": 6,
+               "x": 12,
+               "y": 35
+            },
+            "id": 18,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opLatencies_reads_ops{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - reads",
+                  "refId": "Read operation count"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opLatencies_writes_ops{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - writes",
+                  "refId": "Write operation count"
+               }
+            ],
+            "title": "Read/Write operations",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of insert, query, update, and delete operations.",
+            "gridPos": {
+               "h": 12,
+               "w": 6,
+               "x": 18,
+               "y": 35
+            },
+            "id": 19,
+            "options": {
+               "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "values": [
+                     "value"
+                  ]
+               },
+               "reduceOptions": {
+                  "calcs": [
+                     "lastNotNull"
+                  ]
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opcounters_insert{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - insert",
+                  "refId": "Insert operations"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opcounters_query{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - query",
+                  "refId": "Query operations"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opcounters_update{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - update",
+                  "refId": "Update operations"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opcounters_delete{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - delete",
+                  "refId": "Delete operations"
+               }
+            ],
+            "title": "Operations",
+            "type": "piechart"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The latency for read and write operations.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  },
+                  "unit": "µs"
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 12,
+               "x": 0,
+               "y": 41
+            },
+            "id": 20,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opLatencies_reads_latency{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - reads",
+                  "refId": "Read operation latency"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_opLatencies_writes_latency{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - writes",
+                  "refId": "Write operation latency"
+               }
+            ],
+            "title": "Read/Write latency / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 53
+            },
+            "id": 21,
+            "panels": [ ],
+            "title": "Locks",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of reads and writes queued because of a lock.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  }
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 12,
+               "x": 0,
+               "y": 54
+            },
+            "id": 22,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  mongodb_globalLock_currentQueue_readers{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - reads",
+                  "refId": "Global lock queue - readers"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  mongodb_globalLock_currentQueue_writers{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - writes",
+                  "refId": "Global lock queue - writers"
+               }
+            ],
+            "title": "Current queue",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of reads and writes being actively performed by connected clients.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  }
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 12,
+               "x": 12,
+               "y": 54
+            },
+            "id": 23,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  mongodb_globalLock_activeClients_readers{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - reads",
+                  "refId": "Global lock active clients - readers"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  mongodb_globalLock_activeClients_writers{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{cl_name}} - writes",
+                  "refId": "Global lock active clients - writers"
+               }
+            ],
+            "title": "Active client operations",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of deadlocks for database level locks.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  }
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 12,
+               "x": 0,
+               "y": 60
+            },
+            "id": 24,
+            "options": {
+               "legend": {
+                  "placement": "right"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_deadlockCount_W{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - exclusive",
+                  "refId": "Database exclusive lock deadlocks"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_deadlockCount_w{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - intent exclusive",
+                  "refId": "Database intent exclusive lock deadlocks"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_deadlockCount_R{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - shared",
+                  "refId": "Database shared lock deadlocks"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_deadlockCount_r{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - intent shared",
+                  "refId": "Database intent shared lock deadlocks"
+               }
+            ],
+            "title": "Database deadlocks / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of times lock acquisitions encounter waits for database level locks.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  }
+               }
+            },
+            "gridPos": {
+               "h": 6,
+               "w": 12,
+               "x": 12,
+               "y": 60
+            },
+            "id": 25,
+            "options": {
+               "legend": {
+                  "placement": "right"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_acquireWaitCount_W{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - exclusive",
+                  "refId": "Database exclusive lock wait count"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_acquireWaitCount_w{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - intent exclusive",
+                  "refId": "Database intent exclusive lock wait count"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_acquireWaitCount_R{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - shared",
+                  "refId": "Database shared lock wait count"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "sum by (job,cl_name) (\n  rate(mongodb_locks_Database_acquireWaitCount_r{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])\n)",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{cl_name}} - intent shared",
+                  "refId": "Database intent shared lock wait count"
+               }
+            ],
+            "title": "Database waits acquiring lock / $__interval",
             "type": "timeseries"
          }
       ],

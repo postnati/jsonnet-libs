@@ -21,7 +21,12 @@ local g = import './g.libsonnet';
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels(
               [
-                this.grafana.rows.overview,
+                this.grafana.rows.shard,
+                this.grafana.rows.config,
+                this.grafana.rows.mongos,
+                this.grafana.rows.performance,
+                this.grafana.rows.operations,
+                this.grafana.rows.locks,
               ]
             )
           )

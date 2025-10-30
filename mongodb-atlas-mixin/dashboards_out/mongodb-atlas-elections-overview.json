@@ -48,10 +48,16 @@
                "type": "datasource",
                "uid": "-- Mixed --"
             },
-            "description": "Disk read and write operations per second.",
+            "description": "The number of read and write I/O's processed.",
             "fieldConfig": {
                "defaults": {
-                  "unit": "ops"
+                  "custom": {
+                     "fillOpacity": 10,
+                     "stacking": {
+                        "mode": "normal"
+                     }
+                  },
+                  "unit": "iops"
                }
             },
             "gridPos": {
@@ -61,6 +67,12 @@
                "y": 1
             },
             "id": 2,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -86,7 +98,7 @@
                   "refId": "Disk write operations"
                }
             ],
-            "title": "Disk operations",
+            "title": "Hardware I/O",
             "type": "timeseries"
          }
       ],
