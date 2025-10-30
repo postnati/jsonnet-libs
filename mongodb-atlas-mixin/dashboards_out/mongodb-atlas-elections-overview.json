@@ -40,7 +40,7 @@
             },
             "id": 1,
             "panels": [ ],
-            "title": "Overview",
+            "title": "Step-up elections",
             "type": "row"
          },
          {
@@ -48,21 +48,18 @@
                "type": "datasource",
                "uid": "-- Mixed --"
             },
-            "description": "The number of read and write I/O's processed.",
+            "description": "The number of elections called and elections won by the node when the primary stepped down.",
             "fieldConfig": {
                "defaults": {
                   "custom": {
-                     "fillOpacity": 10,
-                     "stacking": {
-                        "mode": "normal"
-                     }
+                     "fillOpacity": 10
                   },
-                  "unit": "iops"
+                  "unit": "none"
                }
             },
             "gridPos": {
                "h": 8,
-               "w": 24,
+               "w": 12,
                "x": 0,
                "y": 1
             },
@@ -80,25 +77,519 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,cl_name) (\n  rate(hardware_disk_metrics_read_count{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "rate(mongodb_electionMetrics_stepUpCmd_called{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{cl_name}} - reads",
-                  "refId": "Disk read operations"
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - called",
+                  "refId": "Step-up elections called"
                },
                {
                   "datasource": {
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,cl_name) (\n  rate(hardware_disk_metrics_write_count{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "rate(mongodb_electionMetrics_stepUpCmd_successful{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{cl_name}} - writes",
-                  "refId": "Disk write operations"
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - successful",
+                  "refId": "Step-up elections successful"
                }
             ],
-            "title": "Hardware I/O",
+            "title": "Step-up elections / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 9
+            },
+            "id": 3,
+            "panels": [ ],
+            "title": "Priority takeover elections",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of elections called and elections won by the node when it had a higher priority than the primary node.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 12,
+               "x": 0,
+               "y": 10
+            },
+            "id": 4,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_priorityTakeover_called{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - called",
+                  "refId": "Priority takeover elections called"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_priorityTakeover_successful{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - successful",
+                  "refId": "Priority takeover elections successful"
+               }
+            ],
+            "title": "Priority elections / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 18
+            },
+            "id": 5,
+            "panels": [ ],
+            "title": "Catch-up takeover elections",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of elections called and elections won by the node when it was more current than the primary node.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 12,
+               "x": 0,
+               "y": 19
+            },
+            "id": 6,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_catchUpTakeover_called{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - called",
+                  "refId": "Catch-up takeover elections called"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_catchUpTakeover_successful{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - successful",
+                  "refId": "Catch-up takeover elections successful"
+               }
+            ],
+            "title": "Takeover elections / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 27
+            },
+            "id": 7,
+            "panels": [ ],
+            "title": "Election timeout",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of elections called and elections won by the node when the time it took to reach the primary node exceeded the election timeout limit.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 12,
+               "x": 0,
+               "y": 28
+            },
+            "id": 8,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_electionTimeout_called{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - called",
+                  "refId": "Election timeout elections called"
+               },
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_electionTimeout_successful{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}} - successful",
+                  "refId": "Election timeout elections successful"
+               }
+            ],
+            "title": "Timeout elections / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 36
+            },
+            "id": 9,
+            "panels": [ ],
+            "title": "Catch-ups",
+            "type": "row"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of times the node had to catch up to the highest known oplog entry.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 8,
+               "x": 0,
+               "y": 37
+            },
+            "id": 10,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_numCatchUps{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}}",
+                  "refId": "Number of catch-ups"
+               }
+            ],
+            "title": "Catch-ups / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of times the node skipped the catch up process when it was the newly elected primary.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 8,
+               "x": 8,
+               "y": 37
+            },
+            "id": 11,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_numCatchUpsSkipped{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}}",
+                  "refId": "Number of catch-ups skipped"
+               }
+            ],
+            "title": "Catch-ups skipped / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of times the node succeeded in catching up when it was the newly elected primary.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 8,
+               "x": 16,
+               "y": 37
+            },
+            "id": 12,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_numCatchUpsSucceeded{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}}",
+                  "refId": "Number of catch-ups succeeded"
+               }
+            ],
+            "title": "Catch-ups succeeded / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of times the node failed in catching up when it was the newly elected primary.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 8,
+               "x": 0,
+               "y": 45
+            },
+            "id": 13,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_numCatchUpsFailedWithError{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}}",
+                  "refId": "Number of catch-ups failed with error"
+               }
+            ],
+            "title": "Catch-ups failed / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The number of times the node timed out during the catch-up process when it was the newly elected primary.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 8,
+               "x": 8,
+               "y": 45
+            },
+            "id": 14,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "rate(mongodb_electionMetrics_numCatchUpsTimedOut{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}[$__rate_interval])",
+                  "format": "time_series",
+                  "instant": false,
+                  "interval": "1m",
+                  "legendFormat": "{{instance}}",
+                  "refId": "Number of catch-up timeouts"
+               }
+            ],
+            "title": "Catch-up timeouts / $__interval",
+            "type": "timeseries"
+         },
+         {
+            "datasource": {
+               "type": "datasource",
+               "uid": "-- Mixed --"
+            },
+            "description": "The average number of operations done during the catch-up process when this node is the newly elected primary.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 10
+                  },
+                  "unit": "none"
+               }
+            },
+            "gridPos": {
+               "h": 8,
+               "w": 8,
+               "x": 16,
+               "y": 45
+            },
+            "id": 15,
+            "options": {
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
+            "pluginVersion": "v11.0.0",
+            "targets": [
+               {
+                  "datasource": {
+                     "type": "prometheus",
+                     "uid": "${datasource}"
+                  },
+                  "expr": "mongodb_electionMetrics_averageCatchUpOps{job=~\"$job\", cl_name=~\"$cl_name\",job=~\"$job\",cl_name=~\"$cl_name\",instance=~\"$instance\", rs_nm=~\"$rs\"}",
+                  "format": "time_series",
+                  "instant": false,
+                  "legendFormat": "{{instance}}",
+                  "refId": "Average catch-up operations"
+               }
+            ],
+            "title": "Average catch-up operations",
             "type": "timeseries"
          }
       ],

@@ -21,12 +21,12 @@ local g = import './g.libsonnet';
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels(
               [
-                this.grafana.rows.shard,
-                this.grafana.rows.config,
-                this.grafana.rows.mongos,
-                this.grafana.rows.performance,
-                this.grafana.rows.operations,
-                this.grafana.rows.locks,
+                this.grafana.rows.clusterOverviewHardwareRow,
+                this.grafana.rows.clusterOverviewDiskRow,
+                this.grafana.rows.clusterOverviewNetworkRow,
+                this.grafana.rows.clusterOverviewConnectionsRow,
+                this.grafana.rows.clusterOverviewOperationsRow,
+                this.grafana.rows.clusterOverviewLocksRow,
               ]
             )
           )
@@ -49,7 +49,11 @@ local g = import './g.libsonnet';
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels(
               [
-                this.grafana.rows.overview,
+                this.grafana.rows.electionsStepUpRow,
+                this.grafana.rows.electionsPriorityTakeoverRow,
+                this.grafana.rows.electionsCatchUpTakeoverRow,
+                this.grafana.rows.electionsTimeoutRow,
+                this.grafana.rows.electionsCatchUpsRow,
               ]
             )
           )
@@ -72,7 +76,11 @@ local g = import './g.libsonnet';
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels(
               [
-                this.grafana.rows.overview,
+                this.grafana.rows.operationsCountersClusterRow,
+                this.grafana.rows.operationsCountersInstanceRow,
+                this.grafana.rows.operationsLatenciesClusterRow,
+                this.grafana.rows.operationsLatenciesInstanceRow,
+                this.grafana.rows.operationsAvgLatenciesRow,
               ]
             )
           )
@@ -95,7 +103,15 @@ local g = import './g.libsonnet';
           g.util.panel.resolveCollapsedFlagOnRows(
             g.util.grid.wrapPanels(
               [
-                this.grafana.rows.overview,
+                this.grafana.rows.performanceConnectionsRow,
+                this.grafana.rows.performanceDbLocksClusterRow,
+                this.grafana.rows.performanceDbLocksInstanceRow,
+                this.grafana.rows.performanceDbWaitCountsClusterRow,
+                this.grafana.rows.performanceDbWaitCountsInstanceRow,
+                this.grafana.rows.performanceDbAcqTimeRow,
+                this.grafana.rows.performanceCollLocksRow,
+                this.grafana.rows.performanceCollWaitCountsRow,
+                this.grafana.rows.performanceCollAcqTimeRow,
               ]
             )
           )
