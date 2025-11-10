@@ -23,18 +23,19 @@
             },
             "id": 1,
             "panels": [ ],
-            "title": "Job Statistics",
+            "title": "Job statistics",
             "type": "row"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Current number of Sidekiq Workers.",
             "fieldConfig": {
                "defaults": {
                   "color": {
+                     "fixedColor": "text",
                      "mode": "thresholds"
                   },
                   "mappings": [
@@ -74,25 +75,26 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "count(discourse_rss{type=\"sidekiq\",job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"})",
+                  "expr": "count(discourse_rss{type=\"sidekiq\",job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"})",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "",
+                  "legendFormat": "{{job}}: Sidekiq worker count",
                   "refId": "Sidekiq worker count"
                }
             ],
-            "title": "Sidekiq Workers",
+            "title": "Sidekiq workers",
             "type": "stat"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Current number of Web Workers.",
             "fieldConfig": {
                "defaults": {
                   "color": {
+                     "fixedColor": "text",
                      "mode": "thresholds"
                   },
                   "mappings": [
@@ -132,25 +134,26 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "count(discourse_rss{type=\"web\",job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"})",
+                  "expr": "count(discourse_rss{type=\"web\",job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"})",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "",
+                  "legendFormat": "{{job}}: Web worker count",
                   "refId": "Web worker count"
                }
             ],
-            "title": "Web Workers",
+            "title": "Web workers",
             "type": "stat"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Current number of jobs in Sidekiq queue.",
             "fieldConfig": {
                "defaults": {
                   "color": {
+                     "fixedColor": "text",
                      "mode": "thresholds"
                   },
                   "mappings": [
@@ -190,14 +193,14 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "max by (job) (\n  discourse_sidekiq_jobs_enqueued{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "max by (job) (\n  discourse_sidekiq_jobs_enqueued{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{instance}}",
                   "refId": "Sidekiq jobs enqueued"
                }
             ],
-            "title": "Sidekiq Queued",
+            "title": "Sidekiq queued",
             "type": "stat"
          },
          {
@@ -210,15 +213,27 @@
             },
             "id": 5,
             "panels": [ ],
-            "title": "Job Counts",
+            "title": "Job counts",
             "type": "row"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "The number of scheduled jobs ran over an interval.",
+            "fieldConfig": {
+               "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "unit": "none"
+               }
+            },
             "gridPos": {
                "h": 6,
                "w": 12,
@@ -226,6 +241,16 @@
                "y": 7
             },
             "id": 6,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -233,22 +258,31 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,job_name) (\n  rate(discourse_scheduled_job_count{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "sum by (job) (\n  increase(discourse_scheduled_job_count{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}[$__interval:] offset -$__interval)\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{job_name}}",
                   "refId": "Scheduled job count"
                }
             ],
-            "title": "Scheduled Jobs",
+            "title": "Scheduled jobs",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "The amount of sidekiq jobs ran over an interval.",
+            "fieldConfig": {
+               "defaults": {
+                  "color": {
+                     "fixedColor": "text",
+                     "mode": "fixed"
+                  },
+                  "unit": "none"
+               }
+            },
             "gridPos": {
                "h": 6,
                "w": 12,
@@ -256,6 +290,15 @@
                "y": 7
             },
             "id": 7,
+            "options": {
+               "colorMode": "fixed",
+               "graphMode": "none",
+               "reduceOptions": {
+                  "calcs": [
+                     "lastNotNull"
+                  ]
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -263,15 +306,15 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,job_name) (\n  rate(discourse_sidekiq_job_count{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "sum by (job) (\n  increase(discourse_sidekiq_job_count{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}[$__interval:] offset -$__interval)\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{job_name}}",
                   "refId": "Sidekiq job count"
                }
             ],
-            "title": "Sidekiq Jobs",
-            "type": "timeseries"
+            "title": "Sidekiq jobs",
+            "type": "stat"
          },
          {
             "collapsed": false,
@@ -283,23 +326,20 @@
             },
             "id": 8,
             "panels": [ ],
-            "title": "Job Duration",
+            "title": "Duration",
             "type": "row"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Time spent in scheduled jobs broken out by job name.",
             "fieldConfig": {
                "defaults": {
-                  "custom": {
-                     "fillOpacity": 30,
-                     "showPoints": "never",
-                     "stacking": {
-                        "mode": "normal"
-                     }
+                  "color": {
+                     "fixedColor": "text",
+                     "mode": "fixed"
                   },
                   "unit": "s"
                }
@@ -311,12 +351,6 @@
                "y": 14
             },
             "id": 9,
-            "options": {
-               "tooltip": {
-                  "mode": "multi",
-                  "sort": "desc"
-               }
-            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -324,30 +358,27 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,job_name) (\n  rate(discourse_scheduled_job_duration_seconds{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "sum by (job,job_name) (\n  rate(discourse_scheduled_job_duration_seconds{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{job_name}}",
                   "refId": "Scheduled job duration"
                }
             ],
-            "title": "Scheduled Job Duration",
-            "type": "timeseries"
+            "title": "Scheduled job duration",
+            "type": "stat"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Time spent in Sidekiq jobs broken out by job name.",
             "fieldConfig": {
                "defaults": {
-                  "custom": {
-                     "fillOpacity": 30,
-                     "showPoints": "never",
-                     "stacking": {
-                        "mode": "normal"
-                     }
+                  "color": {
+                     "fixedColor": "text",
+                     "mode": "fixed"
                   },
                   "unit": "s"
                }
@@ -359,12 +390,6 @@
                "y": 14
             },
             "id": 10,
-            "options": {
-               "tooltip": {
-                  "mode": "multi",
-                  "sort": "desc"
-               }
-            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -372,15 +397,15 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,job_name) (\n  rate(discourse_sidekiq_job_duration_seconds{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "sum by (job,job_name) (\n  rate(discourse_sidekiq_job_duration_seconds{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{job_name}}",
                   "refId": "Sidekiq job duration"
                }
             ],
-            "title": "Sidekiq Job Duration",
-            "type": "timeseries"
+            "title": "Sidekiq job duration",
+            "type": "stat"
          },
          {
             "collapsed": false,
@@ -397,12 +422,19 @@
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Total RSS Memory used by process. Broken up by pid.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
                   "unit": "bytes"
                }
             },
@@ -413,6 +445,16 @@
                "y": 21
             },
             "id": 12,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -420,24 +462,31 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,pid) (\n  discourse_rss{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "sum by (job) (\n  discourse_rss{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "pid: {{pid}}",
                   "refId": "RSS memory"
                }
             ],
-            "title": "Used RSS Memory",
+            "title": "Used RSS memory",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Current heap size of V8 engine. Broken up by process type",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
                   "unit": "bytes"
                }
             },
@@ -448,6 +497,16 @@
                "y": 21
             },
             "id": 13,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -455,14 +514,14 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,type) (\n  discourse_v8_used_heap_size{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "sum by (job) (\n  discourse_v8_used_heap_size{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{type}}",
                   "refId": "V8 heap size"
                }
             ],
-            "title": "V8 Heap Size",
+            "title": "V8 heap size",
             "type": "timeseries"
          }
       ],
@@ -490,7 +549,7 @@
                "label": "Job",
                "multi": true,
                "name": "job",
-               "query": "label_values(discourse_page_views{job=~\"$job\", instance=~\"$instance\"}, job)",
+               "query": "label_values(discourse_page_views{job=\"integrations/discourse\"}, job)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -505,7 +564,7 @@
                "label": "Instance",
                "multi": true,
                "name": "instance",
-               "query": "label_values(discourse_page_views{job=~\"$job\", instance=~\"$instance\",job=~\"$job\"}, instance)",
+               "query": "label_values(discourse_page_views{job=\"integrations/discourse\",job=~\"$job\"}, instance)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
