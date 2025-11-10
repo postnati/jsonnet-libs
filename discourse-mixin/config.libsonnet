@@ -2,7 +2,7 @@
   local this = self,
 
   // Filtering
-  filteringSelector: 'job=~"$job", instance=~"$instance"',
+  filteringSelector: 'job="integrations/discourse"',
   groupLabels: ['job'],
   instanceLabels: ['instance'],
 
@@ -26,9 +26,7 @@
 
   // Signal categories
   signals: {
-    http: (import './signals/http.libsonnet')(this),
-    requests: (import './signals/requests.libsonnet')(this),
+    overview: (import './signals/overview.libsonnet')(this),
     jobs: (import './signals/jobs.libsonnet')(this),
-    memory: (import './signals/memory.libsonnet')(this),
   },
 }

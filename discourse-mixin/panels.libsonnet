@@ -7,139 +7,91 @@ local commonlib = import 'common-lib/common/main.libsonnet';
 
     // Overview dashboard panels
     trafficByResponseCode:
-      g.panel.timeSeries.new('Traffic by Response Code')
+      commonlib.panels.network.timeSeries.traffic.new(
+        'Traffic by response code',
+        targets=[signals.overview.httpRequests.asTarget()]
+      )
       + g.panel.timeSeries.panelOptions.withDescription('Rate of HTTP traffic over time for the entire application. Grouped by response code.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.http.httpRequests.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('reqps'),
 
     activeRequests:
-      g.panel.timeSeries.new('Active Requests')
+      commonlib.panels.network.timeSeries.traffic.new(
+        'Active requests',
+        targets=[signals.overview.activeRequests.asTarget()]
+      )
       + g.panel.timeSeries.panelOptions.withDescription('Active web requests for the entire application')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.requests.activeRequests.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('reqps'),
 
     queuedRequests:
-      g.panel.timeSeries.new('Queued Requests')
+      commonlib.panels.network.timeSeries.traffic.new(
+        'Queued requests',
+        targets=[signals.overview.queuedRequests.asTarget()]
+      )
       + g.panel.timeSeries.panelOptions.withDescription('Queued web requests for the entire application.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.requests.queuedRequests.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('reqps'),
 
     pageViews:
-      g.panel.timeSeries.new('Page Views')
+      commonlib.panels.network.timeSeries.traffic.new(
+        'Page views',
+        targets=[signals.overview.pageViews.asTarget()]
+      )
       + g.panel.timeSeries.panelOptions.withDescription('Rate of pageviews for the entire application. Grouped by type and service.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.requests.pageViews.asTarget(),
-      ])
-      + g.panel.timeSeries.standardOptions.withUnit('views/sec')
-      + g.panel.timeSeries.standardOptions.withMappings([
-        g.panel.timeSeries.standardOptions.mapping.SpecialValueMap.withType()
-        + g.panel.timeSeries.standardOptions.mapping.SpecialValueMap.withOptions({
-          match: 'null',
-          result: { text: 'N/A' },
-        }),
-      ]),
+      + g.panel.timeSeries.standardOptions.withUnit('none'),
 
     latestMedianRequestTime:
-      g.panel.timeSeries.new('Latest Median Request Time')
+      commonlib.panels.network.timeSeries.base.new('Latest median request time', targets=[signals.overview.latestMedianRequestTime.asTarget()])
       + g.panel.timeSeries.panelOptions.withDescription('The median amount of time for "latest" page requests for the selected site.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.http.latestMedianRequestTime.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('s'),
 
     topicMedianRequestTime:
-      g.panel.timeSeries.new('Topic Show Median Request Time')
+      commonlib.panels.network.timeSeries.base.new('Topic show median request time', targets=[signals.overview.topicMedianRequestTime.asTarget()])
       + g.panel.timeSeries.panelOptions.withDescription('The median amount of time for "topics show" requests for the selected site.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.http.topicMedianRequestTime.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('s'),
 
     latest99thPercentileRequestTime:
-      g.panel.timeSeries.new('Latest 99th percentile Request Time')
+      commonlib.panels.network.timeSeries.base.new('Latest 99th percentile request time', targets=[signals.overview.latest99thPercentileRequestTime.asTarget()])
       + g.panel.timeSeries.panelOptions.withDescription('The 99th percentile amount of time for "latest" page requests for the selected site.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.http.latest99thPercentileRequestTime.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('s'),
 
     topic99thPercentileRequestTime:
-      g.panel.timeSeries.new('Topic Show 99th percentile Request Time')
+      commonlib.panels.network.timeSeries.base.new('Topic show 99th percentile request time', targets=[signals.overview.topic99thPercentileRequestTime.asTarget()])
       + g.panel.timeSeries.panelOptions.withDescription('The 99th percentile amount of time for "topics show" requests for the selected site.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.http.topic99thPercentileRequestTime.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('s'),
 
     // Jobs dashboard panels
     sidekiqJobDuration:
-      g.panel.timeSeries.new('Sidekiq Job Duration')
-      + g.panel.timeSeries.panelOptions.withDescription('Time spent in Sidekiq jobs broken out by job name.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.jobs.sidekiqJobDuration.asTarget(),
-      ])
-      + g.panel.timeSeries.standardOptions.withUnit('s')
-      + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(30)
-      + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-      + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
-      + g.panel.timeSeries.options.tooltip.withMode('multi')
-      + g.panel.timeSeries.options.tooltip.withSort('desc'),
+      commonlib.panels.generic.stat.base.new('Sidekiq job duration', targets=[signals.jobs.sidekiqJobDuration.asTarget()])
+      + g.panel.stat.panelOptions.withDescription('Time spent in Sidekiq jobs broken out by job name.')
+      + g.panel.stat.standardOptions.withUnit('s'),
 
     scheduledJobDuration:
-      g.panel.timeSeries.new('Scheduled Job Duration')
-      + g.panel.timeSeries.panelOptions.withDescription('Time spent in scheduled jobs broken out by job name.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.jobs.scheduledJobDuration.asTarget(),
-      ])
-      + g.panel.timeSeries.standardOptions.withUnit('s')
-      + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(30)
-      + g.panel.timeSeries.fieldConfig.defaults.custom.withShowPoints('never')
-      + g.panel.timeSeries.fieldConfig.defaults.custom.stacking.withMode('normal')
-      + g.panel.timeSeries.options.tooltip.withMode('multi')
-      + g.panel.timeSeries.options.tooltip.withSort('desc'),
-
-    scheduledJobCount:
-      g.panel.timeSeries.new('Scheduled Jobs')
-      + g.panel.timeSeries.panelOptions.withDescription('The number of scheduled jobs ran over an interval.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.jobs.scheduledJobCount.asTarget(),
-      ]),
+      commonlib.panels.generic.stat.base.new('Scheduled job duration', targets=[signals.jobs.scheduledJobDuration.asTarget()])
+      + g.panel.stat.panelOptions.withDescription('Time spent in scheduled jobs broken out by job name.')
+      + g.panel.stat.standardOptions.withUnit('s'),
 
     sidekiqJobCount:
-      g.panel.timeSeries.new('Sidekiq Jobs')
-      + g.panel.timeSeries.panelOptions.withDescription('The amount of sidekiq jobs ran over an interval.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.jobs.sidekiqJobCount.asTarget(),
-      ]),
+      commonlib.panels.generic.stat.info.new('Sidekiq jobs', targets=[signals.jobs.sidekiqJobCount.asTarget()])
+      + g.panel.stat.panelOptions.withDescription('The amount of sidekiq jobs ran over an interval.')
+      + g.panel.stat.standardOptions.withUnit('none'),
+
+    scheduledJobCount:
+      commonlib.panels.generic.timeSeries.base.new('Scheduled jobs', targets=[signals.jobs.scheduledJobCount.asTarget()])
+      + g.panel.stat.panelOptions.withDescription('The number of scheduled jobs ran over an interval.')
+      + g.panel.timeSeries.standardOptions.withUnit('none'),
 
     usedRSSMemory:
-      g.panel.timeSeries.new('Used RSS Memory')
+      commonlib.panels.generic.timeSeries.base.new('Used RSS memory', targets=[signals.jobs.rssMemory.asTarget()])
       + g.panel.timeSeries.panelOptions.withDescription('Total RSS Memory used by process. Broken up by pid.')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.memory.rssMemory.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('bytes'),
 
     v8HeapSize:
-      g.panel.timeSeries.new('V8 Heap Size')
+      commonlib.panels.generic.timeSeries.base.new('V8 heap size', targets=[signals.jobs.v8HeapSize.asTarget()])
       + g.panel.timeSeries.panelOptions.withDescription('Current heap size of V8 engine. Broken up by process type')
-      + g.panel.timeSeries.queryOptions.withTargets([
-        signals.memory.v8HeapSize.asTarget(),
-      ])
       + g.panel.timeSeries.standardOptions.withUnit('bytes'),
 
     sidekiqWorkers:
-      g.panel.stat.new('Sidekiq Workers')
+      commonlib.panels.generic.stat.base.new('Sidekiq workers', targets=[signals.jobs.sidekiqWorkerCount.asTarget()])
       + g.panel.stat.panelOptions.withDescription('Current number of Sidekiq Workers.')
-      + g.panel.stat.queryOptions.withTargets([
-        signals.jobs.sidekiqWorkerCount.asTarget(),
-      ])
       + g.panel.stat.standardOptions.withUnit('none')
       + g.panel.stat.standardOptions.color.withMode('thresholds')
       + g.panel.stat.standardOptions.withMappings([
@@ -154,11 +106,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       + g.panel.stat.options.withTextMode('auto'),
 
     webWorkers:
-      g.panel.stat.new('Web Workers')
+      commonlib.panels.generic.stat.base.new('Web workers', targets=[signals.jobs.webWorkerCount.asTarget()])
       + g.panel.stat.panelOptions.withDescription('Current number of Web Workers.')
-      + g.panel.stat.queryOptions.withTargets([
-        signals.jobs.webWorkerCount.asTarget(),
-      ])
       + g.panel.stat.standardOptions.withUnit('none')
       + g.panel.stat.standardOptions.color.withMode('thresholds')
       + g.panel.stat.standardOptions.withMappings([
@@ -173,11 +122,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       + g.panel.stat.options.withTextMode('auto'),
 
     sidekiqQueued:
-      g.panel.stat.new('Sidekiq Queued')
+      commonlib.panels.generic.stat.base.new('Sidekiq queued', targets=[signals.jobs.sidekiqJobsEnqueued.asTarget()])
       + g.panel.stat.panelOptions.withDescription('Current number of jobs in Sidekiq queue.')
-      + g.panel.stat.queryOptions.withTargets([
-        signals.jobs.sidekiqJobsEnqueued.asTarget(),
-      ])
       + g.panel.stat.standardOptions.withUnit('none')
       + g.panel.stat.standardOptions.color.withMode('thresholds')
       + g.panel.stat.standardOptions.withMappings([

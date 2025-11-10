@@ -28,12 +28,21 @@
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Rate of HTTP traffic over time for the entire application. Grouped by response code.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No traffic",
                   "unit": "reqps"
                }
             },
@@ -44,6 +53,16 @@
                "y": 1
             },
             "id": 2,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -51,24 +70,33 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,status) (\n  rate(discourse_http_requests{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
+                  "expr": "sum by (job,status) (\n  rate(discourse_http_requests{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{status}}",
+                  "legendFormat": "{{ api }} - {{ verb }} - {{ status }}",
                   "refId": "HTTP requests"
                }
             ],
-            "title": "Traffic by Response Code",
+            "title": "Traffic by response code",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Active web requests for the entire application",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No traffic",
                   "unit": "reqps"
                }
             },
@@ -79,6 +107,16 @@
                "y": 1
             },
             "id": 3,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -86,24 +124,33 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "discourse_active_app_reqs{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}",
+                  "expr": "sum by (job) (\n  discourse_active_app_reqs{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{instance}}",
                   "refId": "Active requests"
                }
             ],
-            "title": "Active Requests",
+            "title": "Active requests",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Queued web requests for the entire application.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No traffic",
                   "unit": "reqps"
                }
             },
@@ -114,6 +161,16 @@
                "y": 7
             },
             "id": 4,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -121,36 +178,34 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "discourse_queued_app_reqs{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}",
+                  "expr": "sum by (job) (\n  discourse_queued_app_reqs{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{instance}}",
                   "refId": "Queued requests"
                }
             ],
-            "title": "Queued Requests",
+            "title": "Queued requests",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "Rate of pageviews for the entire application. Grouped by type and service.",
             "fieldConfig": {
                "defaults": {
-                  "mappings": [
-                     {
-                        "options": {
-                           "match": "null",
-                           "result": {
-                              "text": "N/A"
-                           }
-                        },
-                        "type": "special"
-                     }
-                  ],
-                  "unit": "views/sec"
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No traffic",
+                  "unit": "none"
                }
             },
             "gridPos": {
@@ -160,6 +215,16 @@
                "y": 7
             },
             "id": 5,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -167,14 +232,14 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "rate(discourse_page_views{job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])",
+                  "expr": "sum by (job) (\n  rate(discourse_page_views{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\"}[$__rate_interval])\n)",
                   "format": "time_series",
                   "instant": false,
                   "legendFormat": "{{instance}}",
                   "refId": "Page views"
                }
             ],
-            "title": "Page Views",
+            "title": "Page views",
             "type": "timeseries"
          },
          {
@@ -192,12 +257,21 @@
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "The median amount of time for \"latest\" page requests for the selected site.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No packets",
                   "unit": "s"
                }
             },
@@ -208,6 +282,16 @@
                "y": 14
             },
             "id": 7,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -215,24 +299,33 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,controller) (\n  discourse_http_duration_seconds{quantile=\"0.5\",action=\"latest\",job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "sum by (job) (\n  discourse_http_duration_seconds{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\",quantile=\"0.5\",action=\"latest\"}\n)",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{controller}}",
+                  "legendFormat": "{{ instance }}",
                   "refId": "Latest median request time"
                }
             ],
-            "title": "Latest Median Request Time",
+            "title": "Latest median request time",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "The median amount of time for \"topics show\" requests for the selected site.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No packets",
                   "unit": "s"
                }
             },
@@ -243,6 +336,16 @@
                "y": 14
             },
             "id": 8,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -250,24 +353,33 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,controller) (\n  discourse_http_duration_seconds{quantile=\"0.5\",controller=\"topics\",job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "sum by (job) (\n  discourse_http_duration_seconds{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\",quantile=\"0.5\",controller=\"topics\"}\n)",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{controller}}",
+                  "legendFormat": "{{ instance }}",
                   "refId": "Topic median request time"
                }
             ],
-            "title": "Topic Show Median Request Time",
+            "title": "Topic show median request time",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "The 99th percentile amount of time for \"latest\" page requests for the selected site.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No packets",
                   "unit": "s"
                }
             },
@@ -278,6 +390,16 @@
                "y": 20
             },
             "id": 9,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -285,24 +407,33 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,controller) (\n  discourse_http_duration_seconds{quantile=\"0.99\",action=\"latest\",job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "sum by (job) (\n  discourse_http_duration_seconds{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\",quantile=\"0.99\",action=\"latest\"}\n)",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{controller}}",
+                  "legendFormat": "{{ instance }}",
                   "refId": "Latest 99th percentile request time"
                }
             ],
-            "title": "Latest 99th percentile Request Time",
+            "title": "Latest 99th percentile request time",
             "type": "timeseries"
          },
          {
             "datasource": {
-               "type": "datasource",
-               "uid": "-- Mixed --"
+               "type": "prometheus",
+               "uid": "${datasource}"
             },
             "description": "The 99th percentile amount of time for \"topics show\" requests for the selected site.",
             "fieldConfig": {
                "defaults": {
+                  "custom": {
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
+                  },
+                  "decimals": 1,
+                  "noValue": "No packets",
                   "unit": "s"
                }
             },
@@ -313,6 +444,16 @@
                "y": 20
             },
             "id": 10,
+            "options": {
+               "legend": {
+                  "calcs": [ ],
+                  "displayMode": "list"
+               },
+               "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+               }
+            },
             "pluginVersion": "v11.0.0",
             "targets": [
                {
@@ -320,14 +461,14 @@
                      "type": "prometheus",
                      "uid": "${datasource}"
                   },
-                  "expr": "sum by (job,controller) (\n  discourse_http_duration_seconds{quantile=\"0.99\",controller=\"topics\",job=~\"$job\", instance=~\"$instance\",job=~\"$job\",instance=~\"$instance\"}\n)",
+                  "expr": "sum by (job) (\n  discourse_http_duration_seconds{job=\"integrations/discourse\",job=~\"$job\",instance=~\"$instance\",quantile=\"0.99\",controller=\"topics\"}\n)",
                   "format": "time_series",
                   "instant": false,
-                  "legendFormat": "{{controller}}",
+                  "legendFormat": "{{ instance }}",
                   "refId": "Topic 99th percentile request time"
                }
             ],
-            "title": "Topic Show 99th percentile Request Time",
+            "title": "Topic show 99th percentile request time",
             "type": "timeseries"
          }
       ],
@@ -355,7 +496,7 @@
                "label": "Job",
                "multi": true,
                "name": "job",
-               "query": "label_values(discourse_page_views{job=~\"$job\", instance=~\"$instance\"}, job)",
+               "query": "label_values(discourse_page_views{job=\"integrations/discourse\"}, job)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -370,7 +511,7 @@
                "label": "Instance",
                "multi": true,
                "name": "instance",
-               "query": "label_values(discourse_page_views{job=~\"$job\", instance=~\"$instance\",job=~\"$job\"}, instance)",
+               "query": "label_values(discourse_page_views{job=\"integrations/discourse\",job=~\"$job\"}, instance)",
                "refresh": 2,
                "sort": 1,
                "type": "query"

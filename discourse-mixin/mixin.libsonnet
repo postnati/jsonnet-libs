@@ -1,15 +1,16 @@
+local config = import './config.libsonnet';
 local lib = import './main.libsonnet';
 
 local discourse =
   lib.new()
   + lib.withConfigMixin({
-    // Override defaults if needed
+    filteringSelector: config.filteringSelector,
+    uid: config.uid,
+    enableLokiLogs: config.enableLokiLogs,
   });
 
 {
   grafanaDashboards+:: discourse.grafana.dashboards,
   prometheusAlerts+:: discourse.prometheus.alerts,
-  prometheusRules+:: {
-    groups+: [],
-  },
+  prometheusRules+:: discourse.prometheus.recordingRules,
 }

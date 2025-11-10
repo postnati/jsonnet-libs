@@ -23,6 +23,14 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       },
 
     grafana: {
+      variables: commonlib.variables.new(
+        filteringSelector=this.config.filteringSelector,
+        groupLabels=this.config.groupLabels,
+        instanceLabels=this.config.instanceLabels,
+        varMetric='discourse_page_views',
+        customAllValue='.+',
+        enableLokiLogs=this.config.enableLokiLogs,
+      ),
       links: (import './links.libsonnet').new(this),
       panels: (import './panels.libsonnet').new(this),
       rows: (import './rows.libsonnet').new(this),
@@ -31,6 +39,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
 
     prometheus: {
       alerts: alerts.new(this),
+      recordingRules: {},
     },
   },
 }
