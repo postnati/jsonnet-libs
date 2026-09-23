@@ -3,7 +3,7 @@ function(this)
     datasource: 'prometheus_datasource',
     filteringSelector: this.filteringSelector,
     groupLabels: this.groupLabels,
-    instanceLabels: ['solr_cluster'],
+    instanceLabels: [],
     aggLevel: 'none',
     aggFunction: 'avg',
     discoveryMetric: {
@@ -21,7 +21,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'solr_collections_live_nodes{%(queriesSelector)s}',
-            aggKeepLabels: ['solr_cluster'],
+            aggKeepLabels: [],
             legendCustomTemplate: '{{solr_cluster}}',
           },
         },
@@ -64,7 +64,6 @@ function(this)
         sources: {
           prometheus: {
             expr: '100 * sum by (%(agg)s) (solr_collections_shard_state{%(queriesSelector)s}) / count by (%(agg)s) (solr_collections_shard_state{%(queriesSelector)s})',
-            aggKeepLabels: ['solr_cluster'],
             legendCustomTemplate: '{{solr_cluster}}',
           },
         },
@@ -93,7 +92,6 @@ function(this)
         sources: {
           prometheus: {
             expr: '100 * sum by (%(agg)s) (solr_collections_replica_state{%(queriesSelector)s}) / count by (%(agg)s) (solr_collections_replica_state{%(queriesSelector)s})',
-            aggKeepLabels: ['solr_cluster'],
             legendCustomTemplate: '{{solr_cluster}}',
           },
         },

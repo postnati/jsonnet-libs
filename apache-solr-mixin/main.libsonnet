@@ -24,12 +24,12 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         for sig in std.objectFields(this.config.signals)
       },
 
-    // Cluster-overview has no base_url variable, so its signals are scoped to
-    // solr_cluster only (queriesSelector is frozen at unmarshall time).
+    // Cluster-overview has no base_url variable, so its signals drop the
+    // instance scoping (queriesSelector is frozen at unmarshall time).
     signalsCluster:
       {
         [sig]: commonlib.signals.unmarshallJsonMulti(
-          this.config.signals[sig] { instanceLabels: ['solr_cluster'] },
+          this.config.signals[sig] { instanceLabels: [] },
           type=this.config.metricsSource
         )
         for sig in std.objectFields(this.config.signals)

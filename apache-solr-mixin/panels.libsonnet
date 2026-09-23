@@ -90,7 +90,7 @@ local availabilityTable(title, target, description, hidden, renamed) =
       cpuAverageLoad:
         commonlib.panels.generic.timeSeries.base.new(
           'CPU load',
-          targets=[signals.jvm.cpuLoad.asTarget()],
+          targets=[signals.jvm.cpuLoad.withExprWrappersMixin(['', ' > 0']).asTarget()],
           description='CPU load caused by the JVM.',
         )
         // Not .percentage: its stylize() adds decimals=1 and gradientMode='scheme'
@@ -171,7 +171,7 @@ local availabilityTable(title, target, description, hidden, renamed) =
       updateHandlers:
         commonlib.panels.generic.timeSeries.base.new(
           'Update handlers / $__interval',
-          targets=[signals.query.updateHandlerAdds.withFilteringSelectorMixin(coreFilter).asTarget() + { interval: '1m', intervalFactor: 2 }],
+          targets=[signals.query.updateHandlerAdds.withFilteringSelectorMixin(coreFilter).withExprWrappersMixin(['', ' > 0']).asTarget() + { interval: '1m', intervalFactor: 2 }],
           description='Counts the increase in document additions over the specified interval.',
         )
         + g.panel.timeSeries.standardOptions.withUnit('short'),
@@ -233,7 +233,7 @@ local availabilityTable(title, target, description, hidden, renamed) =
       cacheHitRatio:
         commonlib.panels.generic.timeSeries.base.new(
           'Cache hit ratio',
-          targets=[signals.query.cacheHitRatio.withFilteringSelectorMixin(coreFilter).asTarget()],
+          targets=[signals.query.cacheHitRatio.withFilteringSelectorMixin(coreFilter).withExprWrappersMixin(['', ' > 0']).asTarget()],
           description='The cache hit ratio for various cache activities.',
         )
         + g.panel.timeSeries.standardOptions.withUnit('percent')
@@ -313,7 +313,7 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + commonlib.panels.generic.timeSeries.base.stylize(),
 
       topCPULoadByNode:
-        signalsCluster.jvm.topCpuLoad.withTopK('$k').asTimeSeries()
+        signalsCluster.jvm.cpuLoad.withName('Top nodes by CPU load').withTopK('$k').asTimeSeries()
         + commonlib.panels.generic.timeSeries.base.stylize()
         + g.panel.timeSeries.standardOptions.withMin(0)
         + g.panel.timeSeries.standardOptions.withMax(100)
@@ -341,7 +341,7 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + commonlib.panels.generic.timeSeries.base.stylize(),
 
       topUpdateHandlersByNode:
-        signalsCluster.query.topUpdateHandlerAdds.withFilteringSelectorMixin(coreFilter).withTopK('$k').asTimeSeries()
+        signalsCluster.query.updateHandlerAdds.withName('Top cores by update handlers / $__interval').withFilteringSelectorMixin(coreFilter).withTopK('$k').asTimeSeries()
         + commonlib.panels.generic.timeSeries.base.stylize()
         + g.panel.timeSeries.queryOptions.withInterval('1m')
         + { targets: [super.targets[0] { intervalFactor: 2 }] },
@@ -351,7 +351,7 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + commonlib.panels.generic.timeSeries.base.stylize(),
 
       topCacheHitRatioByNode:
-        signalsCluster.query.topCacheHitRatio.withFilteringSelectorMixin(coreFilter).withExprWrappersMixin(['bottomk($k,', ')']).asTimeSeries()
+        signalsCluster.query.cacheHitRatio.withName('Top cores by cache hit ratio').withFilteringSelectorMixin(coreFilter).withExprWrappersMixin(['bottomk($k,', ')']).asTimeSeries()
         + commonlib.panels.generic.timeSeries.base.stylize()
         + g.panel.timeSeries.standardOptions.withMin(0)
         + g.panel.timeSeries.standardOptions.withMax(100)

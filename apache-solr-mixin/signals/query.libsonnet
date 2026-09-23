@@ -23,46 +23,7 @@ function(this)
             expr: 'solr_metrics_core_update_handler_adds_total{%(queriesSelector)s}',
             rangeFunction: 'increase',
             aggKeepLabels: ['base_url', 'collection', 'core'],
-            exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}}',
-          },
-        },
-      },
-      // Cluster-overview variant of updateHandlerAdds: keeps solr_cluster in the
-      // by-clause and omits the '> 0' filter, matching the top-k panel.
-      topUpdateHandlerAdds: {
-        name: 'Top cores by update handlers / $__interval',
-        nameShort: 'Update handlers',
-        type: 'counter',
-        description: 'Top cores by the number of total document additions in the cluster.',
-        unit: 'short',
-        aggLevel: 'group',
-        aggFunction: 'avg',
-        sources: {
-          prometheus: {
-            expr: 'solr_metrics_core_update_handler_adds_total{%(queriesSelector)s}',
-            rangeFunction: 'increase',
-            aggKeepLabels: ['base_url', 'solr_cluster', 'collection', 'core'],
-            legendCustomTemplate: '{{collection}} - {{core}}',
-          },
-        },
-      },
-      // Cluster-overview variant of cacheHitRatio: keeps solr_cluster in the
-      // by-clause and omits the '> 0' filter, which would otherwise hide the
-      // worst-performing caches from the bottom-k panel.
-      topCacheHitRatio: {
-        name: 'Top cores by cache hit ratio',
-        nameShort: 'Cache hit ratio',
-        type: 'gauge',
-        description: 'Top cores by the cache hit ratio in Solr searchers.',
-        unit: 'percent',
-        aggLevel: 'group',
-        aggFunction: 'avg',
-        sources: {
-          prometheus: {
-            expr: '100 * solr_metrics_core_searcher_cache_ratio{type=~"documentCache|filterCache|queryResultCache", %(queriesSelector)s}',
-            aggKeepLabels: ['base_url', 'solr_cluster', 'collection', 'core', 'type'],
-            legendCustomTemplate: '{{collection}} - {{core}} - {{type}}',
           },
         },
       },
@@ -77,7 +38,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'solr_metrics_core_query_mean_rate{category="QUERY", %(queriesSelector)s}',
-            aggKeepLabels: ['base_url', 'solr_cluster', 'collection', 'core', 'searchHandler'],
+            aggKeepLabels: ['base_url', 'collection', 'core', 'searchHandler'],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
           },
         },
@@ -316,7 +277,6 @@ function(this)
           prometheus: {
             expr: '100 * solr_metrics_core_searcher_cache_ratio{type=~"documentCache|filterCache|queryResultCache", %(queriesSelector)s}',
             aggKeepLabels: ['type', 'base_url', 'collection', 'core'],
-            exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{type}}',
           },
         },

@@ -22,7 +22,7 @@ function(this)
           prometheus: {
             expr: 'solr_metrics_jetty_requests_total{%(queriesSelector)s}',
             rangeFunction: 'increase',
-            aggKeepLabels: ['solr_cluster', 'base_url', 'method'],
+            aggKeepLabels: ['base_url', 'method'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}} - {{method}}',
           },
@@ -40,7 +40,7 @@ function(this)
           prometheus: {
             expr: 'solr_metrics_jetty_response_total{%(queriesSelector)s}',
             rangeFunction: 'increase',
-            aggKeepLabels: ['solr_cluster', 'base_url', 'status'],
+            aggKeepLabels: ['base_url', 'status'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}} - {{status}}',
           },
@@ -58,7 +58,7 @@ function(this)
           prometheus: {
             expr: 'solr_metrics_jetty_dispatches_total{%(queriesSelector)s}',
             rangeFunction: 'increase',
-            aggKeepLabels: ['solr_cluster', 'base_url'],
+            aggKeepLabels: ['base_url'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}}',
           },

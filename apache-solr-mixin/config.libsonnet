@@ -30,8 +30,8 @@
   // signals framework
   filteringSelector: '',  // set to apply static filters to all queries, i.e. job="bar"
   customAllValue: '.+',
-  groupLabels: if self.enableMultiCluster then ['job', 'cluster'] else ['job'],
-  instanceLabels: ['solr_cluster', 'base_url'],
+  groupLabels: if self.enableMultiCluster then ['job', 'cluster', 'solr_cluster'] else ['job', 'solr_cluster'],
+  instanceLabels: ['base_url'],
   uid: 'apache-solr',
   metricsSource: ['prometheus'],
   signals+: {

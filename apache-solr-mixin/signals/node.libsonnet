@@ -21,7 +21,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'solr_metrics_node_connections{%(queriesSelector)s}',
-            aggKeepLabels: ['solr_cluster', 'base_url', 'item'],
+            aggKeepLabels: ['base_url', 'item'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}} - {{item}}',
           },
@@ -39,7 +39,7 @@ function(this)
           prometheus: {
             expr: 'solr_metrics_node_thread_pool_submitted_total{executor="updateOnlyExecutor", %(queriesSelector)s}',
             rangeFunction: 'increase',
-            aggKeepLabels: ['solr_cluster', 'base_url'],
+            aggKeepLabels: ['base_url'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}} - submitted',
           },
@@ -57,7 +57,7 @@ function(this)
           prometheus: {
             expr: 'solr_metrics_node_thread_pool_completed_total{executor="updateOnlyExecutor", %(queriesSelector)s}',
             rangeFunction: 'increase',
-            aggKeepLabels: ['solr_cluster', 'base_url'],
+            aggKeepLabels: ['base_url'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}} - completed',
           },
@@ -74,7 +74,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'solr_metrics_node_core_root_fs_bytes{%(queriesSelector)s}',
-            aggKeepLabels: ['solr_cluster', 'base_url', 'item'],
+            aggKeepLabels: ['base_url', 'item'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{base_url}} - {{item}}',
           },
@@ -92,7 +92,7 @@ function(this)
           prometheus: {
             expr: 'solr_metrics_node_errors_total{%(queriesSelector)s}',
             rangeFunction: 'increase',
-            aggKeepLabels: ['base_url', 'solr_cluster', 'collection'],
+            aggKeepLabels: ['base_url', 'collection'],
             legendCustomTemplate: '{{base_url}}',
           },
         },
@@ -111,7 +111,7 @@ function(this)
             rangeFunction: 'increase',
             // 'baseurl' (no underscore) is preserved from the legacy expression; it
             // does not match the 'base_url' label these metrics actually carry.
-            aggKeepLabels: ['solr_cluster', 'collection', 'core', 'baseurl'],
+            aggKeepLabels: ['collection', 'core', 'baseurl'],
             legendCustomTemplate: '{{collection}} - {{core}}',
           },
         },
@@ -127,7 +127,7 @@ function(this)
         sources: {
           prometheus: {
             expr: 'solr_metrics_core_index_size_bytes{%(queriesSelector)s}',
-            aggKeepLabels: ['base_url', 'solr_cluster', 'collection', 'core'],
+            aggKeepLabels: ['base_url', 'collection', 'core'],
             legendCustomTemplate: '{{collection}} - {{core}}',
           },
         },
