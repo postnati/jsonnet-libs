@@ -1,15 +1,13 @@
+local selectorsLib = import './signals/selectors.libsonnet';
+
 {
   new(this): {
+    local selectors = selectorsLib(this.config),
     // %(filteringSelector)s is intentionally LAST in every matcher list: it is blank
     // in config.libsonnet and only injected by the integration, and a blank selector
     // in any earlier position would render a leading comma, which is a fatal PromQL
     // parse error. A trailing comma is valid PromQL.
     local istiodPodFilter = 'pod=~"istiod.*"',
-    local reporterSourceFilter = 'reporter="source"',
-    local grpcResponseStatusErrorFilter = 'grpc_response_status=~"[1-9]\\\\d*"',
-    local grpcResponseStatusFilter = 'grpc_response_status=~"[0-9]\\\\d*"',
-    local requestProtocolHTTPFilter = 'request_protocol="http"',
-    local httpResponseCodeErrorFilter = 'request_protocol="http", response_code=~"[45].+"',
 
     groups: [
       {
@@ -21,7 +19,7 @@
               sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_request_duration_milliseconds_sum{%(reporterSourceFilter)s, %(filteringSelector)s}[5m]))
               /
               clamp_min(sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_request_duration_milliseconds_count{%(reporterSourceFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsWarningHighRequestLatency)s
-            ||| % this.config { reporterSourceFilter: reporterSourceFilter },
+            ||| % this.config { reporterSourceFilter: selectors.reporterSourceFilter },
             'for': '5m',
             labels: {
               severity: 'warning',
@@ -88,9 +86,9 @@
               /
               clamp_min(sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(requestProtocolHTTPFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsCriticalHTTPRequestErrorPercentage)s
             ||| % this.config {
-              reporterSourceFilter: reporterSourceFilter,
-              httpResponseCodeErrorFilter: httpResponseCodeErrorFilter,
-              requestProtocolHTTPFilter: requestProtocolHTTPFilter,
+              reporterSourceFilter: selectors.reporterSourceFilter,
+              httpResponseCodeErrorFilter: selectors.httpResponseCodeErrorFilter,
+              requestProtocolHTTPFilter: selectors.requestProtocolHTTPFilter,
             },
             'for': '5m',
             labels: {
@@ -110,9 +108,9 @@
               /
               clamp_min(sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(grpcResponseStatusFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsCriticalGRPCRequestErrorPercentage)s
             ||| % this.config {
-              reporterSourceFilter: reporterSourceFilter,
-              grpcResponseStatusErrorFilter: grpcResponseStatusErrorFilter,
-              grpcResponseStatusFilter: grpcResponseStatusFilter,
+              reporterSourceFilter: selectors.reporterSourceFilter,
+              grpcResponseStatusErrorFilter: selectors.grpcResponseStatusErrorFilter,
+              grpcResponseStatusFilter: selectors.grpcResponseStatusFilter,
             },
             'for': '5m',
             labels: {
