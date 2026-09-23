@@ -5,7 +5,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
   new(this):
     {
       local signals = this.signals,
-      // Drill-down targets are dashboard uids, which are '<config.uid>-<name>'.
+      // Drill-down links look the target dashboard up by key, as links.libsonnet does.
       local uid = g.util.string.slugify(this.config.uid),
 
       clustersCountStatus:
@@ -104,7 +104,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.panel.table.fieldOverride.byName.withProperty('links', [
             {
               title: '',
-              url: 'd/' + uid + '-clusters?var-datasource=${datasource}&${__all_variables}&var-vcenter_cluster_name=${__value.raw}&${__url_time_range}',
+              url: 'd/' + this.grafana.dashboards[uid + '-clusters.json'].uid + '?var-datasource=${datasource}&${__all_variables}&var-vcenter_cluster_name=${__value.raw}&${__url_time_range}',
             },
           ]),
         ])
@@ -459,7 +459,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.panel.table.fieldOverride.byName.withProperty('links', [
             {
               title: '',
-              url: 'd/' + uid + '-virtual-machines?var-datasource=${datasource}&${__all_variables}&var-vcenter_vm_name=${__value.raw}&${__url_time_range}',
+              url: 'd/' + this.grafana.dashboards[uid + '-virtual-machines.json'].uid + '?var-datasource=${datasource}&${__all_variables}&var-vcenter_vm_name=${__value.raw}&${__url_time_range}',
             },
           ]),
         ])
@@ -974,7 +974,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.panel.table.fieldOverride.byName.withProperty('links', [
             {
               title: '',
-              url: 'd/' + uid + '-hosts?var-datasource=${datasource}&${__all_variables}&var-vcenter_host_name=${__value.raw}&${__url_time_range}',
+              url: 'd/' + this.grafana.dashboards[uid + '-hosts.json'].uid + '?var-datasource=${datasource}&${__all_variables}&var-vcenter_host_name=${__value.raw}&${__url_time_range}',
             },
           ]),
         ])
@@ -1157,7 +1157,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
           + g.panel.table.fieldOverride.byName.withProperty('links', [
             {
               title: '',
-              url: 'd/' + uid + '-virtual-machines?var-datasource=${datasource}&${__all_variables}&var-vcenter_vm_name=${__value.raw}&${__url_time_range}',
+              url: 'd/' + this.grafana.dashboards[uid + '-virtual-machines.json'].uid + '?var-datasource=${datasource}&${__all_variables}&var-vcenter_vm_name=${__value.raw}&${__url_time_range}',
             },
           ]),
         ])
