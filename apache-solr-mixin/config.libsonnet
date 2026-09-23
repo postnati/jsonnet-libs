@@ -15,8 +15,8 @@
   // alerts thresholds
   alertsCriticalCPUUsage: 85,  // %, ApacheSolrHighCPUUsageCritical fires when the 5m average system CPU load across the cluster's nodes stays above this for 5m.
   alertsWarningCPUUsage: 75,  // %, ApacheSolrHighCPUUsageWarning fires when the 5m average system CPU load across the cluster's nodes stays above this for 5m.
-  alertsWarningMemoryUsage: 85,  // %, ApacheSolrHighHeapMemoryUsageWarning fires when JVM heap used over heap max stays above this for 5m.
-  alertsCriticalMemoryUsage: 75,  // %, ApacheSolrHighHeapMemoryUsageCritical fires when JVM heap used over heap max stays above this for 5m. NOTE: inherited from the legacy mixin, this sits below the warning threshold, so critical fires before warning.
+  alertsWarningMemoryUsage: 75,  // %, ApacheSolrHighHeapMemoryUsageWarning fires when JVM heap used over heap max stays above this for 5m.
+  alertsCriticalMemoryUsage: 85,  // %, ApacheSolrHighHeapMemoryUsageCritical fires when JVM heap used over heap max stays above this for 5m.
   alertsWarningCacheUsage: 75,  // %, ApacheSolrLowCacheHitRatio fires when the document/filter/queryResult cache hit ratio stays *below* this for 10m.
   alertsWarningCoreErrors: 15,  // %, ApacheSolrHighCoreErrors fires when the 10m increase in core errors, relative to the 10m average, stays above this for 10m.
   alertsWarningDocumentIndexing: 30,  // %, ApacheSolrHighDocumentIndexing fires when the 15m increase in document adds, relative to the 15m average, stays above this for 15m.

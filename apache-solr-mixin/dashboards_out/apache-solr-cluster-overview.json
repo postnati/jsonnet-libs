@@ -998,11 +998,11 @@
                         },
                         {
                            "color": "yellow",
-                           "value": 90
+                           "value": 80
                         },
                         {
                            "color": "red",
-                           "value": 80
+                           "value": 90
                         }
                      ]
                   },
@@ -1086,11 +1086,11 @@
                         },
                         {
                            "color": "yellow",
-                           "value": 90
+                           "value": 80
                         },
                         {
                            "color": "red",
-                           "value": 80
+                           "value": 90
                         }
                      ]
                   },
@@ -1394,15 +1394,15 @@
                      "mode": "absolute",
                      "steps": [
                         {
-                           "color": "green"
+                           "color": "red"
                         },
                         {
                            "color": "yellow",
-                           "value": 90
+                           "value": 80
                         },
                         {
-                           "color": "red",
-                           "value": 80
+                           "color": "green",
+                           "value": 90
                         }
                      ]
                   },

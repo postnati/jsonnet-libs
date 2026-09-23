@@ -101,8 +101,8 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
           { color: 'green' },
-          { color: 'yellow', value: 90 },
-          { color: 'red', value: 80 },
+          { color: 'yellow', value: 80 },
+          { color: 'red', value: 90 },
         ]),
 
       osMemory:
@@ -240,8 +240,8 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + g.panel.timeSeries.standardOptions.withMin(0)
         + g.panel.timeSeries.standardOptions.withMax(100)
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          { color: 'green' },
-          { color: 'red', value: 80 },
+          { color: 'red' },
+          { color: 'green', value: 80 },
         ]),
 
       coreTimeouts:
@@ -320,8 +320,8 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
           { color: 'blue' },
-          { color: 'yellow', value: 90 },
-          { color: 'red', value: 80 },
+          { color: 'yellow', value: 80 },
+          { color: 'red', value: 90 },
         ]),
 
       topHeapMemoryUsageByNode:
@@ -332,8 +332,8 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + g.panel.timeSeries.standardOptions.color.withMode('continuous-BlYlRd')
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
           { color: 'blue' },
-          { color: 'yellow', value: 90 },
-          { color: 'red', value: 80 },
+          { color: 'yellow', value: 80 },
+          { color: 'red', value: 90 },
         ]),
 
       topMeanQueriesByNode:
@@ -356,9 +356,9 @@ local availabilityTable(title, target, description, hidden, renamed) =
         + g.panel.timeSeries.standardOptions.withMin(0)
         + g.panel.timeSeries.standardOptions.withMax(100)
         + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-          { color: 'green' },
-          { color: 'yellow', value: 90 },
-          { color: 'red', value: 80 },
+          { color: 'red' },
+          { color: 'yellow', value: 80 },
+          { color: 'green', value: 90 },
         ]),
 
       topCoreErrorsByNode:
