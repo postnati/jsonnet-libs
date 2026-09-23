@@ -7,9 +7,9 @@ local commonlib = import 'common-lib/common/main.libsonnet';
 
       clientsWaitingConnections:
         signals.connections.pools_client_waiting_connections_total.asStat()
-        + commonlib.panels.generic.stat.base.stylize()
         + g.panel.stat.options.withGraphMode('none')
         + g.panel.stat.standardOptions.color.withMode('thresholds')
+        + g.panel.stat.standardOptions.thresholds.withMode('absolute')
         + g.panel.stat.standardOptions.thresholds.withSteps([
           g.panel.stat.thresholdStep.withColor('super-light-green')
           + g.panel.stat.thresholdStep.withValue(0),
