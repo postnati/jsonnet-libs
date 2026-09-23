@@ -9,8 +9,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
 //   groupScoped    - job, pgbouncer_cluster only (instanceLabels=[]), for the
 //                    cluster overview, which aggregates across instances.
 //
-// Only the top_database_count variable and the single-select instance override below
-// are pgbouncer-specific; everything else comes from the library.
+// Only the top_database_count variable is pgbouncer-specific; everything else comes
+// from the library. The overview's single-select instance is patched in mixin.libsonnet.
 {
   new(this, varMetric):
     local config = this.config;
@@ -37,18 +37,6 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       prometheusDatasourceLabel='Prometheus data source',
     );
 
-    // The overview dashboard is a per-instance drill-down, so instance is single-select
-    // while database stays multi-select. commonlib's singleInstance would make both
-    // single-select, so narrow just the instance variable here.
-    local singleSelectInstance(variables) =
-      std.map(
-        function(v)
-          if std.get(v, 'name', '') == 'instance'
-          then v { multi: false, includeAll: false }
-          else v,
-        variables
-      );
-
     local topDatabaseCount =
       var.custom.new(
         'top_database_count',
@@ -60,8 +48,6 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       + var.custom.generalOptions.withLabel('Top database count');
 
     instanceScoped {
-      // Overview dashboard: job, pgbouncer_cluster, instance (single), database.
-      overviewVariables: singleSelectInstance(instanceScoped.multiInstance),
       // Cluster overview dashboard: job, pgbouncer_cluster, top database count.
       clusterVariables: groupScoped.multiInstance + [topDatabaseCount],
       // Alert list filter on the cluster overview uses advanced (multi-value) syntax.

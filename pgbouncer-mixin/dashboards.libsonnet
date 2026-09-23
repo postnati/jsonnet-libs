@@ -29,7 +29,7 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
           )
         )
         // hide link to self
-        + root.applyCommon(vars.overviewVariables, uid + '-overview', tags, links { pgbouncerOverview+:: {} }, annotations, timezone, refresh, period),
+        + root.applyCommon(vars.multiInstance, uid + '-overview', tags, links { pgbouncerOverview+:: {} }, annotations, timezone, refresh, period),
       'pgbouncer-cluster-overview.json':
         g.dashboard.new(prefix + 'PgBouncer cluster overview')
         + g.dashboard.withPanels(
