@@ -123,5 +123,6 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
     + g.dashboard.withTimezone(timezone)
     + g.dashboard.withRefresh(refresh)
     + g.dashboard.time.withFrom(period)
-    + g.dashboard.withVariables(vars),
+    + g.dashboard.withVariables(vars)
+    + g.dashboard.withAnnotations(std.objectValues(annotations)),
 }
