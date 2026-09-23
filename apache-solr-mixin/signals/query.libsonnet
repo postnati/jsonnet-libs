@@ -60,7 +60,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: '100 * solr_metrics_core_searcher_cache_ratio{%(queriesSelector)s, type=~"documentCache|filterCache|queryResultCache"}',
+            expr: '100 * solr_metrics_core_searcher_cache_ratio{type=~"documentCache|filterCache|queryResultCache", %(queriesSelector)s}',
             aggKeepLabels: ['base_url', 'solr_cluster', 'collection', 'core', 'type'],
             legendCustomTemplate: '{{collection}} - {{core}} - {{type}}',
           },
@@ -76,7 +76,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_mean_rate{%(queriesSelector)s, category="QUERY"}',
+            expr: 'solr_metrics_core_query_mean_rate{category="QUERY", %(queriesSelector)s}',
             aggKeepLabels: ['base_url', 'solr_cluster', 'collection', 'core', 'searchHandler'],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
           },
@@ -92,7 +92,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_5minRate{%(queriesSelector)s, searchHandler=~"/select|/query|/get"}',
+            expr: 'solr_metrics_core_query_5minRate{searchHandler=~"/select|/query|/get", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -109,7 +109,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_p95_ms{%(queriesSelector)s, searchHandler=~"/select|/query|/get"}',
+            expr: 'solr_metrics_core_query_p95_ms{searchHandler=~"/select|/query|/get", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -126,7 +126,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_p99_ms{%(queriesSelector)s, searchHandler=~"/select|/query|/get"}',
+            expr: 'solr_metrics_core_query_p99_ms{searchHandler=~"/select|/query|/get", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -143,7 +143,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_local_5minRate{%(queriesSelector)s, searchHandler=~"/select|/query|/get"}',
+            expr: 'solr_metrics_core_query_local_5minRate{searchHandler=~"/select|/query|/get", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -160,7 +160,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_local_p95_ms{%(queriesSelector)s, searchHandler=~"/select|/query|/get"}',
+            expr: 'solr_metrics_core_query_local_p95_ms{searchHandler=~"/select|/query|/get", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -177,7 +177,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_local_p99_ms{%(queriesSelector)s, searchHandler=~"/select|/query|/get"}',
+            expr: 'solr_metrics_core_query_local_p99_ms{searchHandler=~"/select|/query|/get", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -194,7 +194,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_5minRate{%(queriesSelector)s, searchHandler=~"/sql|/export|/stream"}',
+            expr: 'solr_metrics_core_query_5minRate{searchHandler=~"/sql|/export|/stream", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -211,7 +211,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_p95_ms{%(queriesSelector)s, searchHandler=~"/sql|/export|/stream"}',
+            expr: 'solr_metrics_core_query_p95_ms{searchHandler=~"/sql|/export|/stream", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -228,7 +228,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_p99_ms{%(queriesSelector)s, searchHandler=~"/sql|/export|/stream"}',
+            expr: 'solr_metrics_core_query_p99_ms{searchHandler=~"/sql|/export|/stream", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -245,7 +245,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_local_5minRate{%(queriesSelector)s, searchHandler=~"/sql|/export|/stream"}',
+            expr: 'solr_metrics_core_query_local_5minRate{searchHandler=~"/sql|/export|/stream", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -262,7 +262,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_local_p95_ms{%(queriesSelector)s, searchHandler=~"/sql|/export|/stream"}',
+            expr: 'solr_metrics_core_query_local_p95_ms{searchHandler=~"/sql|/export|/stream", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -279,7 +279,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_query_local_p99_ms{%(queriesSelector)s, searchHandler=~"/sql|/export|/stream"}',
+            expr: 'solr_metrics_core_query_local_p99_ms{searchHandler=~"/sql|/export|/stream", %(queriesSelector)s}',
             aggKeepLabels: ['searchHandler', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{searchHandler}}',
@@ -296,7 +296,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_core_searcher_cache{%(queriesSelector)s, type=~"documentCache|filterCache|queryResultCache", item=~"evictions"}',
+            expr: 'solr_metrics_core_searcher_cache{type=~"documentCache|filterCache|queryResultCache", item=~"evictions", %(queriesSelector)s}',
             rangeFunction: 'increase',
             aggKeepLabels: ['type', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
@@ -314,7 +314,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: '100 * solr_metrics_core_searcher_cache_ratio{%(queriesSelector)s, type=~"documentCache|filterCache|queryResultCache"}',
+            expr: '100 * solr_metrics_core_searcher_cache_ratio{type=~"documentCache|filterCache|queryResultCache", %(queriesSelector)s}',
             aggKeepLabels: ['type', 'base_url', 'collection', 'core'],
             exprWrappers: [['', ' > 0']],
             legendCustomTemplate: '{{collection}} - {{core}} - {{type}}',

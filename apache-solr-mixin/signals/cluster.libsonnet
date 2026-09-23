@@ -60,9 +60,11 @@ function(this)
         type: 'raw',
         description: 'Percent of running shards in the cluster.',
         unit: 'percent',
+        aggLevel: 'group',
         sources: {
           prometheus: {
-            expr: '100 * sum(solr_collections_shard_state{%(queriesSelector)s}) / count(solr_collections_shard_state{%(queriesSelector)s})',
+            expr: '100 * sum by (%(agg)s) (solr_collections_shard_state{%(queriesSelector)s}) / count by (%(agg)s) (solr_collections_shard_state{%(queriesSelector)s})',
+            aggKeepLabels: ['solr_cluster'],
             legendCustomTemplate: '{{solr_cluster}}',
           },
         },
@@ -87,9 +89,11 @@ function(this)
         type: 'raw',
         description: 'Shows the total percent of running shards in the cluster.',
         unit: 'percent',
+        aggLevel: 'group',
         sources: {
           prometheus: {
-            expr: '100 * sum(solr_collections_replica_state{%(queriesSelector)s}) / count(solr_collections_replica_state{%(queriesSelector)s})',
+            expr: '100 * sum by (%(agg)s) (solr_collections_replica_state{%(queriesSelector)s}) / count by (%(agg)s) (solr_collections_replica_state{%(queriesSelector)s})',
+            aggKeepLabels: ['solr_cluster'],
             legendCustomTemplate: '{{solr_cluster}}',
           },
         },

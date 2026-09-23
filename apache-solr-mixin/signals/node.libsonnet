@@ -37,7 +37,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_node_thread_pool_submitted_total{%(queriesSelector)s, executor="updateOnlyExecutor"}',
+            expr: 'solr_metrics_node_thread_pool_submitted_total{executor="updateOnlyExecutor", %(queriesSelector)s}',
             rangeFunction: 'increase',
             aggKeepLabels: ['solr_cluster', 'base_url'],
             exprWrappers: [['', ' > 0']],
@@ -55,7 +55,7 @@ function(this)
         aggFunction: 'avg',
         sources: {
           prometheus: {
-            expr: 'solr_metrics_node_thread_pool_completed_total{%(queriesSelector)s, executor="updateOnlyExecutor"}',
+            expr: 'solr_metrics_node_thread_pool_completed_total{executor="updateOnlyExecutor", %(queriesSelector)s}',
             rangeFunction: 'increase',
             aggKeepLabels: ['solr_cluster', 'base_url'],
             exprWrappers: [['', ' > 0']],
