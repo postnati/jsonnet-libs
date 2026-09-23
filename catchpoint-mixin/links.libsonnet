@@ -7,13 +7,13 @@ local g = import './g.libsonnet';
         link.link.new('Catchpoint overview', '/d/' + this.grafana.dashboards['catchpoint-overview.json'].uid)
         + link.link.options.withKeepTime(true)
         + link.link.options.withIncludeVars(true),
+      // The two drilldowns pin instance and one of test_name/node_name to
+      // single-select, so a carried-over All or multi value has nowhere to land.
       catchpointTestNameOverview:
         link.link.new('Catchpoint web performance by tests', '/d/' + this.grafana.dashboards['catchpoint-testname-overview.json'].uid)
-        + link.link.options.withKeepTime(true)
-        + link.link.options.withIncludeVars(true),
+        + link.link.options.withKeepTime(true),
       catchpointNodeNameOverview:
         link.link.new('Catchpoint web performance by nodes', '/d/' + this.grafana.dashboards['catchpoint-nodename-overview.json'].uid)
-        + link.link.options.withKeepTime(true)
-        + link.link.options.withIncludeVars(true),
+        + link.link.options.withKeepTime(true),
     },
 }

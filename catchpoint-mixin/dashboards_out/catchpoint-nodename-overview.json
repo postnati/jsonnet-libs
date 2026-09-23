@@ -8,7 +8,6 @@
             "url": "/d/catchpoint-overview"
          },
          {
-            "includeVars": true,
             "keepTime": true,
             "title": "Catchpoint web performance by tests",
             "type": "link",

@@ -1,7 +1,6 @@
 {
       "links": [
          {
-            "includeVars": true,
             "keepTime": true,
             "title": "Catchpoint web performance by nodes",
             "type": "link",

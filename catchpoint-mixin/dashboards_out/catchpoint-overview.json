@@ -1,14 +1,12 @@
 {
       "links": [
          {
-            "includeVars": true,
             "keepTime": true,
             "title": "Catchpoint web performance by nodes",
             "type": "link",
             "url": "/d/catchpoint-nodename-overview"
          },
          {
-            "includeVars": true,
             "keepTime": true,
             "title": "Catchpoint web performance by tests",
             "type": "link",
