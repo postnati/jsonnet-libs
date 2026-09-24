@@ -4,7 +4,9 @@ local selectors = import './selectors.libsonnet';
 function(this)
   local s = selectors(this);
   local clusterLegend = '{{vcenter_cluster_name}}';
-  local clusterSumBy = 'sum by (job, vcenter_datacenter_name, vcenter_cluster_name)';
+  // Grouping comes from the config label lists so an overridden groupLabels (multi-cluster)
+  // is respected. aggLevel stays 'none': these are raw exprs and own their own by-clause.
+  local clusterSumBy = 'sum by (' + std.join(', ', this.groupLabels + this.datacenterLabels + this.clusterLabels) + ')';
   local swd = 'sum without(object, direction)';
   {
     filteringSelector: this.filteringSelector,

@@ -6,8 +6,10 @@ function(this)
   local clusterLegend = '{{vcenter_cluster_name}}';
   local hostLegend = '{{vcenter_host_name}}';
   local rPoolLegend = '{{vcenter_resource_pool_inventory_path}}';
-  local clusterSumBy = 'sum by (job, vcenter_datacenter_name, vcenter_cluster_name)';
-  local hostSumBy = 'sum by (job, vcenter_datacenter_name, vcenter_cluster_name, vcenter_host_name)';
+  // Grouping comes from the config label lists so an overridden groupLabels (multi-cluster)
+  // is respected. aggLevel stays 'none': these are raw exprs and own their own by-clause.
+  local clusterSumBy = 'sum by (' + std.join(', ', this.groupLabels + this.datacenterLabels + this.clusterLabels) + ')';
+  local hostSumBy = 'sum by (' + std.join(', ', this.groupLabels + this.datacenterLabels + this.hostLabels) + ')';
   // The dashboards expose a $top_resource_count variable that caps every "top N" panel.
   local topk = [['topk ($top_resource_count, ', ')']];
   {
