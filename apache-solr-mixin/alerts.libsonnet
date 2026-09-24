@@ -57,8 +57,9 @@
           },
           {
             alert: 'ApacheSolrHighHeapMemoryUsageCritical',
-            expr: this.signals.jvm.heapMemoryUsage.asRuleExpression()
-                  + (' > %(alertsCriticalMemoryUsage)s' % this.config),
+            expr: |||
+              100 * sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="used", %(filteringSelector)s}) / clamp_min(sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="max", %(filteringSelector)s}), 1) > %(alertsCriticalMemoryUsage)s
+            ||| % this.config,
             'for': '5m',
             labels: {
               severity: 'critical',
@@ -66,14 +67,15 @@
             annotations: {
               summary: 'High heap memory usage can lead to garbage collection issues, out-of-memory errors, and overall system instability.',
               description: |||
-                {{$labels.base_url}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%%.0f" $value }}%%, which is above the thresold of %(alertsCriticalMemoryUsage)s.
+                {{$labels.instance}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%%.0f" $value }}%%, which is above the thresold of %(alertsCriticalMemoryUsage)s.
               ||| % this.config,
             },
           },
           {
             alert: 'ApacheSolrHighHeapMemoryUsageWarning',
-            expr: this.signals.jvm.heapMemoryUsage.asRuleExpression()
-                  + (' > %(alertsWarningMemoryUsage)s' % this.config),
+            expr: |||
+              100 * sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="used", %(filteringSelector)s}) / clamp_min(sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="max", %(filteringSelector)s}), 1) > %(alertsWarningMemoryUsage)s
+            ||| % this.config,
             'for': '5m',
             labels: {
               severity: 'warning',
@@ -81,7 +83,7 @@
             annotations: {
               summary: 'High heap memory usage can lead to garbage collection issues, out-of-memory errors, and overall system instability.',
               description: |||
-                {{$labels.base_url}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%%.0f" $value }}%%, which is above the thresold of %(alertsWarningMemoryUsage)s.
+                {{$labels.instance}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%%.0f" $value }}%%, which is above the thresold of %(alertsWarningMemoryUsage)s.
               ||| % this.config,
             },
           },
