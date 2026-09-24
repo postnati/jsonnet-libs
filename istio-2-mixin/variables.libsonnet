@@ -19,24 +19,25 @@ local commonlib = import 'common-lib/common/main.libsonnet';
     )
     + {
       local root = self,
+      local fmt = { groupSelector: std.join(', ', ['%s=~"$%s"' % [l, l] for l in this.config.groupLabels]) },
       // The job/cluster chain built by commonlib. Taken on its own rather than
       // via multiInstance, because only the logs dashboard carries the Loki
       // datasource variable that multiInstance appends.
       local groupVariables = std.filter(function(v) v.type == 'query', root.multiInstance),
 
-      local namespaceQuery = 'query_result(sum(istio_requests_total{job=~"$job", cluster=~"$cluster"}) by (destination_workload_namespace, source_workload_namespace) or sum(istio_tcp_sent_bytes_total{job=~"$job", cluster=~"$cluster"}) by (destination_workload_namespace, source_workload_namespace))',
+      local namespaceQuery = 'query_result(sum(istio_requests_total{%(groupSelector)s}) by (destination_workload_namespace, source_workload_namespace) or sum(istio_tcp_sent_bytes_total{%(groupSelector)s}) by (destination_workload_namespace, source_workload_namespace))' % fmt,
       local namespaceRegex = '/(?:destination|source)_workload_namespace="([^"]*)/g',
-      local serviceQuery = 'query_result(sum(istio_requests_total{job=~"$job", cluster=~"$cluster", source_workload_namespace=~"$namespace"}) by (source_canonical_service) or sum(istio_requests_total{job=~"$job", cluster=~"$cluster", destination_workload_namespace=~"$namespace"}) by (destination_canonical_service) or sum(istio_tcp_sent_bytes_total{job=~"$job", cluster=~"$cluster", source_workload_namespace=~"$namespace"}) by (source_canonical_service) or sum(istio_tcp_sent_bytes_total{job=~"$job", cluster=~"$cluster", destination_workload_namespace=~"$namespace"}) by (destination_canonical_service))',
+      local serviceQuery = 'query_result(sum(istio_requests_total{%(groupSelector)s, source_workload_namespace=~"$namespace"}) by (source_canonical_service) or sum(istio_requests_total{%(groupSelector)s, destination_workload_namespace=~"$namespace"}) by (destination_canonical_service) or sum(istio_tcp_sent_bytes_total{%(groupSelector)s, source_workload_namespace=~"$namespace"}) by (source_canonical_service) or sum(istio_tcp_sent_bytes_total{%(groupSelector)s, destination_workload_namespace=~"$namespace"}) by (destination_canonical_service))' % fmt,
       local serviceRegex = '/(?:source_canonical_service|destination_canonical_service)="([^"]*)/g',
-      local workloadQuery = 'query_result(sum by(source_workload) (istio_requests_total{job=~"$job", cluster=~"$cluster", source_workload_namespace=~"$namespace", source_canonical_service=~"$service"}) or sum by(destination_workload) (istio_requests_total{job=~"$job", cluster=~"$cluster", destination_workload_namespace=~"$namespace", destination_service_name=~"$service"}) or sum by(source_workload) (istio_tcp_sent_bytes_total{job=~"$job", cluster=~"$cluster", source_workload_namespace=~"$namespace", source_canonical_service=~"$service"}) or sum by(destination_workload) (istio_tcp_sent_bytes_total{job=~"$job", cluster=~"$cluster", destination_workload_namespace=~"$namespace", destination_service_name=~"$service"}))',
+      local workloadQuery = 'query_result(sum by(source_workload) (istio_requests_total{%(groupSelector)s, source_workload_namespace=~"$namespace", source_canonical_service=~"$service"}) or sum by(destination_workload) (istio_requests_total{%(groupSelector)s, destination_workload_namespace=~"$namespace", destination_service_name=~"$service"}) or sum by(source_workload) (istio_tcp_sent_bytes_total{%(groupSelector)s, source_workload_namespace=~"$namespace", source_canonical_service=~"$service"}) or sum by(destination_workload) (istio_tcp_sent_bytes_total{%(groupSelector)s, destination_workload_namespace=~"$namespace", destination_service_name=~"$service"}))' % fmt,
       local workloadRegex = '/(?:source|destination)_workload="([^"]*)/g',
-      local clientServiceQuery = 'query_result(sum(istio_requests_total{job=~"$job", cluster=~"$cluster", destination_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service) or sum(istio_tcp_received_bytes_total{job=~"$job", cluster=~"$cluster", destination_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service))',
+      local clientServiceQuery = 'query_result(sum(istio_requests_total{%(groupSelector)s, destination_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service) or sum(istio_tcp_received_bytes_total{%(groupSelector)s, destination_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service))' % fmt,
       local clientServiceRegex = '/source_canonical_service="([^"]*)/',
-      local serverServiceQuery = 'query_result(sum(istio_requests_total{job=~"$job", cluster=~"$cluster", source_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service) or sum(istio_tcp_received_bytes_total{job=~"$job", cluster=~"$cluster", source_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service))',
+      local serverServiceQuery = 'query_result(sum(istio_requests_total{%(groupSelector)s, source_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service) or sum(istio_tcp_received_bytes_total{%(groupSelector)s, source_canonical_service=~"$service"}) by (destination_canonical_service, source_canonical_service))' % fmt,
       local serverServiceRegex = '/destination_canonical_service="([^"]*)/',
-      local clientWorkloadQuery = 'query_result(sum(istio_requests_total{job=~"$job", cluster=~"$cluster", destination_workload=~"$workload"}) by (source_workload) or sum(istio_tcp_received_bytes_total{job=~"$job", cluster=~"$cluster", destination_workload=~"$workload"}) by (source_workload))',
+      local clientWorkloadQuery = 'query_result(sum(istio_requests_total{%(groupSelector)s, destination_workload=~"$workload"}) by (source_workload) or sum(istio_tcp_received_bytes_total{%(groupSelector)s, destination_workload=~"$workload"}) by (source_workload))' % fmt,
       local clientWorkloadRegex = '/source_workload="([^"]*)/',
-      local serverWorkloadQuery = 'query_result(sum(istio_requests_total{job=~"$job", cluster=~"$cluster", source_workload=~"$workload"}) by (destination_workload) or sum(istio_tcp_received_bytes_total{job=~"$job", cluster=~"$cluster", source_workload=~"$workload"}) by (destination_workload))',
+      local serverWorkloadQuery = 'query_result(sum(istio_requests_total{%(groupSelector)s, source_workload=~"$workload"}) by (destination_workload) or sum(istio_tcp_received_bytes_total{%(groupSelector)s, source_workload=~"$workload"}) by (destination_workload))' % fmt,
       local serverWorkloadRegex = '/destination_workload="([^"]*)/',
 
       // Istio component pods, discovered from a metric that carries a pod label.
@@ -66,9 +67,9 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         [root.datasources.prometheus]
         + groupVariables
         + [
-          componentVariable('istiod', 'Istiod', 'pilot_info', 'job=~"$job", cluster=~"$cluster"'),
-          componentVariable('gateway', 'Gateway', 'istio_agent_process_cpu_seconds_total', 'job=~"$job", cluster=~"$cluster", pod=~"istio-egress.*|istio-ingress.*"'),
-          componentVariable('proxy', 'Proxy', 'istio_agent_process_cpu_seconds_total', 'job=~"$job", cluster=~"$cluster", pod!~"istio-egress.*|istio-ingress.*"'),
+          componentVariable('istiod', 'Istiod', 'pilot_info', '%(groupSelector)s' % fmt),
+          componentVariable('gateway', 'Gateway', 'istio_agent_process_cpu_seconds_total', '%(groupSelector)s, pod=~"istio-egress.*|istio-ingress.*"' % fmt),
+          componentVariable('proxy', 'Proxy', 'istio_agent_process_cpu_seconds_total', '%(groupSelector)s, pod!~"istio-egress.*|istio-ingress.*"' % fmt),
         ],
       serviceOverviewVariables:
         [root.datasources.prometheus]

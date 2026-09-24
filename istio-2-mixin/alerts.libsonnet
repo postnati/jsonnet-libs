@@ -16,10 +16,10 @@ local selectorsLib = import './signals/selectors.libsonnet';
           {
             alert: 'IstioHighRequestLatencyWarning',
             expr: |||
-              sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_request_duration_milliseconds_sum{%(reporterSourceFilter)s, %(filteringSelector)s}[5m]))
+              sum by (%(groupBy)s, source_canonical_service, destination_canonical_service) (increase(istio_request_duration_milliseconds_sum{%(reporterSourceFilter)s, %(filteringSelector)s}[5m]))
               /
-              clamp_min(sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_request_duration_milliseconds_count{%(reporterSourceFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsWarningHighRequestLatency)s
-            ||| % this.config { reporterSourceFilter: selectors.reporterSourceFilter },
+              clamp_min(sum by (%(groupBy)s, source_canonical_service, destination_canonical_service) (increase(istio_request_duration_milliseconds_count{%(reporterSourceFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsWarningHighRequestLatency)s
+            ||| % this.config { reporterSourceFilter: selectors.reporterSourceFilter, groupBy: selectors.groupBy },
             'for': '5m',
             labels: {
               severity: 'warning',
@@ -34,8 +34,8 @@ local selectorsLib = import './signals/selectors.libsonnet';
           {
             alert: 'IstioGalleyValidationFailuresWarning',
             expr: |||
-              sum by (job, cluster, pod) (increase(galley_validation_failed{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) > %(alertsWarningGalleyValidationFailures)s
-            ||| % this.config { istiodPodFilter: istiodPodFilter },
+              sum by (%(groupBy)s, pod) (increase(galley_validation_failed{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) > %(alertsWarningGalleyValidationFailures)s
+            ||| % this.config { istiodPodFilter: istiodPodFilter, groupBy: selectors.groupBy },
             'for': '1m',
             labels: {
               severity: 'warning',
@@ -50,8 +50,8 @@ local selectorsLib = import './signals/selectors.libsonnet';
           {
             alert: 'IstioListenerConfigConflictsCritical',
             expr: |||
-              sum by (job, cluster, pod) (increase(pilot_conflict_inbound_listener{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) + sum by (job, cluster, pod) (increase(pilot_conflict_outbound_listener_tcp_over_current_tcp{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) > %(alertsCriticalListenerConfigConflicts)s
-            ||| % this.config { istiodPodFilter: istiodPodFilter },
+              sum by (%(groupBy)s, pod) (increase(pilot_conflict_inbound_listener{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) + sum by (%(groupBy)s, pod) (increase(pilot_conflict_outbound_listener_tcp_over_current_tcp{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) > %(alertsCriticalListenerConfigConflicts)s
+            ||| % this.config { istiodPodFilter: istiodPodFilter, groupBy: selectors.groupBy },
             'for': '1m',
             labels: {
               severity: 'critical',
@@ -66,8 +66,8 @@ local selectorsLib = import './signals/selectors.libsonnet';
           {
             alert: 'IstioXDSConfigRejectionsWarning',
             expr: |||
-              sum by (job, cluster, pod) (increase(pilot_total_xds_rejects{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) > %(alertsWarningXDSConfigRejections)s
-            ||| % this.config { istiodPodFilter: istiodPodFilter },
+              sum by (%(groupBy)s, pod) (increase(pilot_total_xds_rejects{%(istiodPodFilter)s, %(filteringSelector)s}[5m])) > %(alertsWarningXDSConfigRejections)s
+            ||| % this.config { istiodPodFilter: istiodPodFilter, groupBy: selectors.groupBy },
             'for': '1m',
             labels: {
               severity: 'warning',
@@ -82,10 +82,11 @@ local selectorsLib = import './signals/selectors.libsonnet';
           {
             alert: 'IstioHighHTTPRequestErrorsCritical',
             expr: |||
-              100 * sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(httpResponseCodeErrorFilter)s, %(filteringSelector)s}[5m]))
+              100 * sum by (%(groupBy)s, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(httpResponseCodeErrorFilter)s, %(filteringSelector)s}[5m]))
               /
-              clamp_min(sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(requestProtocolHTTPFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsCriticalHTTPRequestErrorPercentage)s
+              clamp_min(sum by (%(groupBy)s, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(requestProtocolHTTPFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsCriticalHTTPRequestErrorPercentage)s
             ||| % this.config {
+              groupBy: selectors.groupBy,
               reporterSourceFilter: selectors.reporterSourceFilter,
               httpResponseCodeErrorFilter: selectors.httpResponseCodeErrorFilter,
               requestProtocolHTTPFilter: selectors.requestProtocolHTTPFilter,
@@ -104,10 +105,11 @@ local selectorsLib = import './signals/selectors.libsonnet';
           {
             alert: 'IstioHighGRPCRequestErrorsCritical',
             expr: |||
-              100 * sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(grpcResponseStatusErrorFilter)s, %(filteringSelector)s}[5m]))
+              100 * sum by (%(groupBy)s, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(grpcResponseStatusErrorFilter)s, %(filteringSelector)s}[5m]))
               /
-              clamp_min(sum by (job, cluster, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(grpcResponseStatusFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsCriticalGRPCRequestErrorPercentage)s
+              clamp_min(sum by (%(groupBy)s, source_canonical_service, destination_canonical_service) (increase(istio_requests_total{%(reporterSourceFilter)s, %(grpcResponseStatusFilter)s, %(filteringSelector)s}[5m])), 1) > %(alertsCriticalGRPCRequestErrorPercentage)s
             ||| % this.config {
+              groupBy: selectors.groupBy,
               reporterSourceFilter: selectors.reporterSourceFilter,
               grpcResponseStatusErrorFilter: selectors.grpcResponseStatusErrorFilter,
               grpcResponseStatusFilter: selectors.grpcResponseStatusFilter,

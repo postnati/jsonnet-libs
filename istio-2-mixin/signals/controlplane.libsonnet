@@ -117,7 +117,7 @@ function(this)
         unit: 'short',
         sources: {
           prometheus: {
-            expr: 'sum by(le, job, cluster) (increase(pilot_proxy_convergence_time_bucket{%(queriesGroupIstiodSelector)s}[$__range:]))' % selectors,
+            expr: 'sum by(le, %(groupBy)s) (increase(pilot_proxy_convergence_time_bucket{%(queriesGroupIstiodSelector)s}[$__range:]))' % selectors,
             legendCustomTemplate: '{{cluster}}',
           },
         },

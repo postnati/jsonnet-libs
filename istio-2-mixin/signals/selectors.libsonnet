@@ -9,6 +9,7 @@ function(this)
   local groupSelector = utils.labelsToPromQLSelector(this.groupLabels);
   {
     queriesGroupSelector: groupSelector,
+    groupBy: std.join(', ', this.groupLabels),
     queriesGroupIstiodSelector: '%s,%s' % [groupSelector, 'pod=~"$istiod"'],
     queriesGroupGatewaySelector: '%s,%s' % [groupSelector, 'pod=~"$gateway"'],
     queriesGroupProxySelector: '%s,%s' % [groupSelector, 'pod=~"$proxy"'],
