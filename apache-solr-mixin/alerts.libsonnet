@@ -24,7 +24,7 @@
           {
             alert: 'ApacheSolrHighCPUUsageCritical',
             expr: |||
-              100 * avg without (item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsCriticalCPUUsage)s
+              100 * sum without (item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsCriticalCPUUsage)s
             ||| % this.config,
             'for': '5m',
             labels: {
@@ -41,7 +41,7 @@
           {
             alert: 'ApacheSolrHighCPUUsageWarning',
             expr: |||
-              100 * avg without (item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsWarningCPUUsage)s
+              100 * sum without (item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsWarningCPUUsage)s
             ||| % this.config,
             'for': '5m',
             labels: {
@@ -90,7 +90,7 @@
           {
             alert: 'ApacheSolrLowCacheHitRatio',
             expr: |||
-              100 * avg without(base_url, category, collection, item, replica, shard) (solr_metrics_core_searcher_cache_ratio{item="hitratio", type=~"documentCache|filterCache|queryResultCache", %(filteringSelector)s}) < %(alertsWarningCacheUsage)s
+              100 * sum without(base_url, category, collection, item, replica, shard) (solr_metrics_core_searcher_cache_ratio{item="hitratio", type=~"documentCache|filterCache|queryResultCache", %(filteringSelector)s}) < %(alertsWarningCacheUsage)s
             ||| % this.config,
             'for': '10m',
             labels: {
