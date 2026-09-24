@@ -31,20 +31,20 @@ groups:
         - alert: ApacheSolrHighHeapMemoryUsageCritical
           annotations:
             description: |
-                {{$labels.instance}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%.0f" $value }}%, which is above the thresold of 85.
+                {{$labels.base_url}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%.0f" $value }}%, which is above the thresold of 85.
             summary: High heap memory usage can lead to garbage collection issues, out-of-memory errors, and overall system instability.
           expr: |
-            100 * sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="used", }) / clamp_min(sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="max", }), 1) > 85
+            100 * sum without(item)(solr_metrics_jvm_memory_heap_bytes{item="used", }) / clamp_min(sum without(item)(solr_metrics_jvm_memory_heap_bytes{item="max", }), 1) > 85
           for: 5m
           labels:
             severity: critical
         - alert: ApacheSolrHighHeapMemoryUsageWarning
           annotations:
             description: |
-                {{$labels.instance}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%.0f" $value }}%, which is above the thresold of 75.
+                {{$labels.base_url}} on cluster {{$labels.solr_cluster}} has had high memory usage of {{ printf "%.0f" $value }}%, which is above the thresold of 75.
             summary: High heap memory usage can lead to garbage collection issues, out-of-memory errors, and overall system instability.
           expr: |
-            100 * sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="used", }) / clamp_min(sum without(item, base_url)(solr_metrics_jvm_memory_heap_bytes{item="max", }), 1) > 75
+            100 * sum without(item)(solr_metrics_jvm_memory_heap_bytes{item="used", }) / clamp_min(sum without(item)(solr_metrics_jvm_memory_heap_bytes{item="max", }), 1) > 75
           for: 5m
           labels:
             severity: warning
