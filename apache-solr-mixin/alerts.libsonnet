@@ -24,7 +24,7 @@
           {
             alert: 'ApacheSolrHighCPUUsageCritical',
             expr: |||
-              100 * sum without (base_url, item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsCriticalCPUUsage)s
+              100 * avg without (item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsCriticalCPUUsage)s
             ||| % this.config,
             'for': '5m',
             labels: {
@@ -34,14 +34,14 @@
               summary: 'High CPU load can indicate that Solr nodes are under heavy load, potentially impacting performance.',
               description:
                 (
-                  '{{$labels.instance}} on cluster {{$labels.solr_cluster}} has had a system CPU load of {{ printf "%%.0f" $value }}%%, which is above the threshold of %(alertsCriticalCPUUsage)s.'
+                  '{{$labels.base_url}} on cluster {{$labels.solr_cluster}} has had a system CPU load of {{ printf "%%.0f" $value }}%%, which is above the threshold of %(alertsCriticalCPUUsage)s.'
                 ) % this.config,
             },
           },
           {
             alert: 'ApacheSolrHighCPUUsageWarning',
             expr: |||
-              100 * sum without (base_url, item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsWarningCPUUsage)s
+              100 * avg without (item) (avg_over_time(solr_metrics_jvm_os_cpu_load{item="systemCpuLoad", %(filteringSelector)s}[5m])) > %(alertsWarningCPUUsage)s
             ||| % this.config,
             'for': '5m',
             labels: {
@@ -51,7 +51,7 @@
               summary: 'High CPU load can indicate that Solr nodes are under heavy load, potentially impacting performance.',
               description:
                 (
-                  '{{$labels.instance}} on cluster {{$labels.solr_cluster}} has had a system CPU load of {{ printf "%%.0f" $value }}%%, which is above the threshold of %(alertsWarningCPUUsage)s.'
+                  '{{$labels.base_url}} on cluster {{$labels.solr_cluster}} has had a system CPU load of {{ printf "%%.0f" $value }}%%, which is above the threshold of %(alertsWarningCPUUsage)s.'
                 ) % this.config,
             },
           },
@@ -90,7 +90,7 @@
           {
             alert: 'ApacheSolrLowCacheHitRatio',
             expr: |||
-              100 * sum without(base_url, category, collection, item, replica, shard) (solr_metrics_core_searcher_cache_ratio{item="hitratio", type=~"documentCache|filterCache|queryResultCache", %(filteringSelector)s}) < %(alertsWarningCacheUsage)s
+              100 * avg without(base_url, category, collection, item, replica, shard) (solr_metrics_core_searcher_cache_ratio{item="hitratio", type=~"documentCache|filterCache|queryResultCache", %(filteringSelector)s}) < %(alertsWarningCacheUsage)s
             ||| % this.config,
             'for': '10m',
             labels: {
